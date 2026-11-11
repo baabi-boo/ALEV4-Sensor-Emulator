@@ -1,0 +1,20 @@
+name: Repository integrity
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  submodule-links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          persist-credentials: false
+      - name: Verify pinned upstream Git links
+        run: python3 scripts/verify_submodules.py

@@ -1,0 +1,8 @@
+[submodule "third_party/isetcam"]
+	path = third_party/isetcam
+	url = https://github.com/ISET/isetcam.git
+	shallow = true
+[submodule "third_party/isethdrsensor"]
+	path = third_party/isethdrsensor
+	url = https://github.com/ISET/isethdrsensor.git
+	shallow = true

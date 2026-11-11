@@ -1,0 +1,9 @@
+# Generated simulation results and local calibration data
+/output/
+/cache/
+/data/raw/
+/data/calibration/
+/*.asv
+*.asv
+*.m~
+.DS_Store
