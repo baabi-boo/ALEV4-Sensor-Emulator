@@ -18,15 +18,35 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           submodules: recursive
           persist-credentials: false
+      - name: Verify exact scientific dependency checkouts
+        run: python3 scripts/verify_submodules.py --require-checkout
+      - name: Test independent validation utilities
+        run: python3 -m unittest discover -s scripts/tests -v
       - name: Install numerical runtime
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends octave octave-image octave-statistics
-      - name: Core numerical tests
-        run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(false); report=test_phase1_core(); disp(jsonencode(report));"
-      - name: ISETCam integration tests
-        run: octave --no-gui --quiet --eval "pkg load image; pkg load statistics; addpath('matlab'); setup_project(true); report=test_iset_integration(); disp(jsonencode(report));"
+      - name: Complete Phase 1 acceptance suite
+        run: octave --no-gui --quiet --eval "addpath('matlab'); report=run_phase1_tests('outputs/validation',true); assert(report.phase1_passed);"
+      - name: Generate reproducible demo artifacts
+        run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(true); summary=phase1_demo('outputs/demo',true); assert(summary.demo_complete && summary.frame_count==10);"
+      - name: Repeat demo in a fresh process
+        run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(true); phase1_demo('outputs/demo-repeat',true);"
+      - name: Independently verify artifacts and reproducibility
+        run: python3 scripts/verify_phase1_artifacts.py outputs --expected-commit "$GITHUB_SHA" --compare-dir outputs/demo-repeat
+      - name: Confirm dependencies were not modified
+        run: python3 scripts/verify_submodules.py --require-checkout
+      - name: Upload numerical evidence and synthetic RAW
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: phase1-evidence-${{ github.sha }}
+          path: |
+            outputs/validation/
+            outputs/demo/
+          if-no-files-found: error
+          retention-days: 14

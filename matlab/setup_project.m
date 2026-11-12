@@ -27,6 +27,20 @@ function paths = setup_project(require_upstream)
     if require_upstream && exist('ieInitSession', 'file') ~= 2
         error('ALEV4:ISETCamNotOnPath', 'ISETCam ieInitSession was not found on the path.');
     end
+    if require_upstream
+        required = {'ieInitSession', 'ieSessionSet', 'sceneCreate', 'sceneGet', ...
+            'sceneSet', 'oiCreate', 'oiSet', 'oiCompute', 'oiGet', ...
+            'pixelCreate', 'pixelGet', 'sensorCreate', 'sensorSet', ...
+            'sensorGet', 'sensorCompute'};
+        prefix = [isetcam filesep];
+        for k = 1:numel(required)
+            resolved = which(required{k});
+            if ~strncmp(resolved, prefix, numel(prefix))
+                error('ALEV4:ISETPathConflict', ...
+                    '%s resolves outside the pinned ISETCam checkout: %s', required{k}, resolved);
+            end
+        end
+    end
 
     paths = struct('root', root, 'isetcam', isetcam, 'isethdrsensor', hdrsensor, ...
         'upstream_enabled', require_upstream);

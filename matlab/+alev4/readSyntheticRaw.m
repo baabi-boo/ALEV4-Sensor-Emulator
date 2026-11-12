@@ -21,7 +21,7 @@ function [raw, meta] = readSyntheticRaw(output_base)
         error('ALEV4:InvalidRawMetadata', 'Manifest size is invalid.');
     end
     try
-        meta = jsondecode(fileread(json_path));
+        meta = jsondecode(readManifest(json_path));
     catch err
         error('ALEV4:InvalidRawMetadata', 'Cannot decode manifest: %s', err.message);
     end
@@ -124,6 +124,26 @@ function [raw, meta] = readSyntheticRaw(output_base)
     end
     raw = reshape(values, double(meta.width), double(meta.height)).';
     meta.sensor = cfg;
+end
+
+function text = readManifest(path)
+% Bound the actual read, not only a preceding directory-size observation.
+% The extra byte detects a manifest that grew after the size check without
+% ever allocating or passing an unbounded file to the JSON decoder.
+    [fid, message] = fopen(path, 'rb');
+    if fid < 0
+        error('ALEV4:InvalidRawMetadata', 'Cannot open manifest: %s', message);
+    end
+    cleanup = onCleanup(@() closeQuietly(fid)); %#ok<NASGU>
+    [bytes, count] = fread(fid, 2000001, '*uint8');
+    [message, error_number] = ferror(fid);
+    if error_number ~= 0
+        error('ALEV4:InvalidRawMetadata', 'Cannot read manifest: %s', message);
+    end
+    if count < 2 || count > 2000000
+        error('ALEV4:InvalidRawMetadata', 'Manifest size is invalid.');
+    end
+    text = native2unicode(bytes.', 'UTF-8');
 end
 
 function requireText(value, expected, name)

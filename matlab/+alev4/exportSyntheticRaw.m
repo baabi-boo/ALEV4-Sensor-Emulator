@@ -6,6 +6,8 @@ function files = exportSyntheticRaw(result, cfg, output_base)
 %   RESULT must contain raw_dn, exposure_s and seed. Neither destination may
 %   already exist. Use a distinct base name for every export. This format is
 %   not ARRIRAW, DNG, or a calibrated ALEV4 capture.
+%   The UTF-8 JSON manifest is limited to 2,000,000 bytes, matching the
+%   reader. Oversized metadata is rejected before creating any output file.
 %
 %   Temporary files are completed before publication. An ordinary failure
 %   removes this invocation's incomplete pair. Publication of two separate
@@ -73,13 +75,9 @@ function files = exportSyntheticRaw(result, cfg, output_base)
     else
         meta.runtime = struct('name', 'MATLAB', 'version', version);
     end
-    root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
-    meta.provenance = struct( ...
-        'repository_head', observedHead(root), ...
-        'isetcam_head', observedHead(fullfile(root, 'third_party', 'isetcam')), ...
-        'isethdrsensor_head', observedHead(fullfile(root, 'third_party', 'isethdrsensor')), ...
-        'meaning', 'Observed Git HEADs; an empty value means unavailable. Uncommitted edits are not identified.');
+    meta.provenance = alev4.sourceProvenance();
 
+    manifest_bytes = encodeManifest(meta);
     raw_temp = [tempname(parent) '.raw.part'];
     json_temp = [tempname(parent) '.json.part'];
     published_raw = false;
@@ -87,7 +85,7 @@ function files = exportSyntheticRaw(result, cfg, output_base)
     cleanup = onCleanup(@() cleanupTemps(raw_temp, json_temp)); %#ok<NASGU>
     try
         writePayload(raw_temp, raw);
-        writeManifest(json_temp, meta);
+        writeManifest(json_temp, manifest_bytes);
         refuseExisting(raw_path, json_path);
         [ok, message] = movefile(raw_temp, raw_path);
         if ~ok
@@ -146,14 +144,21 @@ function writePayload(path, raw)
     end
 end
 
-function writeManifest(path, meta)
+function bytes = encodeManifest(meta)
     encoded = jsonencode(meta);
+    bytes = unicode2native([encoded sprintf('\n')], 'UTF-8');
+    if numel(bytes) > 2e6
+        error('ALEV4:InvalidRawMetadata', ...
+            'The UTF-8 manifest exceeds the 2,000,000-byte format limit.');
+    end
+end
+
+function writeManifest(path, bytes)
     [fid, message] = fopen(path, 'wb');
     if fid < 0
         error('ALEV4:RawWriteFailed', 'Cannot open temporary manifest: %s', message);
     end
     cleanup = onCleanup(@() closeQuietly(fid)); %#ok<NASGU>
-    bytes = unicode2native([encoded sprintf('\n')], 'UTF-8');
     count = fwrite(fid, bytes, 'uint8');
     if count ~= numel(bytes) || fclose(fid) ~= 0
         error('ALEV4:RawWriteFailed', 'Incomplete manifest write.');
@@ -183,54 +188,3 @@ function cleanupTemps(raw_temp, json_temp)
     deleteOwned(json_temp);
 end
 
-function sha = observedHead(root)
-% Read Git's ordinary HEAD/ref files without invoking a shell. This also
-% handles submodule/worktree .git files. Never substitute a guessed revision.
-    sha = '';
-    git_dir = fullfile(root, '.git');
-    try
-        if exist(git_dir, 'file') == 2
-            pointer = strtrim(fileread(git_dir));
-            if numel(pointer) < 8 || ~strcmp(pointer(1:8), 'gitdir: ')
-                return;
-            end
-            target = strtrim(pointer(9:end));
-            if isempty(target)
-                return;
-            end
-            if target(1) == '/' || target(1) == '\' || ...
-                    (numel(target) >= 2 && target(2) == ':')
-                git_dir = target;
-            else
-                git_dir = fullfile(root, target);
-            end
-        end
-        head = strtrim(fileread(fullfile(git_dir, 'HEAD')));
-        if ~isempty(regexp(head, '^[0-9a-f]{40}$', 'once'))
-            sha = head;
-            return;
-        end
-        token = regexp(head, '^ref: (refs/[A-Za-z0-9_./-]+)$', 'tokens', 'once');
-        if isempty(token) || ~isempty(strfind(token{1}, '..')) %#ok<STREMP>
-            return;
-        end
-        ref_file = fullfile(git_dir, strrep(token{1}, '/', filesep));
-        if exist(ref_file, 'file') == 2
-            candidate = strtrim(fileread(ref_file));
-            if ~isempty(regexp(candidate, '^[0-9a-f]{40}$', 'once'))
-                sha = candidate;
-            end
-        elseif exist(fullfile(git_dir, 'packed-refs'), 'file') == 2
-            lines = regexp(fileread(fullfile(git_dir, 'packed-refs')), '\r?\n', 'split');
-            for k = 1:numel(lines)
-                record = regexp(lines{k}, '^([0-9a-f]{40}) (refs/\S+)$', 'tokens', 'once');
-                if ~isempty(record) && strcmp(record{2}, token{1})
-                    sha = record{1};
-                    return;
-                end
-            end
-        end
-    catch
-        sha = '';
-    end
-end
