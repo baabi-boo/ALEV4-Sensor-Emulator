@@ -26,5 +26,7 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends octave octave-image octave-statistics
-      - name: Confirm runtime availability
-        run: octave --no-gui --quiet --eval "disp(version); pkg load image; pkg load statistics; disp('Runtime available; numerical tests are added in the implementation commit.');"
+      - name: Core numerical tests
+        run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(false); report=test_phase1_core(); disp(jsonencode(report));"
+      - name: ISETCam integration tests
+        run: octave --no-gui --quiet --eval "pkg load image; pkg load statistics; addpath('matlab'); setup_project(true); report=test_iset_integration(); disp(jsonencode(report));"

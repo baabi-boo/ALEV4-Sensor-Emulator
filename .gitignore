@@ -1,5 +1,9 @@
 # Generated simulation results and local calibration data
 /output/
+/outputs/
+/.venv/
+__pycache__/
+*.pyc
 /cache/
 /data/raw/
 /data/calibration/
@@ -7,3 +11,4 @@
 *.asv
 *.m~
 .DS_Store
+
