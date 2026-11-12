@@ -1,0 +1,30 @@
+name: Phase 1 numerical validation
+
+on:
+  push:
+    branches: [main, phase1-bayer-baseline]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase1-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  octave-validation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Install numerical runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends octave octave-image octave-statistics
+      - name: Confirm runtime availability
+        run: octave --no-gui --quiet --eval "disp(version); pkg load image; pkg load statistics; disp('Runtime available; numerical tests are added in the implementation commit.');"
