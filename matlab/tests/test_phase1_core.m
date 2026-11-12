@@ -18,6 +18,7 @@ function report = test_phase1_core()
         'gaussian_read_noise_and_signed_dark', ...
         'full_well_and_adc_boundaries', ...
         'seed_reproducibility_and_rng_isolation', ...
+        'noisy_boundary_seeds_and_late_failure_isolation', ...
         'invalid_configuration_and_signal_rejection', ...
         'controlled_spectral_fixtures', ...
         'poisson_shapes_and_zero_counts'};
@@ -32,6 +33,7 @@ function report = test_phase1_core()
     metrics.read_noise = testReadNoise();
     testReadoutBoundaries();
     testReproducibility();
+    testBoundarySeeds();
     metrics.rejected_inputs = testRejection();
     testFixtures();
     testPoissonShapes();
@@ -259,8 +261,47 @@ function testReproducibility()
     second = alev4.applyNoise(expectation, cfg, 505);
     assert(isequal(first.raw_dn, second.raw_dn), 'Noise-disabled RAW must be seed-independent.');
     assert(isequal(first.collected_electrons, second.collected_electrons), 'Noise-disabled charge must be seed-independent.');
-    alev4.applyNoise(expectation, cfg, 0);
-    alev4.applyNoise(expectation, cfg, 4294967295);
+end
+
+function testBoundarySeeds()
+    cfg = alev4.createBaselineSensor(struct('image_size', [5 7], ...
+        'shot_noise', true, 'read_noise_e', 3));
+    % Both Poisson regimes and a zero-mean column share each seeded run.
+    expectation = repmat([0 0.25 9.999 10 10.001 42 100], 5, 1);
+    for seed = [0 4294967295]
+        rng(988, 'twister');
+        rand(2, 3); randn(3, 2); % Exercise both caller streams before capture.
+        before = rng;
+        first = alev4.applyNoise(expectation, cfg, seed);
+        assert(isequal(before, rng()), ...
+            'Noisy boundary-seed success must restore caller RNG state.');
+        assert(first.seed == seed, 'Boundary seed must be retained exactly.');
+        assert(any(first.collected_electrons(:) ~= expectation(:)), ...
+            'Boundary-seed regression must exercise nontrivial shot noise.');
+        assert(any(first.read_electrons(:) ~= first.charge_electrons(:)), ...
+            'Boundary-seed regression must exercise Gaussian read noise.');
+        second = alev4.applyNoise(expectation, cfg, seed);
+        assert(isequal(first, second), ...
+            'Boundary seeds must reproduce the complete noisy result.');
+        assert(isequal(before, rng()), ...
+            'Repeated boundary-seed simulation must restore caller RNG state.');
+
+        % Only the final gain changes: identical seeded shot/read draws now
+        % overflow after both random stages. This is not a preflight error.
+        assert(any(abs(first.read_electrons(:)) > 1), ...
+            'The seeded fixture must produce a signal that overflows realmax gain.');
+        overflow_cfg = cfg;
+        overflow_cfg.gain_dn_per_e = realmax;
+        assertError(@() alev4.applyNoise(expectation, overflow_cfg, seed), ...
+            'ALEV4:ReadoutOverflow');
+        assert(isequal(before, rng()), ...
+            'Boundary-seed late readout failure must restore both caller RNG streams.');
+        after_failure = alev4.applyNoise(expectation, cfg, seed);
+        assert(isequal(first, after_failure), ...
+            'A late readout failure must not affect subsequent seeded results.');
+        assert(isequal(before, rng()), ...
+            'Post-failure boundary-seed simulation must preserve caller RNG state.');
+    end
 end
 
 function count = testRejection()

@@ -105,10 +105,12 @@ class ArtifactTests(unittest.TestCase):
             self.mutate(self.report, change)
             self.rejects()
 
-    def test_configuration_and_spectral_gates_are_required(self):
+    def test_every_numerical_gate_is_required(self):
         original = self.report.read_bytes()
-        for gate in ("config_edges", "spectral_properties"):
-            self.assertIn(gate, verifier.GATES)
+        required_gates = {"core", "config_edges", "spectral_properties", "input_representation",
+                          "numerical_edges", "poisson_edges", "raw_io", "demo_contract", "provenance_tests", "iset"}
+        self.assertEqual(set(verifier.GATES), required_gates)
+        for gate in sorted(required_gates):
             for failure in ("missing", "passed_false", "status_failed"):
                 with self.subTest(gate=gate, failure=failure):
                     self.report.write_bytes(original)
@@ -122,6 +124,16 @@ class ArtifactTests(unittest.TestCase):
                     write_json(self.report, value)
                     with self.assertRaisesRegex(verifier.ArtifactError, gate):
                         verifier.verify_outputs(self.root)
+
+    def test_spectral_bin_edges_must_be_positive_and_finite(self):
+        cfg = json.loads(self.summary.read_text())["sensor"]
+        cfg.update(wavelength_nm=[1e300], bin_width_nm=[1e299], qe=[[.2, .4, .6]])
+        verifier.config(cfg)
+        for wavelength, width in ((1.6e308, 1e308), (50, 100), (50, 101)):
+            with self.subTest(wavelength=wavelength, width=width):
+                cfg.update(wavelength_nm=[wavelength], bin_width_nm=[width])
+                with self.assertRaisesRegex(verifier.ArtifactError, "Invalid spectral bins"):
+                    verifier.config(cfg)
 
     def test_source_mismatch(self):
         with self.assertRaises(verifier.ArtifactError):

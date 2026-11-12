@@ -6,8 +6,8 @@ function result = simulateExposure(photon_irradiance, sensor, exposure_s, seed)
 %   This is a generic single-gain model, not a calibrated ALEV4 model.
 %   Noise-free expectations are retained BEFORE full-well and ADC clipping.
 %   Exact zero collection/irradiance endpoints bypass spectral arithmetic,
-%   but still undergo readout noise. Unsupported floating-point underflow or
-%   overflow raises an error rather than masquerading as a zero exposure.
+%   but still undergo readout noise. Collection-factor underflow to zero and
+%   overflowing spectral accumulations raise explicit numeric-range errors.
 %   Sparse one-bin images and other accepted numeric inputs are normalized
 %   to dense doubles before integration; retained expectations are dense.
     sensor = alev4.createBaselineSensor(sensor);

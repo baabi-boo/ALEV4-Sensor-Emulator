@@ -24,7 +24,7 @@ SHA_FIELDS = ("repository_head", "isetcam_head", "isethdrsensor_head")
 BRACKETS = dict(zip(("exposure_025x", "exposure_050x", "exposure_100x", "exposure_200x", "exposure_400x"), (0.25, 0.5, 1.0, 2.0, 4.0)))
 NAMES = {"black", "flat", "ramp", "checker", "iset_scene", *BRACKETS}
 GATES = ("core", "config_edges", "spectral_properties", "input_representation", "numerical_edges",
-         "poisson_edges", "raw_io", "provenance_tests", "iset")
+         "poisson_edges", "raw_io", "demo_contract", "provenance_tests", "iset")
 
 
 class ArtifactError(ValueError):
@@ -119,10 +119,15 @@ def config(value):
     bins = value["bin_width_nm"] if isinstance(value["bin_width_nm"], list) else [value["bin_width_nm"]]
     wave = value["wavelength_nm"] if isinstance(value["wavelength_nm"], list) else [value["wavelength_nm"]]
     require(len(wave) == len(bins) and len(wave) > 0, "Spectral shape mismatch")
+    previous_upper = None
     for i, (w, b) in enumerate(zip(wave, bins)):
-        require(number(b, "bin width") > 0 and number(w, "wavelength") > b/2, "Invalid spectral bins")
+        w, b = number(w, "wavelength"), number(b, "bin width")
+        lower, upper = w-b/2, w+b/2
+        require(b > 0 and 0 < lower and math.isfinite(lower) and math.isfinite(upper), "Invalid spectral bins")
         if i:
-            require(w > wave[i-1] and wave[i-1] + bins[i-1]/2 <= w-b/2 + 8*math.ulp(w), "Unordered/overlapping spectral bins")
+            tolerance = 8*max(math.ulp(previous_upper), math.ulp(lower))
+            require(w > wave[i-1] and previous_upper-lower <= tolerance, "Unordered/overlapping spectral bins")
+        previous_upper = upper
     qe = value["qe"]
     if len(wave) == 1 and isinstance(qe, list) and len(qe) == 3 and not isinstance(qe[0], list):
         qe = [qe]

@@ -39,6 +39,7 @@ function report = run_phase1_tests(output_dir, require_iset)
         report.numerical_edges = test_numerical_edges();
         report.poisson_edges = test_poisson_edges();
         report.raw_io = test_raw_io();
+        report.demo_contract = test_demo_contract();
         if require_iset
             report.iset = test_iset_integration();
             report.phase1_passed = true;

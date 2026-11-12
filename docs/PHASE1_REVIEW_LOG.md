@@ -43,6 +43,15 @@ execution is not claimed unless separately recorded.
 | 33 | Input portability fixes | Normalized accepted sparse inputs, encoded reports as UTF-8 and added seven test groups |
 | 34 | Usage audit | Found missing stale-report command and ambiguous retained-readout documentation |
 | 35 | RAW contract audit | Independently decoded ten real artifacts; requested degenerate-shape regressions |
+| 36 | Usage fixes | Aligned full acceptance commands and documented readout meaning and physical bounds |
+| 37 | Degenerate RAW shapes | Added twelve round trips across three shapes and all four CFA patterns |
+| 38 | RNG isolation audit | Confirmed guarded streams; requested noisy seed-boundary and demo-state tests |
+| 39 | ISET state review | Independently checked session/preference restoration on success and late failure |
+| 40 | Evidence verifier review | Found extreme upper-bin-edge mismatch and missing explicit new-gate regression |
+| 41 | Seed boundary tests | Added noisy endpoint-seed repeatability and post-randomness failure restoration tests |
+| 42 | Demo contract tests | Added nine-frame core-only inventory, RNG and no-overwrite byte-preservation tests |
+| 43 | Verifier alignment | Matched spectral-edge validation and required every numerical gate independently |
+| 44 | Physics acceptance review | Confirmed units and readout order; narrowed underflow documentation to actual guarantee |
 
 Further requested review tasks and final executable evidence are recorded as
 they complete. A green intermediate run does not close the review effort.
