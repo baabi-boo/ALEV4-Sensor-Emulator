@@ -1,6 +1,6 @@
 # Architecture and boundaries
 
-The main repository is the **integration and future ALEV4-specific implementation layer**. It does not fork, rewrite, or vendor the full history of ISETCam or ISETHdrsensor. Phase 1 currently provides a generic single-gain baseline; full acceptance remains pending the expanded verification run.
+The main repository is the **integration and future ALEV4-specific implementation layer**. It does not fork, rewrite, or vendor the full history of ISETCam or ISETHdrsensor. Phase 1 provides an acceptance-tested generic single-gain baseline; the [completion report](PHASE1_COMPLETION.md) records its verified scope and exact source revision.
 
 ## Implemented Phase 1 path
 

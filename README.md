@@ -2,7 +2,7 @@
 
 A research-oriented, **independent and unaffiliated** project working toward an ALEV4-inspired camera sensor model.
 
-> **Phase 1 status: implemented; full acceptance pending.** The generic, single-gain Bayer baseline and its first core/ISETCam tests have executed successfully in GNU Octave 8.4.0. The expanded acceptance workflow is still being verified. There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. MATLAB execution has not yet been verified.
+> **Phase 1 status: complete and acceptance-tested in GNU Octave 8.4.0.** All 91 numerical test groups, 29 Python tests, failure-reporting checks, genuine ISETCam integration and repeated-process artifact checks passed. See the [completion report](docs/PHASE1_COMPLETION.md) for the exact tested revision and retained evidence. There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution has not yet been verified.
 
 ## What Phase 1 implements
 
@@ -56,6 +56,8 @@ LogC4 is a post-capture encoding, **not** a replacement for sensor physics. Neit
 
 ## Documentation
 
+- [Phase 1 completion report and evidence](docs/PHASE1_COMPLETION.md)
+- [60-agent implementation and review ledger](docs/PHASE1_REVIEW_LOG.md)
 - [Phase 1 usage and artifact format](docs/PHASE1_USAGE.md)
 - [Numerical contract](docs/PHASE1_DESIGN.md)
 - [Architecture and scope](docs/ARCHITECTURE.md)

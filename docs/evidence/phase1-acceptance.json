@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "scope": "Phase 1 generic uncalibrated single-gain Bayer baseline",
+  "status": "passed",
+  "tested_repository": "baabi-boo/ALEV4-Sensor-Emulator",
+  "tested_commit": "708517d9faabf2052b60ddb38a3497cd8879942f",
+  "workflow_run": 43131574021,
+  "workflow_job": 130896713454,
+  "workflow_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43131574021",
+  "runtime": {
+    "name": "GNU Octave",
+    "version": "8.4.0",
+    "native_matlab_executed": false
+  },
+  "numerical_suites": {
+    "provenance_tests": 9,
+    "core": 13,
+    "config_edges": 4,
+    "spectral_properties": 6,
+    "input_representation": 7,
+    "fixture_edges": 7,
+    "numerical_edges": 6,
+    "poisson_edges": 6,
+    "raw_io": 14,
+    "demo_contract": 5,
+    "iset": 14
+  },
+  "numerical_group_count": 91,
+  "python_unit_tests": 29,
+  "stale_report_subprocess_check": "passed",
+  "dependency_checks": {
+    "before": "passed",
+    "after": "passed",
+    "isetcam": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+    "isethdrsensor": "ee2dacceb456516de3ecefadd72955154cf3cabe"
+  },
+  "demo": {
+    "frames": 10,
+    "files": 31,
+    "fresh_process_repeat": "byte-identical, verified in the linked CI job",
+    "downloaded_primary_independently_verified": true,
+    "primary_files_sha256": {
+      "black.json": "37f3f9558e8e097c37c2e5560d5d92eb1a51467df7703aeb4bbcf652387ccc28",
+      "black.pgm": "01089e0a609319ea4203168a329dee6e31c887b594d7a8ddce3b6e9107f634df",
+      "black.raw": "1e7df09185dd29843c87ca8a5827b37a9c7cdfe5d3ee1071df0c37e6b5c24ac4",
+      "checker.json": "4732ef42f1eb111b402c051f5539bc13d8fecf15ca619d26a70bff8a6f980116",
+      "checker.pgm": "ed69999637322338e5b53b090361d602f04bc57e83a3a50493f25e2ea44138e1",
+      "checker.raw": "50c4ec759b24f828009fd44c95f0adebec0dc7a11f09952c1b85331bfcbf4f3a",
+      "exposure_025x.json": "fec8d5caaea22e9ba586fbfb5540413dd0784fa373e2336974a80f9a70985700",
+      "exposure_025x.pgm": "536e4c4c261296b13a5286f6e34096be0138ddf24d0e51e72a11f5a0331bb52c",
+      "exposure_025x.raw": "f04aab3956ba6e60c5759ba219e2e54e36d34b126db7e72eaec511d3d8a01628",
+      "exposure_050x.json": "fbbec19d142998f7df2a2eee59c7f20e1433177aa0159db4fe3c9273d55bdf67",
+      "exposure_050x.pgm": "cec70c98ee51705955264ba7aa6ee15dc51542428db1781a4cb1adada366a593",
+      "exposure_050x.raw": "3bc5d327531655d05dad73d451aaae499aaeab0df5792199623967727f15c036",
+      "exposure_100x.json": "5e26df1c8c412953a34f1ba5e9edc7e342591c61aaa5801d071116a75911f5e9",
+      "exposure_100x.pgm": "4a2aede0c453f0d4dc088066caf28a9c2c08db0b33acdf58548060b4520681ba",
+      "exposure_100x.raw": "db624d1842aea204345e945904a5fbec75d6095e14c03e39e7e961d24a3ade5d",
+      "exposure_200x.json": "478eef01cb321fe2985de0e1288ea5692e4f165cc53d1afb06802ddc02e2eead",
+      "exposure_200x.pgm": "948dc35046b7ba794306368193f3c910521cbedbb8a35c6d74511c22e6a86f92",
+      "exposure_200x.raw": "0cc922d6e14589e70e6bf6ea6103fe8d68541cf8ed46e9b50cdb4d05fe4dc613",
+      "exposure_400x.json": "52c5bdbbe3ab650308225b28bed6204ab314173dec76a82174514f7ecdca286b",
+      "exposure_400x.pgm": "e2bd3667264913d4a2f7997f9782f907dded2041dec668305ae732f69a9fd5e9",
+      "exposure_400x.raw": "d90105e4c9a8470dce6e179402d72aff0f435266e0d1aedb171271b7b6a54a12",
+      "flat.json": "e22e87a39e2822406337caf76c1033db9ad38ed399fd7a793c4893485d817835",
+      "flat.pgm": "b4eecb695404710aeafafe9917a917b7a536e3aac94910f9a7301ae7ab7bfcfe",
+      "flat.raw": "9e2ffa78f9d8be24e4fbe6b6386dddefa351d3c66e6c2ef10da0972a9e5ba8ca",
+      "iset_scene.json": "6a8b2509c31b0d4c9f573e7a4028008edc10221e1d39e5f5e216925338015441",
+      "iset_scene.pgm": "1cc669514ac19e1ae33413c775519a6e89fa561d3a06709aa79b7a001e4bcc18",
+      "iset_scene.raw": "2b3041c8dc9fb35ce31f3f5f9967632444ff773e42818a63ea7ed614ccaee6fe",
+      "phase1-demo-summary.json": "2f7fcc4c8812ec7f906d4a2356cf321dab682ea87bf4798a45b10a03561ab4a5",
+      "ramp.json": "d697bc74498401e3fd44f3cec01ead79f2f714a8e306c886e41f9fccafdeca17",
+      "ramp.pgm": "dac99d1a65f6a42502fbbdb9e04c26296533db369cd9dedcce07c7b1c2196f52",
+      "ramp.raw": "89820adaf6e8e6d9130cca870f929862ad812742d50fa81229d5598978bd1528"
+    }
+  },
+  "artifact": {
+    "id": 13905467586,
+    "archive_sha256": "d5a202ba02a687c2c20b2a264ad4fb4f97b1d727dfc7997164f1b21d92fc1046",
+    "retention_days": 14
+  },
+  "evidence_boundary": "This receipt and the adjacent reports describe the exact tested commit above. Documentation-only descendants may refer to it; rerun CI for any changed implementation. Source lint is not runtime proof.",
+  "limitations": [
+    "No calibrated ALEV4 equivalence or demonstrated 17-stop performance",
+    "No authentic ARRIRAW or calibrated color output",
+    "ISET reference is a controlled uniform field, not arbitrary-scene resampling",
+    "Native MATLAB and cross-runtime identical RNG streams are unverified",
+    "Format bounds are not large-frame performance guarantees"
+  ]
+}
+

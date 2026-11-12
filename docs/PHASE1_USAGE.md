@@ -1,6 +1,6 @@
 # Phase 1 usage
 
-Phase 1 is implemented; full acceptance is pending. The first core/ISETCam tests have run successfully in GNU Octave 8.4.0. MATLAB execution is not yet verified. All examples below describe a generic, uncalibrated, single-gain sensor, not an ALEV4-equivalent capture.
+Phase 1 is complete and acceptance-tested in GNU Octave 8.4.0; see the [completion report](PHASE1_COMPLETION.md) for the exact tested revision and evidence. Native MATLAB execution is not yet verified. All examples below describe a generic, uncalibrated, single-gain sensor, not an ALEV4-equivalent capture.
 
 ## Prerequisites and dependency checks
 
@@ -36,7 +36,7 @@ python3 scripts/verify_phase1_artifacts.py outputs/run-01 --expected-commit "$(g
 python3 scripts/verify_submodules.py --require-checkout
 ```
 
-The failure-runner check confirms that a failed run cannot leave a stale passing report. The two demo commands run in separate processes. The independent Python checker validates the full report, ten frame triplets, analytic exposure-bracket expectations, and matching same-runtime files. A report alone is not a substitute for these artifact checks. CI uploads the validation report and primary demo directory; inspect the job conclusion as well as any uploaded failure artifacts.
+The failure-runner check confirms that numerical/setup failures cannot preserve an earlier passing report after the initial invalidation write succeeds. If storage prevents that initial write, the process fails but the old file may remain; always check the current process/job result. The two demo commands run in separate processes. The independent Python checker validates the full report, ten frame triplets, analytic exposure-bracket expectations, and matching same-runtime files. A report alone is not a substitute for these artifact checks. CI uploads the validation report and primary demo directory; inspect the job conclusion as well as any uploaded failure artifacts.
 
 ## MATLAB commands
 

@@ -1,6 +1,6 @@
 # Development roadmap
 
-**Phase 0 is established. Phase 1 is implemented; full acceptance is pending.** The first core/ISETCam test run passed in GNU Octave 8.4.0, but the expanded gates must pass together before Phase 1 is marked complete. No MATLAB runtime pass or ALEV4 calibration is claimed. A phase passes only when its evidence and tests exist; numbered targets are not completion claims.
+**Phase 0 is established. Phase 1 is complete and acceptance-tested in GNU Octave 8.4.0.** All expanded numerical, RAW, provenance, integration and repeated-process artifact gates passed together on the revision identified in the [completion report](PHASE1_COMPLETION.md). No native MATLAB runtime pass or ALEV4 calibration is claimed. A phase passes only when its evidence and tests exist; numbered future targets are not completion claims.
 
 | Phase | Goal | Acceptance evidence |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ The implementation now contains the generic spectral sensor, retained photoelect
 
 The core-only entrypoint intentionally reports `phase1_passed=false`. A runtime-installation probe, source lint, or an attractive preview cannot substitute for the full acceptance gate. See [usage](PHASE1_USAGE.md) and [validation](VALIDATION.md).
 
-Once these gates pass, the next development phase is **Phase 2: independent simultaneous high-gain and low-gain paths**. The remaining phase goals and calibration requirements are unchanged.
+These gates have passed for the recorded Phase 1 revision. The next development phase is **Phase 2: independent simultaneous high-gain and low-gain paths**. The remaining phase goals and calibration requirements are unchanged.
 
 ## Calibration gate
 

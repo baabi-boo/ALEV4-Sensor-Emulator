@@ -25,8 +25,10 @@ function report = run_phase1_tests(output_dir, require_iset)
         report.runtime = 'MATLAB';
     end
     destination = fullfile(output_dir, 'phase1-validation.json');
-    % Invalidate any earlier success BEFORE executing new tests. Failure or
-    % interruption cannot leave a stale pass report for the current run.
+    % Invalidate any earlier success BEFORE executing new tests. After this
+    % write succeeds, later failures cannot leave the previous pass intact.
+    % If storage prevents this initial write, the invocation itself fails;
+    % an old report must never substitute for the current process result.
     writeReport(destination, report);
     try
         setup_project(require_iset);

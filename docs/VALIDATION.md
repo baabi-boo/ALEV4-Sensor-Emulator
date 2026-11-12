@@ -2,7 +2,7 @@
 
 ## Current evidence boundary
 
-Phase 1 is **implemented; full acceptance is pending**. The first core numerical and ISETCam integration tests passed in GNU Octave 8.4.0. This does not yet establish a pass for the expanded RAW, provenance, edge-case, artifact, and repeated-process workflow. MATLAB execution has not been verified. Source lint is useful but is not runtime evidence.
+Phase 1 is **complete and acceptance-tested in GNU Octave 8.4.0**. The full workflow passed 91 numerical groups across 11 suites, 29 Python tests, the stale-report failure regression, genuine ISETCam integration, independent artifact validation and byte-identical repeated-process demos. The [completion report](PHASE1_COMPLETION.md) identifies the exact tested revision and preserves numerical evidence. Native MATLAB execution has not been verified. Source lint is useful but is not runtime evidence.
 
 ## Scientific targets
 
@@ -26,7 +26,7 @@ Poisson moment tests use fixed seeds and sample-size-aware seven-standard-error 
 
 The ISET fixture's comparison tolerance is `5e-5` relative to the peak reference magnitude (with a unit floor), accommodating upstream single-precision operations. Its controlled uniform scene avoids conflating spectral integration with nonuniform spatial regridding. It is not validation of arbitrary optical scenes.
 
-Run the full commands in [PHASE1_USAGE.md](PHASE1_USAGE.md). `run_phase1_tests(..., false)` deliberately leaves `phase1_passed=false`; missing dependencies or skipped ISET work cannot become a full pass. The runner invalidates an earlier success report before executing new tests and writes a failed status if a test raises an error.
+Run the full commands in [PHASE1_USAGE.md](PHASE1_USAGE.md). `run_phase1_tests(..., false)` deliberately leaves `phase1_passed=false`; missing dependencies or skipped ISET work cannot become a full pass. After its initial invalidation write succeeds, the runner cannot preserve the earlier success report when a numerical/setup test fails. Storage failures themselves produce a failed invocation; always check the current process/job result as well as any report file.
 
 ## Tests reserved for later phases
 
