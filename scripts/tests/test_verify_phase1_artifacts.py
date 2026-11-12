@@ -107,7 +107,7 @@ class ArtifactTests(unittest.TestCase):
 
     def test_every_numerical_gate_is_required(self):
         original = self.report.read_bytes()
-        required_gates = {"core", "config_edges", "spectral_properties", "input_representation",
+        required_gates = {"core", "config_edges", "spectral_properties", "input_representation", "fixture_edges",
                           "numerical_edges", "poisson_edges", "raw_io", "demo_contract", "provenance_tests", "iset"}
         self.assertEqual(set(verifier.GATES), required_gates)
         for gate in sorted(required_gates):

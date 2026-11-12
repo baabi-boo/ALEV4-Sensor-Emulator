@@ -137,6 +137,8 @@ Every exported frame has:
 
 Exports and imports enforce a maximum of **100 million pixels** and **2,000,000 UTF-8 manifest bytes**. The writer refuses existing `.raw` or `.json` destinations and cleans its ordinary failed temporary writes. Publication of two files is not a transactional filesystem operation; concurrent writers to the same base name are unsupported.
 
+Git provenance is a bounded metadata observation, not a cleanliness or Git-object verification. The observer supports SHA-1 detached HEADs and ordinary, submodule, or linked-worktree refs using ASCII letters, digits, underscores, periods, slashes and hyphens, with malformed path components rejected. `main` and `phase1-bayer-baseline` are supported. Otherwise valid Git names containing `+` or non-ASCII characters are outside this observer's scope and produce an empty, unavailable revision rather than a guessed SHA. Individual metadata files are limited to 8 MiB; larger files likewise produce unavailable provenance. Full acceptance requires available revisions and the separate strict checkout-integrity checks.
+
 The demo additionally writes `name.pgm`, a fixed-ADC-scale grayscale preview of the Bayer mosaic, and `phase1-demo-summary.json`. Its four fixtures are `black`, `flat`, `ramp`, and `checker`. Five flat-field brackets use exposure multipliers `0.25`, `0.5`, `1`, `2`, and `4`; the full run adds `iset_scene`. Upper brackets exercise clipping. Preview brightness, spatial variance, and a synthetic RAW extension do not establish camera color quality, temporal noise calibration, exposure latitude, or ARRIRAW compatibility.
 
 Full acceptance requires a passing current workflow, its numerical report, and independently verified artifacts. Real-camera calibration remains Phase 6.

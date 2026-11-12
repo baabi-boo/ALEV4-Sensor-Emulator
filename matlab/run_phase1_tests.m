@@ -36,6 +36,7 @@ function report = run_phase1_tests(output_dir, require_iset)
         report.config_edges = test_config_edges();
         report.spectral_properties = test_spectral_properties();
         report.input_representation = test_input_representation();
+        report.fixture_edges = test_fixture_edges();
         report.numerical_edges = test_numerical_edges();
         report.poisson_edges = test_poisson_edges();
         report.raw_io = test_raw_io();

@@ -23,7 +23,7 @@ MAX_PIXELS = 100_000_000
 SHA_FIELDS = ("repository_head", "isetcam_head", "isethdrsensor_head")
 BRACKETS = dict(zip(("exposure_025x", "exposure_050x", "exposure_100x", "exposure_200x", "exposure_400x"), (0.25, 0.5, 1.0, 2.0, 4.0)))
 NAMES = {"black", "flat", "ramp", "checker", "iset_scene", *BRACKETS}
-GATES = ("core", "config_edges", "spectral_properties", "input_representation", "numerical_edges",
+GATES = ("core", "config_edges", "spectral_properties", "input_representation", "fixture_edges", "numerical_edges",
          "poisson_edges", "raw_io", "demo_contract", "provenance_tests", "iset")
 
 

@@ -89,9 +89,42 @@ function report = test_provenance()
     end
     assert(rejected, 'Invalid root type was not rejected.');
 
+    % The observer deliberately supports only a restricted ASCII ref subset.
+    % A valid Git branch containing '+' is unsupported, not guessed from its
+    % present loose ref. UTF-8 ref bytes likewise remain explicitly unknown.
+    unsupported = fullfile(root, 'unsupported-refs');
+    writeText(fullfile(unsupported, '.git', 'refs', 'heads', 'review+phase1'), sha_a);
+    unsupported_refs = {'refs/heads/review+phase1', ...
+        ['refs/heads/feature/caf' char([195 169])]};
+    for k = 1:numel(unsupported_refs)
+        writeText(fullfile(unsupported, '.git', 'HEAD'), ...
+            ['ref: ' unsupported_refs{k} sprintf('\n')]);
+        p = alev4.sourceProvenance(unsupported);
+        assert(isempty(p.repository_head), 'Unsupported ref spelling must remain unavailable.');
+    end
+
+    % Exercise the actual byte boundary. A valid SHA/ref at the beginning of
+    % an oversized file must not be accepted after a silently truncated read.
+    bounded = fullfile(root, 'bounded-metadata');
+    metadata_limit = 8 * 1024 * 1024;
+    limit_head = [sha_d repmat(' ', 1, metadata_limit - numel(sha_d))];
+    writeText(fullfile(bounded, '.git', 'HEAD'), limit_head);
+    p = alev4.sourceProvenance(bounded);
+    assert(strcmp(p.repository_head, sha_d), 'Metadata exactly at the byte limit should be observed.');
+    writeText(fullfile(bounded, '.git', 'HEAD'), [limit_head ' ']);
+    p = alev4.sourceProvenance(bounded);
+    assert(isempty(p.repository_head), 'Oversized HEAD must remain unavailable.');
+    writeText(fullfile(bounded, '.git', 'HEAD'), sprintf('ref: refs/heads/main\n'));
+    packed_prefix = sprintf('%s refs/heads/main\n#', sha_c);
+    writeText(fullfile(bounded, '.git', 'packed-refs'), ...
+        [packed_prefix repmat(' ', 1, metadata_limit + 1 - numel(packed_prefix))]);
+    p = alev4.sourceProvenance(bounded);
+    assert(isempty(p.repository_head), 'Oversized packed refs must not yield their valid leading SHA.');
+
     tests = {'missing_metadata', 'loose_branch', 'detached_submodules', ...
         'packed_refs', 'linked_worktree_commondir', 'symbolic_chains_and_cycles', ...
-        'invalid_roots_and_metadata'};
+        'invalid_roots_and_metadata', 'unsupported_ref_spellings', ...
+        'metadata_byte_limit'};
     report = struct('suite', 'provenance', 'passed', true, ...
         'test_count', numel(tests), 'tests', {tests});
     fprintf('PASS: Git provenance, %d test groups.\n', numel(tests));

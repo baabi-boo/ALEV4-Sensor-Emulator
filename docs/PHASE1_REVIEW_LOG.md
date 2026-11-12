@@ -52,6 +52,15 @@ execution is not claimed unless separately recorded.
 | 42 | Demo contract tests | Added nine-frame core-only inventory, RNG and no-overwrite byte-preservation tests |
 | 43 | Verifier alignment | Matched spectral-edge validation and required every numerical gate independently |
 | 44 | Physics acceptance review | Confirmed units and readout order; narrowed underflow documentation to actual guarantee |
+| 45 | CI acceptance audit | Confirmed required runtime/dependencies, failure propagation and independent-process repeat |
+| 46 | Provenance review | Confirmed Git layouts; requested size-bound regression and ref-name limitation documentation |
+| 47 | Fixture review | Independently checked bracket means, saturation interpretation and all ten preview payloads |
+| 48 | Runtime/resource scope | Checked Python 3.10 grammar, MATLAB lint and documented format versus memory limits |
+| 49 | Provenance boundaries | Added exact/oversized 8 MiB metadata and unsupported-ref-name regressions |
+| 50 | Fixture edge tests | Added seven groups covering degenerate geometry, amplitudes, checker orientation and invalid inputs |
+| 51 | Public API error review | Confirmed shape/type/range rejection and documented finite-arithmetic behavior |
+| 52 | Scientific claims review | Confirmed scope boundaries and refined the description of spatial sample variance |
+| 53 | Acceptance inventory | Mapped all eleven required suites to 91 expected groups; independently ran 29 Python tests |
 
 Further requested review tasks and final executable evidence are recorded as
 they complete. A green intermediate run does not close the review effort.
