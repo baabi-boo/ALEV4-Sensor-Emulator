@@ -2,6 +2,7 @@ function samples = samplePoisson(lambda)
 %SAMPLEPOISSON Draw Poisson counts without a Statistics Toolbox dependency.
 %   X = alev4.samplePoisson(LAMBDA) returns a double array of nonnegative
 %   integer counts, preserving the shape of the real, nonnegative 2-D input.
+%   Accepted numeric inputs, including sparse matrices, become dense doubles.
 %   This function consumes the caller's uniform RNG stream. To obtain seeded
 %   simulation with RNG isolation, call alev4.applyNoise instead.
 %
@@ -25,7 +26,7 @@ function samples = samplePoisson(lambda)
             'Poisson means must be a finite real matrix in [0, 1e9].');
     end
 
-    lambda = double(lambda);
+    lambda = full(double(lambda));
     samples = zeros(size(lambda));
     flatMeans = lambda(:);
 

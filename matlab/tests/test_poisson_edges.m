@@ -2,12 +2,16 @@ function report = test_poisson_edges()
 %TEST_POISSON_EDGES Exercise sampler branches, mixed indexing and endpoints.
 %   REPORT = TEST_POISSON_EDGES() throws on any failed assertion. The suite
 %   uses only ordinary MATLAB/Octave numeric functions, not a statistics
-%   toolbox. Fixed seeds and seven-standard-error bounds limit flakiness.
+%   toolbox. Moment checks use seven-standard-error tolerances; PMF checks
+%   use conservative Bernstein bounds with alpha=1e-12 per check. Fixed
+%   seeds preserve reproducibility, not identical cross-runtime streams.
 %   These distribution checks are evidence, not a proof of exact arithmetic.
     caller_rng = rng;
     restore_rng = onCleanup(@() rng(caller_rng)); %#ok<NASGU>
     names = {'mixed_means_nonsquare_indexing', ...
         'threshold_probability_continuity', ...
+        'threshold_third_central_moment', ...
+        'rounded_gaussian_discriminator', ...
         'supported_upper_mean_endpoint', ...
         'zero_means_consume_no_random_numbers'};
 
@@ -30,16 +34,39 @@ function report = test_poisson_edges()
 
     moment_metrics = struct([]);
     threshold_metrics = struct([]);
+    third_moment_metrics = struct([]);
     for k = 1:numel(means)
         x = mixed_samples(labels == k);
         assert(numel(x) == samples_per_mean, 'The mixed fixture has incorrect group counts.');
         moment_metrics(k) = checkMoments(x, means(k)); %#ok<AGROW>
         if k >= 4 && k <= 6
-            % A rounded Gaussian can approximate moments but not these
-            % individual Poisson probabilities near the algorithm switch.
+            % Mean/variance and finite PMF windows alone can accept a
+            % rounded Gaussian. The known-mean third moment below checks
+            % the Poisson asymmetry around the branch boundary as well.
             threshold_metrics(end+1) = checkProbabilities(x, means(k), [5 9 10 11 15]); %#ok<AGROW>
+            third = thirdMoment(x, means(k));
+            assert(third.within_poisson_bound, ...
+                sprintf('Poisson third central moment at lambda=%g exceeds its finite-sample bound.', means(k)));
+            third_moment_metrics(end+1) = third; %#ok<AGROW>
         end
     end
+
+    % Test the discriminator itself against a deliberately incorrect
+    % rounded-Gaussian reference, without replacing the production sampler.
+    % At lambda=10 its mean/variance can fit the old windows, while its near
+    % symmetry does not match the Poisson third central moment of 10.
+    rng(1704, 'twister');
+    reference_lambda = 10;
+    gaussian_reference = max(round(reference_lambda + ...
+        sqrt(reference_lambda) * randn(samples_per_mean, 1)), 0);
+    reference_moments = checkMoments(gaussian_reference, reference_lambda);
+    reference_third = thirdMoment(gaussian_reference, reference_lambda);
+    assert(~reference_third.within_poisson_bound, ...
+        'The third-moment discriminator failed to reject the rounded-Gaussian reference.');
+    reference_metrics = struct('description', ...
+        'Fixed-seed rounded/clamped Gaussian test reference, not the production sampler', ...
+        'seed', 1704, 'ordinary_moments', reference_moments, ...
+        'third_moment', reference_third, 'rejected_by_third_moment', true);
 
     rng(1702, 'twister');
     upper_samples = alev4.samplePoisson(1e9 * ones(200, 250));
@@ -67,6 +94,8 @@ function report = test_poisson_edges()
         'test_count', numel(names), 'tests', {names}, ...
         'samples_per_mean', samples_per_mean, 'mixed_shape', size(mixed_means), ...
         'mixed_moments', moment_metrics, 'threshold_probabilities', threshold_metrics, ...
+        'threshold_third_moments', third_moment_metrics, ...
+        'rounded_gaussian_reference', reference_metrics, ...
         'upper_endpoint', upper_metrics, 'zero_rng_unchanged', true, ...
         'runtime_version', version());
     fprintf('PASS: Poisson edges, %d test groups.\n', numel(names));
@@ -94,7 +123,13 @@ function metrics = checkProbabilities(x, lambda, counts)
     n = numel(x);
     expected = exp(-lambda + counts * log(lambda) - gammaln(counts + 1));
     observed = zeros(size(counts));
-    tolerances = 7 * sqrt(expected .* (1 - expected) / n) + 1 / n;
+    alpha = 1e-12;
+    log_tail = log(2 / alpha);
+    % Each frequency is a binomial proportion under the stated model.
+    % This two-sided Bernstein bound does not rely on a normal approximation
+    % and remains conservative for bins with much less than one expected hit.
+    tolerances = sqrt(2 * expected .* (1 - expected) * log_tail / n) + ...
+        2 * log_tail / (3 * n);
     for k = 1:numel(counts)
         observed(k) = sum(x == counts(k)) / n;
     end
@@ -102,5 +137,23 @@ function metrics = checkProbabilities(x, lambda, counts)
         sprintf('Poisson PMF at lambda=%g is inconsistent near the sampler switch.', lambda));
     metrics = struct('lambda', lambda, 'samples', n, 'counts', counts, ...
         'expected_probabilities', expected, 'observed_probabilities', observed, ...
-        'probability_tolerances', tolerances);
+        'probability_tolerances', tolerances, ...
+        'probability_alpha_per_check', alpha, 'probability_bound', 'Bernstein');
+end
+
+function metrics = thirdMoment(x, lambda)
+% Use the KNOWN mean lambda, not a fitted sample mean. For Poisson,
+% E[(X-lambda)^3]=lambda and Var((X-lambda)^3)=mu6-mu3^2
+% = lambda + 24*lambda^2 + 15*lambda^3. The mean of N independent
+% such terms therefore has the standard error below.
+    x = x(:);
+    n = numel(x);
+    measured = mean((x - lambda).^3);
+    standard_error = sqrt((lambda + 24 * lambda^2 + 15 * lambda^3) / n);
+    tolerance = 7 * standard_error;
+    metrics = struct('lambda', lambda, 'samples', n, ...
+        'expected_third_central_moment', lambda, ...
+        'measured_third_central_moment', measured, ...
+        'standard_error', standard_error, 'tolerance', tolerance, ...
+        'within_poisson_bound', abs(measured - lambda) <= tolerance);
 end

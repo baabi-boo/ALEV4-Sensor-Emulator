@@ -35,6 +35,7 @@ function report = run_phase1_tests(output_dir, require_iset)
         report.core = test_phase1_core();
         report.config_edges = test_config_edges();
         report.spectral_properties = test_spectral_properties();
+        report.input_representation = test_input_representation();
         report.numerical_edges = test_numerical_edges();
         report.poisson_edges = test_poisson_edges();
         report.raw_io = test_raw_io();
@@ -58,11 +59,24 @@ function report = run_phase1_tests(output_dir, require_iset)
 end
 
 function writeReport(destination, report)
-    fid = fopen(destination, 'w');
-    if fid < 0, error('ALEV4:ReportWrite', 'Cannot open validation report.'); end
-    cleanup = onCleanup(@() fclose(fid)); %#ok<NASGU>
+    % JSON character data can contain localized errors or non-ASCII paths.
+    % Encode explicitly so the report is valid UTF-8 on every host locale.
     payload = jsonencode(report);
-    if fwrite(fid, payload, 'char') ~= numel(payload)
+    bytes = unicode2native(payload, 'UTF-8');
+    fid = fopen(destination, 'wb');
+    if fid < 0, error('ALEV4:ReportWrite', 'Cannot open validation report.'); end
+    cleanup = onCleanup(@() closeQuietly(fid)); %#ok<NASGU>
+    count = fwrite(fid, bytes, 'uint8');
+    close_status = fclose(fid);
+    if count ~= numel(bytes) || close_status ~= 0
         error('ALEV4:ReportWrite', 'Incomplete validation report write.');
+    end
+end
+
+function closeQuietly(fid)
+    try
+        fclose(fid);
+    catch
+        % Normal completion has already closed this handle.
     end
 end

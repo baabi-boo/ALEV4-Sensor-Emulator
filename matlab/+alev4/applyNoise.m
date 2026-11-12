@@ -4,7 +4,8 @@ function result = applyNoise(expected_electrons, cfg, seed)
 %       Poisson(MU) -> full-well clipping -> Gaussian read noise ->
 %       gain [DN/e-] + black offset [DN] -> round -> ADC clipping.
 %   With CFG.shot_noise=false, MU is used as deterministic collected charge.
-%   All intermediate electron arrays remain double precision; RAW is uint16.
+%   Accepted numeric inputs are normalized to dense doubles. All intermediate
+%   electron arrays remain dense double precision; RAW is uint16.
 %
 %   read_electrons can be negative. Clipping negative read noise before the
 %   black offset would bias dark frames and is deliberately not performed.
@@ -34,10 +35,11 @@ function result = applyNoise(expected_electrons, cfg, seed)
         error('ALEV4:InvalidSeed', 'Seed must be an integer in [0, 2^32-1].');
     end
 
-    expected_electrons = double(expected_electrons);
+    expected_electrons = full(double(expected_electrons));
+    seed = full(double(seed));
     previousRng = rng;
     restoreRng = onCleanup(@() rng(previousRng)); %#ok<NASGU>
-    rng(double(seed), 'twister');
+    rng(seed, 'twister');
 
     if cfg.shot_noise
         collected = alev4.samplePoisson(expected_electrons);
@@ -66,5 +68,5 @@ function result = applyNoise(expected_electrons, cfg, seed)
     result.full_well_saturated = collected >= cfg.full_well_e;
     result.adc_low_clipped = roundedDn < 0;
     result.adc_high_clipped = roundedDn > adcMax;
-    result.seed = double(seed);
+    result.seed = seed;
 end

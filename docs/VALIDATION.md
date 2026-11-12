@@ -22,7 +22,7 @@ Use ARRI's official public specifications as **reference claims**, not as alread
 | Artifact independence | Python decoder checks RAW bytes/metadata, analytic bracket expectations, safe references, and repeated files independently of MATLAB I/O |
 | Source identity | Recorded runtime/revisions and clean dependency checkouts matching committed gitlinks before and after execution |
 
-Poisson tests use fixed seeds and sample-size-aware seven-standard-error bounds. The principal test uses 100,000 samples at each of 0.1, 1, 10, and 1000 expected electrons; edge tests cover the sampling threshold and supported upper endpoint. Statistical consistency is evidence for the implementation, not proof of exact arithmetic or ALEV4 behavior.
+Poisson moment tests use fixed seeds and sample-size-aware seven-standard-error bounds. Probability checks use conservative Bernstein bounds with a per-check significance parameter of `1e-12`, including rare bins where a normal approximation is inappropriate. The principal test uses 100,000 samples at each of 0.1, 1, 10, and 1000 expected electrons; edge tests cover mixed means, the sampling threshold, and the supported upper endpoint. A third-central-moment check near the threshold distinguishes Poisson skewness from a rounded Gaussian substitute. Statistical consistency is evidence for the implementation, not proof of exact arithmetic or ALEV4 behavior.
 
 The ISET fixture's comparison tolerance is `5e-5` relative to the peak reference magnitude (with a unit floor), accommodating upstream single-precision operations. Its controlled uniform scene avoids conflating spectral integration with nonuniform spatial regridding. It is not validation of arbitrary optical scenes.
 

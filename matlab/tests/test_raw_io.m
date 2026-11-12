@@ -2,10 +2,14 @@ function report = test_raw_io()
 %TEST_RAW_IO Exercise synthetic RAW serialization with independent byte checks.
 %   Uses only ordinary assertions and temporary, test-owned directories.
 %   No proprietary RAW reader or image-processing toolbox is required.
-    tests = {@testAsymmetricRoundtrip, @testMetadata, @testSingleWavelength, ...
+    tests = {@testAsymmetricRoundtrip, @testScalarRoundtrip, ...
+        @testSingleRowRoundtrip, @testSingleColumnRoundtrip, ...
+        @testMetadata, @testSingleWavelength, ...
         @testOverwriteProtection, @testInvalidExports, @testInvalidMetadata, ...
         @testMalformedJson, @testManifestSizeLimit, @testPayloadLength, @testAdcPayload, @testPaths};
-    names = {'asymmetric_row_major_little_endian', 'complete_metadata', ...
+    names = {'asymmetric_row_major_little_endian', ...
+        'scalar_roundtrip_all_bayer_patterns', 'single_row_roundtrip_all_bayer_patterns', ...
+        'single_column_roundtrip_all_bayer_patterns', 'complete_metadata', ...
         'single_wavelength_odd_shape', 'overwrite_and_partial_pair_protection', ...
         'invalid_export_rejection', 'invalid_metadata_rejection', ...
         'malformed_json_rejection', 'shared_manifest_byte_limit', 'truncated_and_extra_bytes', ...
@@ -41,6 +45,69 @@ function testAsymmetricRoundtrip()
     values = fread(fid, Inf, '*uint16');
     independent = reshape(values, 5, 3).';
     assert(isequal(independent, result.raw_dn));
+end
+
+function testScalarRoundtrip()
+    checkDegenerateRoundtrip(uint16(43981));
+end
+
+function testSingleRowRoundtrip()
+    checkDegenerateRoundtrip(uint16([258 17185 65535 32769 511]));
+end
+
+function testSingleColumnRoundtrip()
+    checkDegenerateRoundtrip(uint16([258; 17185; 65535; 32769; 511]));
+end
+
+function checkDegenerateRoundtrip(values)
+    [folder, cleanup] = ownFolder(); %#ok<NASGU>
+    patterns = {'RGGB', 'BGGR', 'GRBG', 'GBRG'};
+    [height, width] = size(values);
+    % Calculate row-major bytes with explicit row/column iteration, not the
+    % transpose/reshape operations used by the production writer and reader.
+    expected_bytes = zeros(2 * numel(values), 1, 'uint8');
+    offset = 1;
+    for row = 1:height
+        for column = 1:width
+            value = double(values(row, column));
+            expected_bytes(offset) = uint8(mod(value, 256));
+            expected_bytes(offset + 1) = uint8(floor(value / 256));
+            offset = offset + 2;
+        end
+    end
+    for p = 1:numel(patterns)
+        cfg = alev4.createBaselineSensor(struct('image_size', [height width], ...
+            'wavelength_nm', [510; 650], 'bin_width_nm', [8; 12], ...
+            'qe', [0.125 0.5 0.25; 0.75 0.25 0.125], ...
+            'pixel_pitch_m', 4e-6, 'fill_factor', 0.625, ...
+            'full_well_e', 4095, 'read_noise_e', 1.5, 'gain_dn_per_e', 0.75, ...
+            'black_level_dn', 32, 'adc_bits', 16, ...
+            'cfa_pattern', patterns{p}, 'shot_noise', false));
+        result = struct('raw_dn', values, 'exposure_s', 0.125, 'seed', 4294967295);
+        base = fullfile(folder, ['degenerate_' patterns{p}]);
+        files = alev4.exportSyntheticRaw(result, cfg, base);
+        [actual, meta] = alev4.readSyntheticRaw(base);
+        assert(isa(actual, 'uint16') && isequal(size(actual), [height width]));
+        assert(isequal(actual, values), 'Degenerate-shape pixels changed during round trip.');
+        assert(isequal(readBytes(files.raw), expected_bytes), ...
+            'Degenerate-shape row-major little-endian bytes do not match the independent oracle.');
+        assert(meta.height == height && meta.width == width);
+        assert(meta.byte_count == 2 * numel(values));
+        assert(strcmp(meta.cfa_pattern, patterns{p}) && isequal(meta.cfa_origin(:).', [1 1]));
+        assert(meta.exposure_s == result.exposure_s && meta.seed == result.seed);
+        fields = fieldnames(cfg);
+        assert(isequal(sort(fieldnames(meta.sensor)), sort(fields)));
+        for k = 1:numel(fields)
+            expected = cfg.(fields{k}); restored = meta.sensor.(fields{k});
+            if isnumeric(expected)
+                assert(isequal(size(restored), size(expected)));
+                assert(all(abs(double(restored(:)) - double(expected(:))) <= ...
+                    1e-14 * max(1, max(abs(double(expected(:)))))));
+            else
+                assert(isequal(restored, expected));
+            end
+        end
+    end
 end
 
 function testMetadata()

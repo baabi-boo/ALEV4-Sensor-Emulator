@@ -8,6 +8,8 @@ function result = simulateExposure(photon_irradiance, sensor, exposure_s, seed)
 %   Exact zero collection/irradiance endpoints bypass spectral arithmetic,
 %   but still undergo readout noise. Unsupported floating-point underflow or
 %   overflow raises an error rather than masquerading as a zero exposure.
+%   Sparse one-bin images and other accepted numeric inputs are normalized
+%   to dense doubles before integration; retained expectations are dense.
     sensor = alev4.createBaselineSensor(sensor);
     if ~isnumeric(photon_irradiance) || ~isreal(photon_irradiance) || ...
             any(~isfinite(photon_irradiance(:))) || any(photon_irradiance(:) < 0)
@@ -24,13 +26,15 @@ function result = simulateExposure(photon_irradiance, sensor, exposure_s, seed)
         error('ALEV4:InvalidExposure', 'Exposure must be a finite nonnegative number of seconds.');
     end
     irradiance = double(photon_irradiance);
+    if issparse(irradiance), irradiance = full(irradiance); end
+    exposure_s = full(double(exposure_s));
     expected = zeros(sensor.image_size);
     incident = zeros(sensor.image_size);
     % Avoid 0*Inf for a physically exact zero signal, even when accepted
     % finite irradiance or geometry would overflow intermediate arithmetic.
     has_collection = exposure_s > 0 && sensor.fill_factor > 0;
     if has_collection && any(irradiance(:) > 0)
-        collection = double(exposure_s) * sensor.pixel_pitch_m^2 * sensor.fill_factor;
+        collection = exposure_s * sensor.pixel_pitch_m^2 * sensor.fill_factor;
         if collection == 0
             error('ALEV4:CollectionUnderflow', ...
                 'Positive exposure/area/fill product underflowed; rescale the input configuration.');
@@ -52,7 +56,7 @@ function result = simulateExposure(photon_irradiance, sensor, exposure_s, seed)
     end
     result = alev4.applyNoise(expected, sensor, seed);
     result.expected_incident_photons = incident;
-    result.exposure_s = double(exposure_s);
+    result.exposure_s = exposure_s;
     result.input_units = 'photons m^-2 s^-1 nm^-1';
     result.spectral_bin_convention = 'bin-average density times explicit width in nm';
 end

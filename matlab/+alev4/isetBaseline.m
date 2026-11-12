@@ -11,6 +11,8 @@ function [result, cfg, report] = isetBaseline(seed, exposure_s)
 %   The imported effective QE is ISETCam's generic CFA/IR/pixel response,
 %   NOT a measured ALEV4 response. RESULT is labelled synthetic by the RAW
 %   exporter. ISETCam is required; missing dependencies are errors, not skips.
+%   Caller RNG, global vcSESSION, and the complete ISET preference group are
+%   restored on success and error. The fixture uses its own temporary session.
 %
 %   Call setup_project first. GNU Octave additionally needs the image package.
 %   MATLAB needs the Image Processing Toolbox used by ISETCam's fspecial.
@@ -48,7 +50,11 @@ function [result, cfg, report] = isetBaseline(seed, exposure_s)
 
     previous_rng = rng;
     rng_guard = onCleanup(@() rng(previous_rng)); %#ok<NASGU>
+    previous_iset = captureIsetState();
+    state_guard = onCleanup(@() restoreIsetState(previous_iset));
     rng(double(seed), 'twister');
+    global vcSESSION;
+    vcSESSION = struct();
     ieInitSession;
     ieSessionSet('waitbar', 0);
 
@@ -169,4 +175,43 @@ function [result, cfg, report] = isetBaseline(seed, exposure_s)
         'max_relative_error', max_relative_error, 'relative_tolerance', tolerance, ...
         'iset_expected_electrons', iset_expected, ...
         'synthetic', true, 'calibrated_alev4', false);
+    % Restore persistent/session state before the caller receives a result.
+    % On error, the same cleanup guard runs during stack unwinding.
+    clear state_guard;
+end
+
+function state = captureIsetState()
+    names = who('global');
+    state.had_session = any(strcmp(names, 'vcSESSION'));
+    if state.had_session
+        global vcSESSION;
+        state.session = vcSESSION;
+    else
+        state.session = [];
+    end
+    state.had_preferences = ispref('ISET');
+    if state.had_preferences
+        state.preferences = getpref('ISET');
+    else
+        state.preferences = struct();
+    end
+end
+
+function restoreIsetState(state)
+    if state.had_session
+        global vcSESSION;
+        vcSESSION = state.session;
+    else
+        % The fixture introduced this global, so do not leave it behind.
+        clear global vcSESSION;
+    end
+    % Remove only the group owned by the ISET fixture. Restore all original
+    % fields, not just waitbar: ieInitSession can also introduce defaults.
+    if ispref('ISET'), rmpref('ISET'); end
+    if state.had_preferences
+        names = fieldnames(state.preferences);
+        for k = 1:numel(names)
+            setpref('ISET', names{k}, state.preferences.(names{k}));
+        end
+    end
 end

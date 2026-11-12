@@ -42,6 +42,13 @@ seed reproduce output within a supported runtime/version. Cross-runtime
 bit-identical random streams are not promised. Poisson sampling uses an exact
 rejection/inversion family rather than a rounded Gaussian approximation.
 
+The supported Poisson mean is at most `1e9` electrons. Calculations use finite
+double precision; overflowing spectral accumulations and a positive collection
+factor that underflows to zero are explicit errors, not simulated physical
+zeros. Exact zero exposure, fill factor, or incident irradiance still permits
+electronic read noise. Image dimensions are bounded to 100 million pixels;
+this limit is not a promise of practical memory/performance at that size.
+
 ## Artifacts and provenance
 
 Synthetic RAW uses row-major, little-endian uint16 pixels plus a JSON manifest.

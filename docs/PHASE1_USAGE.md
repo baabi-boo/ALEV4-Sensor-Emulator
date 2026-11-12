@@ -6,6 +6,13 @@ Phase 1 is implemented; full acceptance is pending. The first core/ISETCam tests
 
 Run commands from the repository root. Use Python 3.10 or newer for the validation utilities. Full integration needs the two pinned submodule checkouts and GNU Octave with its `image` package, or MATLAB with the Image Processing Toolbox. The standalone numerical core uses no ISET or Statistics Toolbox functionality. CI installs the Octave statistics package as well, but the custom Poisson sampler does not require it.
 
+For Ubuntu 24.04, install the command-line prerequisites with the same Octave packages used by CI:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends git python3 octave octave-image octave-statistics
+```
+
 ```bash
 git submodule update --init --recursive --depth 1
 python3 scripts/verify_submodules.py --require-checkout
@@ -22,13 +29,14 @@ Choose a fresh output root, such as `outputs/run-01`. Use a different name for a
 
 ```bash
 octave --no-gui --quiet --eval "addpath('matlab'); report=run_phase1_tests('outputs/run-01/validation',true); assert(report.phase1_passed);"
+python3 scripts/test_runner_failure.py
 octave --no-gui --quiet --eval "addpath('matlab'); setup_project(true); phase1_demo('outputs/run-01/demo',true);"
 octave --no-gui --quiet --eval "addpath('matlab'); setup_project(true); phase1_demo('outputs/run-01/demo-repeat',true);"
 python3 scripts/verify_phase1_artifacts.py outputs/run-01 --expected-commit "$(git rev-parse HEAD)" --compare-dir outputs/run-01/demo-repeat
 python3 scripts/verify_submodules.py --require-checkout
 ```
 
-The two demo commands run in separate processes. The independent Python checker validates the full report, ten frame triplets, analytic exposure-bracket expectations, and matching same-runtime files. A report alone is not a substitute for these artifact checks. CI uploads the validation report and primary demo directory; inspect the job conclusion as well as any uploaded failure artifacts.
+The failure-runner check confirms that a failed run cannot leave a stale passing report. The two demo commands run in separate processes. The independent Python checker validates the full report, ten frame triplets, analytic exposure-bracket expectations, and matching same-runtime files. A report alone is not a substitute for these artifact checks. CI uploads the validation report and primary demo directory; inspect the job conclusion as well as any uploaded failure artifacts.
 
 ## MATLAB commands
 
@@ -81,16 +89,16 @@ files = alev4.exportSyntheticRaw(result, cfg, 'outputs/example-01/flat');
 assert(isequal(raw, result.raw_dn));
 ```
 
-`simulateExposure` requires a finite, nonnegative `H × W × K` photon-irradiance array. The third dimension matches `cfg.wavelength_nm`; a single spectral bin uses an ordinary `H × W` array. An explicit integer seed in `[0, 2^32-1]` is required. `alev4.energyToPhotons(energy_irradiance, wavelength_nm)` converts energy density in W/(m² nm) to the accepted photon density.
+`simulateExposure` requires a finite, nonnegative `H × W × K` photon-irradiance array. The third dimension matches `cfg.wavelength_nm`; a single spectral bin uses an ordinary `H × W` array. Exposure is a finite, nonnegative scalar measured in seconds. An explicit integer seed in `[0, 2^32-1]` is required. `alev4.energyToPhotons(energy_irradiance, wavelength_nm)` converts energy density in W/(m² nm) to the accepted photon density.
 
 ### Configuration contract
 
 | Field | Meaning / constraint |
 | --- | --- |
 | `image_size` | Positive integer `[height width]`; odd/nonsquare arrays supported |
-| `wavelength_nm`, `bin_width_nm` | Increasing positive bin centers and explicit positive, nonoverlapping widths, in nm |
+| `wavelength_nm`, `bin_width_nm` | Increasing positive bin centers and explicit positive, nonoverlapping widths, in nm; both edges of every bin must be positive and finite |
 | `qe` | `K × 3` effective R/G/B efficiencies in `[0,1]`, including CFA transmission but excluding fill factor |
-| `pixel_pitch_m`, `fill_factor` | Square-pixel pitch in metres; collection area is `pixel_pitch_m^2 * fill_factor` |
+| `pixel_pitch_m`, `fill_factor` | Positive finite square-pixel pitch in metres whose square is positive, finite and representable; `fill_factor` is in `[0,1]`; collection area is `pixel_pitch_m^2 * fill_factor` |
 | `full_well_e`, `read_noise_e` | Positive physical capacity and nonnegative Gaussian RMS noise, in electrons |
 | `gain_dn_per_e`, `black_level_dn` | Positive DN/electron gain and an offset within the ADC range |
 | `adc_bits` | Integer 1–16; storage remains `uint16` |
@@ -104,7 +112,7 @@ The Poisson sampler supports expected means through `1e9` electrons. Unsupported
 
 ### Retained outputs and readout order
 
-`result.expected_incident_photons` and `result.expected_electrons` are continuous, unclipped expectations. `collected_electrons` is the sampled charge; `charge_electrons` is full-well-limited charge. `read_electrons` preserves signed read noise. `raw_dn` is gain/offset/rounding/ADC-clipped `uint16` data.
+`result.expected_incident_photons` and `result.expected_electrons` are continuous, unclipped expectations. `collected_electrons` is the sampled charge; `charge_electrons` is full-well-limited charge. `read_electrons` is that full-well-limited charge plus signed Gaussian read noise, not a noise-only array; the noise realization alone is `read_electrons - charge_electrons`. `raw_dn` is gain/offset/rounding/ADC-clipped `uint16` data.
 
 Read noise is added **after** full-well clipping and is not clipped again at full well. Negative read noise is retained until ADC processing, preventing a premature dark-frame bias. `full_well_saturated` marks collected charge at or above full well; `adc_low_clipped` and `adc_high_clipped` mark rounded codes outside the ADC range. They are different conditions.
 

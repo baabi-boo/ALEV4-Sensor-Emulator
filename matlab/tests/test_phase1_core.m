@@ -2,8 +2,10 @@ function report = test_phase1_core()
 %TEST_PHASE1_CORE Executable generic-sensor physical/statistical acceptance.
 %   REPORT = TEST_PHASE1_CORE() throws on the first failed assertion. Tests
 %   require only the project MATLAB path; no ISETCam or statistics toolbox.
-%   Statistical tolerances are seven standard errors with fixed seeds, not
-%   arbitrary percentage windows. These tests do not establish ALEV4 parity.
+%   Moment tolerances use seven standard errors. Individual binomial/PMF
+%   checks use Bernstein bounds at alpha=1e-12 per check, including rare bins
+%   where a normal approximation is unreliable. Seeds are fixed. These
+%   checks do not establish ALEV4 parity or prove an exact distribution.
     caller_rng = rng;
     restore_rng = onCleanup(@() rng(caller_rng)); %#ok<NASGU>
     names = { ...
@@ -144,11 +146,14 @@ end
 function metrics = testPoissonStatistics()
     n = 100000;
     means = [0.1 1 10 1000];
+    probability_alpha = 1e-12;
     cfg = alev4.createBaselineSensor(struct('image_size', [1000 100], ...
         'full_well_e', 1e6, 'read_noise_e', 0));
     metrics = repmat(struct('lambda', 0, 'samples', n, 'mean', 0, ...
         'variance', 0, 'mean_tolerance', 0, 'variance_tolerance', 0, ...
-        'maximum_probability_error', 0, 'neighbor_covariance', 0), 1, numel(means));
+        'maximum_probability_error', 0, 'probability_check_count', 0, ...
+        'probability_alpha_per_check', probability_alpha, ...
+        'probability_bound', 'Bernstein', 'neighbor_covariance', 0), 1, numel(means));
     for k = 1:numel(means)
         lambda = means(k);
         r = alev4.applyNoise(lambda * ones(cfg.image_size), cfg, 200 + k);
@@ -160,13 +165,20 @@ function metrics = testPoissonStatistics()
         assert(abs(measured_mean-lambda) <= mean_tolerance, 'Poisson empirical mean exceeds seven standard errors.');
         assert(abs(measured_variance-lambda) <= variance_tolerance, 'Poisson variance does not track mean electrons.');
         max_error = 0;
+        probability_checks = 0;
         if lambda <= 1
             for count = 0:5
                 probability = exp(-lambda) * lambda^count / factorial(count);
                 observed = sum(x == count) / n;
-                tolerance = 7 * sqrt(probability * (1-probability) / n) + 1/n;
+                % A histogram count is binomial under the Poisson model.
+                % Bernstein remains conservative even when N*p is far
+                % below one; a seven-normal-SE window does not.
+                log_tail = log(2 / probability_alpha);
+                tolerance = sqrt(2 * probability * (1-probability) * log_tail / n) + ...
+                    2 * log_tail / (3 * n);
                 assert(abs(observed-probability) <= tolerance, 'Low-count Poisson probability mismatch.');
                 max_error = max(max_error, abs(observed-probability));
+                probability_checks = probability_checks + 1;
             end
         end
         % Disjoint neighboring pairs avoid overlap in the covariance check.
@@ -175,6 +187,9 @@ function metrics = testPoissonStatistics()
         metrics(k) = struct('lambda', lambda, 'samples', n, 'mean', measured_mean, ...
             'variance', measured_variance, 'mean_tolerance', mean_tolerance, ...
             'variance_tolerance', variance_tolerance, 'maximum_probability_error', max_error, ...
+            'probability_check_count', probability_checks, ...
+            'probability_alpha_per_check', probability_alpha, ...
+            'probability_bound', 'Bernstein', ...
             'neighbor_covariance', covariance);
     end
 end
