@@ -15,6 +15,8 @@ function cfg = createBaselineSensor(overrides)
 %   Changing wavelength_nm requires matching bin_width_nm and qe arrays.
 %   Four Bayer patterns and odd image dimensions are supported. The pattern
 %   starts at the top-left sample, MATLAB array index (1,1).
+%   Image dimensions are limited to 100 million pixels, matching the RAW
+%   format. Valid sparse numeric configuration arrays become dense doubles.
 
     wavelength_nm = (400:20:700)';
     qe = [0.55 * exp(-0.5 * ((wavelength_nm - 610) / 45).^2), ...
@@ -65,7 +67,13 @@ function cfg = createBaselineSensor(overrides)
         error('ALEV4:InvalidSensorConfig', ...
             'image_size must contain two positive integer dimensions.');
     end
-    cfg.image_size = double(cfg.image_size(:).');
+    cfg.image_size = full(double(cfg.image_size(:).'));
+    maximum_pixels = 1e8;
+    if any(cfg.image_size > maximum_pixels) || ...
+            cfg.image_size(1) > maximum_pixels / cfg.image_size(2)
+        error('ALEV4:InvalidSensorConfig', ...
+            'image_size must not exceed 100 million pixels.');
+    end
 
     if ~isRealFiniteNumeric(cfg.wavelength_nm) || ...
             ~isvector(cfg.wavelength_nm) || isempty(cfg.wavelength_nm) || ...
@@ -73,7 +81,7 @@ function cfg = createBaselineSensor(overrides)
         error('ALEV4:InvalidSensorConfig', ...
             'wavelength_nm must be a nonempty positive finite vector.');
     end
-    cfg.wavelength_nm = double(cfg.wavelength_nm(:));
+    cfg.wavelength_nm = full(double(cfg.wavelength_nm(:)));
     if any(diff(cfg.wavelength_nm) <= 0)
         error('ALEV4:InvalidSensorConfig', ...
             'wavelength_nm must be strictly increasing.');
@@ -86,14 +94,16 @@ function cfg = createBaselineSensor(overrides)
         error('ALEV4:InvalidSensorConfig', ...
             'bin_width_nm must contain one positive finite width per bin.');
     end
-    cfg.bin_width_nm = double(cfg.bin_width_nm(:));
+    cfg.bin_width_nm = full(double(cfg.bin_width_nm(:)));
     lower_edges = cfg.wavelength_nm - cfg.bin_width_nm / 2;
     upper_edges = cfg.wavelength_nm + cfg.bin_width_nm / 2;
     if any(lower_edges <= 0) || any(~isfinite(upper_edges))
         error('ALEV4:InvalidSensorConfig', ...
             'Spectral bins must have positive finite wavelength edges.');
     end
-    edge_tolerance = 8 * eps(max(upper_edges));
+    % Each comparison uses only its two boundary magnitudes. A distant
+    % large wavelength must not relax overlap checks on earlier small bins.
+    edge_tolerance = 8 * max(eps(upper_edges(1:end-1)), eps(lower_edges(2:end)));
     if any(upper_edges(1:end-1) - lower_edges(2:end) > edge_tolerance)
         error('ALEV4:InvalidSensorConfig', ...
             'Spectral bins must not overlap; provide explicit bin widths.');
@@ -104,7 +114,7 @@ function cfg = createBaselineSensor(overrides)
         error('ALEV4:InvalidSensorConfig', ...
             'qe must be an N-by-3 finite R/G/B matrix in [0,1].');
     end
-    cfg.qe = double(cfg.qe);
+    cfg.qe = full(double(cfg.qe));
 
     cfg.pixel_pitch_m = requireScalar(cfg.pixel_pitch_m, 'pixel_pitch_m');
     if cfg.pixel_pitch_m <= 0 || ~isfinite(cfg.pixel_pitch_m^2) || ...
@@ -152,6 +162,7 @@ function cfg = createBaselineSensor(overrides)
         error('ALEV4:InvalidSensorConfig', ...
             'shot_noise must be a scalar logical true or false.');
     end
+    cfg.shot_noise = full(cfg.shot_noise);
 end
 
 function tf = isRealFiniteNumeric(value)
@@ -163,5 +174,5 @@ function value = requireScalar(value, name)
         error('ALEV4:InvalidSensorConfig', ...
             '%s must be a real finite numeric scalar.', name);
     end
-    value = double(value);
+    value = full(double(value));
 end

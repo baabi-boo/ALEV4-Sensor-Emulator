@@ -3,8 +3,9 @@
 
 Usage: python3 scripts/verify_phase1_artifacts.py outputs
        --expected-commit SHA --compare-dir outputs/demo-repeat
-The comparison directory contains a second complete demo. No byte differences
-are ignored. This verifies generic simulation artifacts, not ALEV4 calibration.
+The comparison directory contains a second complete demo in a distinct resolved
+directory. No byte differences are ignored. This verifies generic simulation
+artifacts, not ALEV4 calibration.
 """
 from __future__ import annotations
 
@@ -22,7 +23,8 @@ MAX_PIXELS = 100_000_000
 SHA_FIELDS = ("repository_head", "isetcam_head", "isethdrsensor_head")
 BRACKETS = dict(zip(("exposure_025x", "exposure_050x", "exposure_100x", "exposure_200x", "exposure_400x"), (0.25, 0.5, 1.0, 2.0, 4.0)))
 NAMES = {"black", "flat", "ramp", "checker", "iset_scene", *BRACKETS}
-GATES = ("core", "numerical_edges", "poisson_edges", "raw_io", "provenance_tests", "iset")
+GATES = ("core", "config_edges", "spectral_properties", "numerical_edges",
+         "poisson_edges", "raw_io", "provenance_tests", "iset")
 
 
 class ArtifactError(ValueError):
@@ -220,14 +222,17 @@ def verify_demo(directory, source, engine):
 
 
 def digest(path):
+    result = hashlib.sha256()
     with path.open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            result.update(chunk)
+    return result.hexdigest()
 
 
 def verify_outputs(output_root, compare_dir=None, expected_commit=None):
     root = Path(output_root)
     report = read_json(root / "validation" / "phase1-validation.json")
-    require(report.get("schema_version") == "1.0" and report.get("phase") == 1 and report.get("status") == "passed" and report.get("phase1_passed") is True, "Full Phase 1 pass report required")
+    require(report.get("schema_version") == "1.0" and integer(report.get("phase"), "phase", 1, 1) == 1 and report.get("status") == "passed" and report.get("phase1_passed") is True, "Full Phase 1 pass report required")
     require(report.get("calibrated_alev4") is False, "Report must not claim ALEV4 calibration")
     for name in GATES:
         gate = report.get(name)
@@ -242,7 +247,10 @@ def verify_outputs(output_root, compare_dir=None, expected_commit=None):
     engine = runtime({"name": report.get("runtime"), "version": report.get("runtime_version")})
     files, means = verify_demo(root / "demo", source, engine)
     if compare_dir is not None:
-        other, _ = verify_demo(Path(compare_dir), source, engine)
+        comparison = Path(compare_dir)
+        require(comparison.resolve() != (root / "demo").resolve(),
+                "Comparison must use a distinct demo directory, not the same directory or an alias")
+        other, _ = verify_demo(comparison, source, engine)
         counterpart = {p.name: p for p in other}
         require(all(digest(p) == digest(counterpart[p.name]) for p in files), "Repeated demo is not byte-identical")
     return {"status": "passed", "frame_count": 10, "artifact_count": len(files), "source": source,

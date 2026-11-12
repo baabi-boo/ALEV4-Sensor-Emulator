@@ -1,73 +1,73 @@
 # ALEV4 Sensor Emulator
 
-A research-oriented, **independent and unaffiliated** project to model the image-formation and sensor-readout characteristics of the ARRI ALEXA 35's ALEV 4 CMOS sensor.
+A research-oriented, **independent and unaffiliated** project working toward an ALEV4-inspired camera sensor model.
 
-> **Project status: repository/bootstrap only.** The two research dependencies are linked below, but there is **no calibrated ALEV4 implementation, no demonstrated 17-stop simulation, and no genuine ARRIRAW encoder** in this repository yet. All ALEV4-specific behaviour must be implemented and validated.
+> **Phase 1 status: implemented; full acceptance pending.** The generic, single-gain Bayer baseline and its first core/ISETCam tests have executed successfully in GNU Octave 8.4.0. The expanded acceptance workflow is still being verified. There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. MATLAB execution has not yet been verified.
 
-## Architecture
+## What Phase 1 implements
 
-| Component | Location | Source | Role |
-| --- | --- | --- | --- |
-| ISETCam | `third_party/isetcam` | [ISET/isetcam](https://github.com/ISET/isetcam) | Scene/optical image, spectral irradiance, Bayer photosites, sensor noise |
-| ISETHdrsensor | `third_party/isethdrsensor` | [ISET/isethdrsensor](https://github.com/ISET/isethdrsensor) | HDR imaging research, datasets, and evaluation experiments |
-| ALEV4 implementation | `matlab/` | This repository | Future sensor architecture, calibrated parameters, reference tests |
+- Spectral photon irradiance integrated into continuous photoelectron expectations, with explicit wavelength-bin widths, effective RGB quantum efficiency, pixel area, and fill factor.
+- Four Bayer patterns, including odd-sized and nonsquare images.
+- Poisson shot noise, Gaussian read noise, physical full-well clipping, gain/black level, and 1–16-bit ADC quantization.
+- Seeded reproducibility within one runtime/version, with caller RNG-state restoration.
+- Labelled synthetic RAW export/import and strict metadata/payload checks.
+- Black, flat, ramp, checker, and exposure-bracket fixtures; a headless ISETCam uniform-scene integration check; numerical reports and grayscale Bayer-mosaic previews.
 
-Both upstream projects are **Git submodules**, pinned to exact commits rather than copied, modified, or merged into the main repository's Git history. They remain separately maintained.
+Default parameters are illustrative, not measurements of an ARRI sensor. This is the physics foundation for later work, not a camera-look LUT or a hardware/firmware emulator.
 
-**Important:** ISETHdrsensor primarily investigates RGBW and multi-capture HDR designs. It is *not* an implementation of ARRI's simultaneous dual-gain architecture. An ALEV4-specific dual-gain model must be written here.
+## Components
 
-## Clone and set up
+| Component | Location | Role |
+| --- | --- | --- |
+| Standalone numerical core | `matlab/+alev4/` | Generic sensor integration, noise, readout, and synthetic RAW I/O |
+| ISETCam | `third_party/isetcam` | Pinned upstream scene/optics/Bayer reference used by `alev4.isetBaseline` |
+| ISETHdrsensor | `third_party/isethdrsensor` | Pinned HDR research dependency; not executed by the Phase 1 baseline |
+| Acceptance tests | `matlab/tests/`, `scripts/tests/` | Physics, file-format, provenance, and independent artifact checks |
 
-Requirements: Git, MATLAB compatible with the upstream toolboxes; optional Python dependencies and additional ISET repositories for advanced upstream examples.
+The upstream projects remain separately maintained Git submodules. ISETHdrsensor's RGBW/multi-capture research is **not** an implementation of ARRI's simultaneous dual-gain readout. Phase 2 must implement and test that separate model.
+
+## Quick start
+
+Use Git, Python 3.10 or newer, and GNU Octave with the `image` package for the full ISETCam gate. The standalone core does not require the ISET toolboxes or a statistics package. The CI workflow currently installs Octave, `octave-image`, and `octave-statistics`; the custom Poisson sampler does not call `poissrnd`.
 
 ```bash
 git clone https://github.com/baabi-boo/ALEV4-Sensor-Emulator.git
 cd ALEV4-Sensor-Emulator
 git submodule update --init --recursive --depth 1
-python3 scripts/verify_submodules.py
+python3 scripts/verify_submodules.py --require-checkout
+python3 -m unittest discover -s scripts/tests -v
+octave --no-gui --quiet --eval "addpath('matlab'); report=run_phase1_tests('outputs/validation',true); assert(report.phase1_passed);"
+octave --no-gui --quiet --eval "addpath('matlab'); setup_project(true); phase1_demo('outputs/demo',true);"
 ```
 
-Run in MATLAB from the repository root:
+Use a **fresh demo directory** on subsequent runs: existing RAW, JSON, or preview files are deliberately not overwritten. Full acceptance also requires the independent Python artifact and repeated-process checks described in [Phase 1 usage](docs/PHASE1_USAGE.md). A successful core-only run is not a full Phase 1 pass.
 
-```matlab
-paths = setup_project;
-```
+For MATLAB, use the same `.m` entrypoints after `addpath('matlab')`. ISETCam's integration path requires the Image Processing Toolbox. These MATLAB commands are documented for use and verification; they are not evidence that MATLAB execution has already passed.
 
-The bootstrap file lives at `matlab/setup_project.m`. Add it to the MATLAB path first (`addpath('matlab')`) if not already using MATLAB's Current Folder path. The function prepares the upstream toolboxes but **does not instantiate an ALEV4 sensor**.
+## Synthetic RAW contract
 
-To fetch newer upstream versions intentionally:
+Each frame is a headerless, **row-major, little-endian `uint16`** `.raw` payload plus a JSON manifest. The format is `ALEV4-SYNTHETIC-RAW`, not ARRIRAW or DNG. The manifest records sensor configuration, exposure, seed, units, CFA origin, runtime, and observed Git revisions. Limits are 100 million pixels and 2,000,000 UTF-8 manifest bytes. The previews are grayscale Bayer mosaics, not demosaiced or color-calibrated images.
 
-```bash
-git submodule update --remote --init third_party/isetcam third_party/isethdrsensor
-git diff --submodule
-# Run integration checks and review release notes before committing the new pins.
-git add third_party/isetcam third_party/isethdrsensor
-git commit -m "chore: update scientific dependency pins"
-```
+## Remaining engineering targets
 
-## Engineering targets (not implemented yet)
+Phases 2–7 cover independent dual-gain paths, ALEV4-inspired geometry/optics, structured noise/readout effects, calibrated demosaic and AWG4/LogC4 transforms, real-camera characterization, and performance/reporting. The public 4608 × 3164 geometry and 17-stop exposure-latitude claim are research targets, not properties established by Phase 1.
 
-- **ALEV4 reference geometry:** Super 35 Bayer CMOS sensor; 4608 × 3164 photosites.
-- **Exposure latitude:** reproduce and independently measure the ARRI-reported 17 stops, with test conditions and a defined signal-to-noise criterion.
-- **Sensor physics:** spectral quantum efficiency, pixel geometry, photon shot noise, dark current, PRNU/DSNU, correlated electronics noise, ADC effects, full-well and clipping.
-- **Readout:** model the simultaneous high/low gain paths and their merge; do not substitute an unrelated multi-exposure HDR algorithm.
-- **Optics:** optical low-pass filter, lens MTF/PSF, flare, spatial aliasing, rolling readout where measurable.
-- **Output:** an explicitly labelled **synthetic RAW Bayer** representation, then separately calibrated demosaic, color matrices, ARRI Wide Gamut 4 / LogC4 transforms.
-- **Validation:** compare controlled synthetic and measured targets using both numerical metrics and documented uncertainty.
-
-LogC4 is an encoding/processing stage, **not** a replacement for sensor physics. Synthetic RAW files must not be presented as authentic ARRIRAW captures.
+LogC4 is a post-capture encoding, **not** a replacement for sensor physics. Neither a plausible preview nor matching a published dynamic-range number establishes sensor equivalence.
 
 ## Documentation
 
+- [Phase 1 usage and artifact format](docs/PHASE1_USAGE.md)
+- [Numerical contract](docs/PHASE1_DESIGN.md)
 - [Architecture and scope](docs/ARCHITECTURE.md)
 - [Development roadmap](docs/ROADMAP.md)
 - [Validation plan](docs/VALIDATION.md)
 
 ## Source material and attribution
 
+- [ISETCam](https://github.com/ISET/isetcam) and [ISETHdrsensor](https://github.com/ISET/isethdrsensor)
 - [ARRI ALEV sensors](https://www.arri.com/en/learn/arri-camera-technology/alev-sensors)
 - [ARRI ALEXA 35 specifications](https://www.arri.com/en/camera-systems/cameras/alexa-35)
 - [ARRI reference images and footage](https://www.arri.com/en/learn/camera-systems/camera-sample-footage-reference-image)
 - [ARRI Log C documentation](https://www.arri.com/en/learn/camera-systems/image-science/log-c)
 
-This project is **not affiliated with, endorsed by, or sponsored by ARRI**. ARRI and ALEXA are trademarks of their respective owner. Third-party submodule code remains subject to its own licenses. No ARRI firmware, proprietary calibration tables, or copyrighted footage is distributed with this repository.
+This project is **not affiliated with, endorsed by, or sponsored by ARRI**. ARRI and ALEXA are trademarks of their respective owner. Third-party submodule code remains subject to its own licenses. No ARRI firmware, proprietary calibration tables, or copyrighted footage is distributed here.

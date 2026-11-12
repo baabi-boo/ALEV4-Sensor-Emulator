@@ -32,6 +32,8 @@ jobs:
           sudo apt-get install -y --no-install-recommends octave octave-image octave-statistics
       - name: Complete Phase 1 acceptance suite
         run: octave --no-gui --quiet --eval "addpath('matlab'); report=run_phase1_tests('outputs/validation',true); assert(report.phase1_passed);"
+      - name: Verify failures invalidate stale success reports
+        run: python3 scripts/test_runner_failure.py
       - name: Generate reproducible demo artifacts
         run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(true); summary=phase1_demo('outputs/demo',true); assert(summary.demo_complete && summary.frame_count==10);"
       - name: Repeat demo in a fresh process
