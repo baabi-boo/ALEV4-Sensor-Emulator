@@ -4,12 +4,13 @@ function report = test_raw_io()
 %   No proprietary RAW reader or image-processing toolbox is required.
     tests = {@testAsymmetricRoundtrip, @testScalarRoundtrip, ...
         @testSingleRowRoundtrip, @testSingleColumnRoundtrip, ...
-        @testMetadata, @testSingleWavelength, ...
+        @testMetadata, @testMetadataNumericPrecision, @testSingleWavelength, ...
         @testOverwriteProtection, @testInvalidExports, @testInvalidMetadata, ...
         @testMalformedJson, @testManifestSizeLimit, @testPayloadLength, @testAdcPayload, @testPaths};
     names = {'asymmetric_row_major_little_endian', ...
         'scalar_roundtrip_all_bayer_patterns', 'single_row_roundtrip_all_bayer_patterns', ...
         'single_column_roundtrip_all_bayer_patterns', 'complete_metadata', ...
+        'tiny_numeric_metadata_preservation', ...
         'single_wavelength_odd_shape', 'overwrite_and_partial_pair_protection', ...
         'invalid_export_rejection', 'invalid_metadata_rejection', ...
         'malformed_json_rejection', 'shared_manifest_byte_limit', 'truncated_and_extra_bytes', ...
@@ -148,6 +149,64 @@ function testMetadata()
         assert(isempty(sha) || ~isempty(regexp(sha, '^[0-9a-f]{40}$', 'once')));
     end
     assert(~isempty(meta.provenance.meaning));
+end
+
+function testMetadataNumericPrecision()
+    [folder, cleanup] = ownFolder(); %#ok<NASGU>
+    cfg = alev4.createBaselineSensor(struct('image_size', [2 3], ...
+        'wavelength_nm', 550, 'bin_width_nm', 10, 'qe', [1e-20 2e-20 3e-20], ...
+        'pixel_pitch_m', 1e-6, 'fill_factor', 1, ...
+        'read_noise_e', 1e-20, 'shot_noise', false));
+    % This valid scale combination produces 1000/2000/3000 electrons by
+    % CFA channel despite the tiny exposure and QE. Serializing either as
+    % zero would describe a different exposure without changing RAW bytes.
+    exposures = [1e-20 1e-300];
+    for k = 1:numel(exposures)
+        result = alev4.simulateExposure(ones(2, 3) * 1e54, cfg, exposures(k), 42);
+        if k == 1
+            expected_raw = uint16([564 1064 564; 1064 1564 1064]);
+        else
+            expected_raw = uint16(64 * ones(2, 3));
+        end
+        assert(isequal(result.raw_dn, expected_raw));
+        base = fullfile(folder, sprintf('tiny_metadata_%d', k));
+        files = alev4.exportSyntheticRaw(result, cfg, base);
+        [raw, meta] = alev4.readSyntheticRaw(base);
+        assert(isequal(raw, expected_raw));
+        expected_bytes = zeros(2 * numel(expected_raw), 1, 'uint8');
+        offset = 1;
+        for row = 1:size(expected_raw, 1)
+            for column = 1:size(expected_raw, 2)
+                value = double(expected_raw(row, column));
+                expected_bytes(offset) = uint8(mod(value, 256));
+                expected_bytes(offset + 1) = uint8(floor(value / 256));
+                offset = offset + 2;
+            end
+        end
+        assert(isequal(readBytes(files.raw), expected_bytes));
+
+        expected = [exposures(k) cfg.qe cfg.read_noise_e];
+        restored = [meta.exposure_s meta.sensor.qe meta.sensor.read_noise_e];
+        assert(all(restored > 0), 'Tiny positive metadata must never become zero.');
+        assert(all(abs(restored - expected) <= 4 * eps(abs(expected))), ...
+            'Native metadata precision must be checked at each value''s own scale.');
+
+        % Native JSON parsers can round a correct decimal by a few ULPs.
+        % Independently parse the written numeric tokens with str2double to
+        % verify that the decimal text retains the original binary64 value.
+        encoded = fileread(files.metadata);
+        exposure_token = regexp(encoded, '"exposure_s":([^,}]+)', 'tokens', 'once');
+        noise_token = regexp(encoded, '"read_noise_e":([^,}]+)', 'tokens', 'once');
+        qe_token = regexp(encoded, '"qe":\[([^\]]+)\]', 'tokens', 'once');
+        assert(~isempty(exposure_token) && ~isempty(noise_token) && ~isempty(qe_token));
+        assert(str2double(exposure_token{1}) == exposures(k));
+        assert(str2double(noise_token{1}) == cfg.read_noise_e);
+        qe_tokens = strsplit(qe_token{1}, ',');
+        assert(isequal(cellfun(@str2double, qe_tokens), cfg.qe));
+        assert(strcmp(meta.schema_version, '1.0'));
+        assert(strcmp(meta.algorithm_version, 'phase1-baseline-v1'));
+        assert(strcmp(meta.sampler_version, 'Poisson-Knuth-PTRS-v1'));
+    end
 end
 
 function testSingleWavelength()

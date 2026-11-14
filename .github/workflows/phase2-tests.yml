@@ -1,0 +1,54 @@
+name: Phase 2 dual-gain validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase2-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  octave-validation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - name: Verify exact scientific dependency checkouts
+        run: python3 scripts/verify_submodules.py --require-checkout
+      - name: Test independent validation utilities
+        run: python3 -m unittest discover -s scripts/tests -v
+      - name: Install numerical runtime
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends octave octave-image octave-statistics
+      - name: Complete Phase 2 numerical suites and Phase 1 prerequisite
+        run: octave --no-gui --quiet --eval "addpath('matlab'); report=run_phase2_tests('outputs/phase2/validation',true); assert(report.phase2_passed);"
+      - name: Verify failures invalidate stale success reports
+        run: python3 scripts/test_phase2_runner_failure.py > outputs/phase2/validation/phase2-runner-failures.json
+      - name: Generate simultaneous dual-gain demo artifacts
+        run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(false); summary=phase2_demo('outputs/phase2/demo'); assert(summary.demo_complete && summary.frame_count==6);"
+      - name: Repeat demo in a fresh process
+        run: octave --no-gui --quiet --eval "addpath('matlab'); setup_project(false); phase2_demo('outputs/phase2/demo-repeat');"
+      - name: Independently verify artifacts and reproducibility
+        run: python3 scripts/verify_phase2_artifacts.py outputs/phase2 --expected-commit "$GITHUB_SHA" --compare-dir outputs/phase2/demo-repeat > outputs/phase2/validation/phase2-acceptance.json
+      - name: Confirm dependencies were not modified
+        run: python3 scripts/verify_submodules.py --require-checkout
+      - name: Upload numerical evidence and simultaneous readouts
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        if: always()
+        with:
+          name: phase2-evidence-${{ github.sha }}
+          path: |
+            outputs/phase2/validation/
+            outputs/phase2/demo/
+          if-no-files-found: error
+          retention-days: 14

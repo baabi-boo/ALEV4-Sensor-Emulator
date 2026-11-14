@@ -1,21 +1,21 @@
 # Development roadmap
 
-**Phase 0 is established. Phase 1 is complete and acceptance-tested in GNU Octave 8.4.0.** All expanded numerical, RAW, provenance, integration and repeated-process artifact gates passed together on the revision identified in the [completion report](PHASE1_COMPLETION.md). No native MATLAB runtime pass or ALEV4 calibration is claimed. A phase passes only when its evidence and tests exist; numbered future targets are not completion claims.
+**Phase 0 is established. Phase 1 is complete and acceptance-tested in GNU Octave 8.4.0.** Phase 2 now implements simultaneous dual gain; its current release status is recorded in the [README](../README.md), with the final revision and evidence in the [Phase 2 completion report](PHASE2_COMPLETION.md). The historical Phase 1 numerical, RAW, provenance, integration, and repeated-process gates remain identified in its [completion report](PHASE1_COMPLETION.md). No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
 
 | Phase | Goal | Acceptance evidence |
 | --- | --- | --- |
 | 0 | Reproducible repository with two pinned upstream submodules | `.gitmodules`, 160000 gitlinks, clean `main`, integrity check passing |
 | 1 | Generic spectral Bayer sensor baseline | Known photon-to-electron conversion, shot-noise scaling, deterministic tests, scene-to-RAW demo |
-| 2 | Independent dual-gain sensor paths | High- and low-gain synthetic readouts with gain, read-noise, saturation and merge continuity tests |
+| 2 | Simultaneous high/low-gain readout of shared charge | Independent electronic noise, gain/clipping checks, guarded observable merge, synthetic bundles and repeatable artifacts |
 | 3 | ALEV4-inspired geometry and optics | Documented pixel grid and sensor dimensions, calibrated/assumed CFA spectral response, measured or stated PSF/MTF |
 | 4 | Sensor noise and readout realism | PRNU/DSNU, row/column structure, dark-frame behaviour, clipping and exposure-index sweeps |
 | 5 | RAW and ARRI-compatible post-capture color transforms | Labelled synthetic RAW, reproducible demosaic/color pipeline, numeric LogC4/AWG4 transform tests |
 | 6 | Real-camera characterization | Controlled exposure brackets, Xyla chart, dark/flat frames, color charts and comparison metrics with uncertainties |
 | 7 | Performance, reproducibility and public reports | Multi-frame benchmark, full example workflows, reported error bars and reproducible validation assets |
 
-## Phase 1 completion gate
+## Preserved Phase 1 completion gate
 
-The implementation now contains the generic spectral sensor, retained photoelectron expectations, seeded noise/readout, synthetic RAW I/O, controlled fixtures, and an ISETCam uniform-scene comparison. Acceptance requires all of the following on an identified source revision:
+Phase 1 supplies the generic spectral sensor, retained photoelectron expectations, seeded noise/readout, synthetic RAW I/O, controlled fixtures, and an ISETCam uniform-scene comparison. Its acceptance requires the following on an identified source revision:
 
 1. Verify the declared upstream gitlinks and clean, initialized checkouts at those exact revisions.
 2. Pass numerical conversion, exposure/QE/area scaling, Bayer phase, noise statistics, clipping, quantization, invalid-input, and RNG-isolation tests.
@@ -25,9 +25,32 @@ The implementation now contains the generic spectral sensor, retained photoelect
 6. Repeat the demo in a fresh process and independently verify the artifacts, analytic exposure-bracket expectations, and identical same-runtime output files.
 7. Retain reports identifying runtime, tested repository revision, dependency revisions, and test commands, then confirm dependencies were not modified by execution.
 
-The core-only entrypoint intentionally reports `phase1_passed=false`. A runtime-installation probe, source lint, or an attractive preview cannot substitute for the full acceptance gate. See [usage](PHASE1_USAGE.md) and [validation](VALIDATION.md).
+These gates passed for the recorded Phase 1 revision and remain regression requirements. The core-only entrypoint intentionally reports `phase1_passed=false`. See [Phase 1 usage](PHASE1_USAGE.md) and [validation](VALIDATION.md).
 
-These gates have passed for the recorded Phase 1 revision. The next development phase is **Phase 2: independent simultaneous high-gain and low-gain paths**. The remaining phase goals and calibration requirements are unchanged.
+## Phase 2 implementation and release gate
+
+The implementation now samples one shared photocharge array and physical well, branches into independently configured electronics, and reconstructs signed electrons from the two recorded ADC planes. It preserves Phase 1 APIs and uses the same spectral integration helper. The [numerical contract](PHASE2_DESIGN.md) defines gain/units, conservative rail validity, the low-channel transition policy, its quantization margin, and its noisy-estimator limitations.
+
+Phase 2 release acceptance requires all of the following together:
+
+1. Preserve the complete Phase 1 numerical/ISETCam prerequisite and its separate artifact/repeat gates.
+2. Verify shared sampled charge, independent path transfer functions, distinct ADC and physical saturation, and RNG restoration on success and failure.
+3. Measure shared shot covariance, independent electronic noise, cancellation of shot noise in the path difference, and electronic noise added after physical well clipping. Use sample-size-based tolerances and meaningful wrong-model controls.
+4. Verify deterministic merge continuity and quantization bounds, including fractional black offsets and the high-gain upper-rail boundary. Merge decisions must use recorded channels, not hidden noiseless charge.
+5. Reject malformed configuration, unsupported numerical ranges, corrupted bundles, ambiguous metadata, and inconsistent validity flags. Verify no-overwrite and owned failure cleanup behavior.
+6. Execute the Phase 2 runner with the Phase 1 prerequisite required; stale success must not survive a failed rerun after report invalidation succeeds. A failed process cannot be replaced by an old report when initial storage fails.
+7. Generate all six dual-gain demo bundles, independently decode and recompute their deterministic results, repeat in a fresh process, and compare distinct nonaliased artifact sets.
+8. Retain the tested source/dependency revisions, runtime, commands, reports and artifact checksums; confirm clean pinned dependencies and the release CI result.
+
+The Phase 2 core-only entrypoint deliberately reports `phase2_passed=false`. A passing numerical report alone does not replace the artifact and independent-repeat gates. The [usage guide](PHASE2_USAGE.md), [bundle contract](PHASE2_ARTIFACTS.md), and [review ledger](PHASE2_REVIEW_LOG.md) describe the implementation and verification work without treating pending release evidence as complete.
+
+## Next: Phase 3 geometry and optics
+
+After Phase 2 acceptance, the next development phase is **Phase 3: ALEV4-inspired geometry and optics**. Its first deliverable should identify the origin and confidence of every geometry, CFA, and optical parameter. Published dimensions, assumed spectral curves, fitted values, and controlled measurements must remain distinguishable.
+
+Implement and test pixel-grid/CFA origin conventions, physical image extent and spatial sampling, followed by a documented PSF/MTF model and independently checked spatial integration. The current ISETCam adapter only validates a uniform field; nonuniform optical images require a separate resampling/integration contract. Retain both existing readout modes and their acceptance gates while adding this layer.
+
+A physically plausible optical model is not automatically a calibrated ALEV4 model. Structured noise, color transforms, and real-camera fitting retain their later phases instead of being silently folded into geometry work.
 
 ## Calibration gate
 

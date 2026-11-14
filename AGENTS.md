@@ -1,0 +1,72 @@
+# Working on ALEV4 Sensor Emulator
+
+## Start with the recorded state
+
+Read `README.md`, `docs/ROADMAP.md`, `docs/ARCHITECTURE.md`, and the design,
+usage, and completion documents for the phase being changed. Inspect the
+current branch, worktree, dependency pins, and latest CI result before choosing
+work. A roadmap target is not evidence that its implementation exists. Preserve
+other contributors' changes and coordinate ownership when agents share files.
+
+## Scientific and numerical contract
+
+- Keep photons, electrons, seconds, spectral-bin widths, and digital numbers
+  explicit. Preserve the distinction between expected charge, sampled charge,
+  stored charge, signed readout, and quantized output.
+- Simultaneous dual gain uses one exposure, one sampled photocharge array, and
+  one physical full-well limit. Branch only into separate readout electronics.
+  Shared shot noise and independent downstream read noises must remain testable.
+- Reconstruct merged values from the observed readouts and their configuration.
+  Do not use inaccessible noiseless expectations to improve a reported merge.
+  Separate ADC clipping, conservative rail validity, and physical saturation.
+- Keep explicit seeds, restore caller RNG state on success and failure, and
+  state the runtime/version governing reproducibility. Do not promise identical
+  random streams across MATLAB and Octave without measured evidence.
+- Reject malformed configuration, unsupported numeric ranges, missing required
+  dependencies, and failed assertions. Do not silently replace a required gate
+  with a fallback or report a skipped test as passed.
+
+## Boundaries and dependencies
+
+This is an independent, uncalibrated research model. Label assumed parameters
+and synthetic artifacts. Do not claim sensor identity, measured ARRI dynamic
+range, proprietary calibration, or genuine ARRIRAW support without the required
+independent evidence. Keep sensor physics separate from display/color transforms.
+
+Keep ISETCam and ISETHdrsensor as pinned, separately maintained submodules.
+Implement project behavior in this repository; do not edit, update, or vendor
+upstream dependencies accidentally. An intentional pin update needs documented
+purpose and executed compatibility checks. Use
+`python3 scripts/verify_submodules.py --require-checkout` before and after full
+acceptance. Observed Git HEAD metadata alone does not prove source cleanliness.
+
+## Verification and evidence
+
+Preserve earlier phase acceptance gates when adding a later phase. Test changed
+physics with independent analytical expectations and statistically justified
+tolerances, including error paths and relevant boundary cases. For exported
+artifacts, verify actual bytes, shape, order, units, metadata, and reconstruction;
+do not trust the producer's success flags alone. Test repeatability in separate
+processes when that is an acceptance requirement.
+
+Record exact commands, runtime, tested source revision, dependency revisions,
+results, and any missing execution. Invalidate stale successful reports before
+rerunning tests. Mark a phase complete only after its required gates execute and
+their evidence is retained. Native MATLAB compatibility remains unverified until
+MATLAB itself runs the relevant gates.
+
+## Handoff and delivery
+
+Update the roadmap, usage/design documentation, and completion or progress report
+with what changed, what passed, what remains uncertain, and the next concrete
+step. Keep agent ledgers factual: count actual delegated tasks and record their
+contributions; do not invent execution, reviewers, or passes.
+
+Make focused, reviewable commits and inspect the final diff for accidental data,
+generated outputs, dependency edits, or credentials. Keep raw camera/calibration
+datasets in their excluded directories unless explicitly authorized for lawful
+distribution. Respect the user's requested branch and existing authorization;
+do not request permission again for work already authorized. Before pushing,
+check for upstream changes, integrate them without discarding work, and report
+the resulting commit and observed CI outcome. If a required gate cannot run,
+state exactly what is missing and leave the completion claim open.

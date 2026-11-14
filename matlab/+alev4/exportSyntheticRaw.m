@@ -7,7 +7,10 @@ function files = exportSyntheticRaw(result, cfg, output_base)
 %   already exist. Use a distinct base name for every export. This format is
 %   not ARRIRAW, DNG, or a calibrated ALEV4 capture.
 %   The UTF-8 JSON manifest is limited to 2,000,000 bytes, matching the
-%   reader. Oversized metadata is rejected before creating any output file.
+%   reader. Finite numeric metadata uses 17 significant decimal digits and
+%   is checked after native decoding; the decoded sensor is validated again.
+%   Unsupported precision or oversized metadata is rejected before creating
+%   any output file.
 %
 %   Temporary files are completed before publication. An ordinary failure
 %   removes this invocation's incomplete pair. Publication of two separate
@@ -145,7 +148,20 @@ function writePayload(path, raw)
 end
 
 function bytes = encodeManifest(meta)
-    encoded = jsonencode(meta);
+    try
+        [encoded, decoded] = alev4.encodeBundleJson(meta);
+        sensor = decoded.sensor;
+        % JSON vectors have no row/column orientation. Match the reader's
+        % canonical one-bin QE shape before checking its physical bounds.
+        if numel(sensor.wavelength_nm) == 1 && isnumeric(sensor.qe) && ...
+                isvector(sensor.qe) && numel(sensor.qe) == 3
+            sensor.qe = sensor.qe(:).';
+        end
+        alev4.createBaselineSensor(sensor);
+    catch err
+        error('ALEV4:InvalidRawMetadata', ...
+            'Cannot preserve and validate RAW metadata: %s', err.message);
+    end
     bytes = unicode2native([encoded sprintf('\n')], 'UTF-8');
     if numel(bytes) > 2e6
         error('ALEV4:InvalidRawMetadata', ...
