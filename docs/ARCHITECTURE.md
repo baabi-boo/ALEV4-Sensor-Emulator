@@ -1,6 +1,70 @@
 # Architecture and boundaries
 
-The main repository is the **integration and independent sensor-model implementation layer**. It does not fork, rewrite, or vendor the full history of ISETCam or ISETHdrsensor. Phase 1 provides the accepted generic single-gain baseline; its [completion report](PHASE1_COMPLETION.md) records the historical tested revision. Phase 2 adds simultaneous dual gain; its release status is recorded in the [README](../README.md), and its [completion report](PHASE2_COMPLETION.md) identifies the final evidence and outcome.
+The main repository is the **integration and independent sensor-model implementation layer**. It does not fork, rewrite, or vendor the full history of ISETCam or ISETHdrsensor. Phase 1 provides the accepted generic single-gain baseline; its [completion report](PHASE1_COMPLETION.md) records the historical tested revision. Phase 2 adds accepted simultaneous dual gain; its [completion report](PHASE2_COMPLETION.md) identifies the tested source and retained evidence.
+
+Phase 3 is implemented in the current development tree. It places physical
+geometry, optional optical filtering, and conservative spatial sampling ahead
+of those preserved readouts. Exact-source release verification is still in
+progress; implementation, development execution, and a clean-source release
+pass are separate claims. See the [usage guide](PHASE3_USAGE.md),
+[numerical contract](PHASE3_DESIGN.md), and [validation gates](VALIDATION.md).
+
+## Spatial front end and geometry binding
+
+`createSensorGeometry` owns a separate versioned geometry schema: full-grid
+size, one-based active ROI, square pitch and origin in metres, full-grid Bayer
+pattern, and parameter source IDs. `sensorGrid` derives active pixel edges and
+centres without allocating a full-frame coordinate mesh for a small crop.
+Coordinates retain their full-grid location; crop offsets adjust Bayer parity.
+Unsupported ranges, collapsed adjacent sites, and excessive relative edge
+spacing error reject rather than changing the effective photosite footprint.
+
+`bindSensorGeometry(readout, geometry, mode)` preserves the existing single-
+and dual-gain schemas. Explicit `derive` mode copies the configuration and
+changes only image size, pitch, and CFA pattern, inside `.sensor` for dual
+gain. The default spatial-wrapper mode, `validate`, rejects conflicting
+already-bound settings. Geometry does not add a second physical well or alter
+either path's electronics.
+
+`alexa35Geometry` is an opt-in Open Gate geometry profile. The published
+4608-by-3164 photosites and 6.075 micrometre pitch are distinguished from the
+caller-selected Bayer origin and assumed QE/PSF in the
+[source register](PHASE3_SOURCES.md). This full grid describes the published
+active area; it does not establish total die size, optical-black dimensions,
+hardware crop origins, measured optical response, or calibration.
+
+`simulateSpatialExposure` executes the following declared operations:
+
+1. Validate cell-average spectral photon irradiance and physical cell edges.
+   Input planes correspond exactly to the readout's wavelength bins. Point
+   samples require an explicit reconstruction before entering this interface.
+2. For `pre_psf` input, apply a shared or per-bin finite PSF to each spectral
+   plane **before CFA selection**. Kernel origin, physical sampling, spectral
+   association, and complete support are explicit. Only the valid-support
+   crop survives; neither coefficients nor boundary support are silently
+   renormalized. An omitted pre-PSF kernel resolves to an explicit identity.
+   For `post_optics` input, preserve the input field and require `psf=[]`.
+3. Compute rectangular-overlap averages over complete active photosite
+   footprints. Separable sparse operators avoid a full source-by-target
+   two-dimensional matrix. Coverage is mandatory, with no extrapolation,
+   clamping, edge snapping, or renormalization of missing support. Identical
+   and aligned grids have exact copy paths.
+4. Pass the sampled **density** into the existing spectral integration and
+   single- or dual-gain exposure API. Pixel area, fill factor, exposure, QE,
+   and bin widths are applied once in spectral integration. Fill factor does
+   not also shrink the spatial averaging footprint.
+
+The geometry, PSF, and overlap helpers consume no random numbers. The wrapper
+preserves caller RNG state on success and failure; full-grid identity cases
+retain existing seeded readout results. An independently simulated smaller
+noisy crop is not promised to equal a crop of a full-frame random realization.
+Weighted operations reject unsupported subnormal arithmetic or erased positive
+support; exact identity/copy paths retain representable values.
+
+`opticalMtf` separately computes the complex discrete OTF and MTF at physical
+frequencies in cycles/metre, respecting the declared kernel origin and Nyquist
+bounds. Its optional continuous square-aperture sinc is an analytical
+reference, not a second sampling operation or a measured camera response.
 
 ## Shared spectral integration
 
@@ -40,13 +104,52 @@ Phase 1 continues to export its uint16 RAW/JSON pair and optional grayscale Baye
 
 The native bundle reader validates configuration and file association, reconstructs the merge from recorded channels, and checks flags. Export stages complete files, publishes the manifest last, refuses existing destinations, and removes only its own incomplete publication on failure. Concurrent writers to one base are unsupported. Python independently decodes the bytes, checks fixed demo expectations and summaries, validates report prerequisites, and rejects aliased repeat sets. Neither reader can reconstruct unobserved analog history from arbitrary RAW; simulator tests and controlled fixtures establish those separate properties.
 
-`run_phase2_tests` writes fresh incomplete evidence before execution, requires every numerical suite to report an explicit pass, and includes the complete Phase 1 numerical/ISETCam prerequisite for a full numerical pass. Its standalone mode remains incomplete. Separate workflow gates cover failure reporting, fresh-process demo repetition, independent artifacts, and clean dependencies. Observed Git revisions alone do not establish a clean or correctly pinned source tree.
+Phase 3 adds an [outer spatial bundle](PHASE3_ARTIFACTS.md) containing original,
+optical, and sampled float64 irradiance, expected electrons, optional PSF
+coefficients, geometry, operation order, and the unchanged nested readout
+payloads. Spatial cubes use plane-major, row-major, little-endian bytes.
+`spatial.json` binds fixed file names, exact shapes, units, lengths and SHA-256
+hashes. Native readback and an independent Python scalar verifier reconstruct
+the declared convolution, overlap, spectral integration, and observable
+readout associations; recomputing a hash cannot conceal a semantic mismatch.
+Retained expected charge is verification data, never an input to the
+observed-channel dual-gain merge.
+
+The Phase 3 reader validates original JSON keys and strings, bounded grammar,
+and original numeric tokens before constructing the spatial configuration.
+It preserves scalar/vector/matrix wire kinds and binary64 physical coordinates
+that a general native JSON decoder can round. The portable contract limits
+ASCII keys to 63 characters, objects to 256 fields, and nesting to 64
+object/array containers. It rejects ambiguous dimensions, duplicate keys,
+invalid Unicode escapes, embedded NULs, unsupported values, symlinks and
+aliased files. Coordinate decoding never relaxes physical coverage. The
+existing Phase 1/2 wire formats and decoder allowances remain unchanged.
+
+`exportSpatialBundle` validates the supplied retained result, creates a
+uniquely owned staging directory beside a new target, verifies the complete
+staged bundle, and publishes it after writing the manifest last. Existing
+targets and ambiguous staging ownership reject. Failure cleanup removes only
+this invocation's owned output. Concurrent writers to one target and universal
+atomic no-clobber publication are outside the contract.
+
+`run_phase3_tests` writes fresh incomplete evidence before execution and
+requires nine Phase 3 suite gates plus the complete Phase 2/Phase 1
+numerical/ISETCam prerequisites. Standalone execution reports `core_only` with
+`phase3_passed=false`. A numerical pass is still distinct from complete release
+acceptance. `scripts/run_phase3_acceptance.py` additionally runs Python and
+failure-reporting tests, all three phases' fresh-process demos/repeats,
+independent artifact verifiers, and dependency checks before and after
+execution. It checks disjoint repeat file identities and clean unchanged
+source, records commands/exits/hashes, and strips caller `GIT_*` overrides
+from its own Git reads and child gates. `--development` runs the same gates
+but always leaves `release_accepted=false`. Observed Git revisions alone do
+not establish a clean or correctly pinned source tree.
 
 ## Dependency responsibilities
 
-- `third_party/isetcam`: scene, optical-image, sensor, pixel, and imaging utilities. The retained adapter executes `sceneCreate`, `oiCompute`, and a noiseless Bayer `sensorCompute`; it does not supply an ARRI ALEV4 preset.
+- `third_party/isetcam`: scene, optical-image, sensor, pixel, and imaging utilities. The retained uniform adapter and restricted spatial fixtures execute `sceneCreate`, `oiCompute`, and a noiseless Bayer `sensorCompute`; they do not supply an ARRI ALEV4 preset.
 - `third_party/isethdrsensor`: linked HDR architecture research and test scenes, not executed by the current single/dual core. Its RGBW and multiple-exposure examples do not implement the specific simultaneous readout in this repository. Advanced examples may require external projects or datasets that are not bundled.
-- `matlab/+alev4/`: independently testable spectral integration, readout, merge, synthetic I/O, provenance observation, and ISETCam adapter. New project behavior belongs here rather than in modified submodules.
+- `matlab/+alev4/`: independently testable geometry, PSF/MTF, conservative sampling, spectral integration, readout, merge, synthetic I/O, provenance observation, and ISETCam adapters. New project behavior belongs here rather than in modified submodules.
 - `matlab/tests/` and `scripts/`: numerical acceptance, artifact corruption tests, independent scalar/file calculations, and dependency checks. Python verification does not implement a second production sensor simulator.
 
 ## ISETCam adapter boundary
@@ -55,7 +158,25 @@ The native bundle reader validates configuration and file association, reconstru
 
 Independent expectations are compared with analog volts divided by conversion gain. ISETCam's convenience electron getter rounds values and is unsuitable for this fractional-electron reference. The relative-error tolerance permits upstream single-precision roundoff rather than an arbitrary visual match.
 
-Nonuniform optical images require separately validated resampling and spatial integration. That geometry/optics layer is the next phase after dual-gain acceptance; the current adapter does not establish an ALEV4 optical low-pass filter or calibrated lens/MTF model.
+`alev4.isetSpatialFixture` adds genuine uniform, ramp, checker, and edge
+scene/optics/Bayer comparisons on a restricted 16-by-16 full-fill geometry.
+ISET's native optical output is already **post-optics point samples**.
+`isetPointGrid` explicitly defines a piecewise-bilinear field over those
+samples, retains every interior native knot in the cell partition, and
+computes each cell average from its four reconstructed corners. It requires
+complete point support and rejects extrapolation and unsupported numerical
+ranges. Those cell averages enter `simulateSpatialExposure` as `post_optics`
+with no second PSF.
+
+Independent footprint integration, native sensor quadrature refinement and
+source-cell refinement test that reconstruction. The chosen pitch and native
+sample spacing keep ISET's extra Gaussian regridding prefilter at 1-by-1, so
+the comparison has a stated spatial model. The adapter restores caller session,
+preferences and RNG state. Missing-dependency tests restore their own temporary
+path removals; an Octave image package loaded by the adapter remains loaded.
+Missing required dependencies reject. These
+fixtures do not establish arbitrary ISET optical-image imports, arbitrary
+native sensor/pixel configurations, measured ALEV4 OLPF, or calibrated lens MTF.
 
 ## Design rules
 
@@ -72,6 +193,11 @@ Nonuniform optical images require separately validated resampling and spatial in
 
 ## Planned later layers and exclusions
 
-After Phase 2 acceptance, Phase 3 adds documented sensor geometry, CFA assumptions, spatial sampling, and stated or measured PSF/MTF behavior. Structured noise/readout realism, demosaic and color characterization, AWG4/LogC4 encoding, controlled real-camera comparisons, and performance reporting retain their later roadmap phases.
+After Phase 3's exact-source release gate, the next development work is
+[Phase 4 sensor noise and readout realism](PHASE4_PLAN.md): persistent sensor
+realizations, PRNU/DSNU, exposure-dependent dark signal, and structured
+electronic noise while preserving shared dual-gain charge. Demosaic and color
+characterization, AWG4/LogC4 encoding, controlled real-camera comparisons, and
+performance reporting retain their later roadmap phases.
 
-No firmware emulation, MIPI CSI-2 hardware emulation, camera UI, lens-mount mechanics, or ARRI camera control protocol is implemented here. Neither synthetic format is an ARRIRAW encoder. Native MATLAB execution, calibrated ALEV4 equivalence, and practical full-frame performance remain unestablished until their own evidence exists.
+No firmware emulation, MIPI CSI-2 hardware emulation, camera UI, lens-mount mechanics, or ARRI camera control protocol is implemented here. None of the synthetic formats is an ARRIRAW encoder. Native MATLAB execution, calibrated ALEV4 equivalence, and practical full-frame performance remain unestablished until their own evidence exists.

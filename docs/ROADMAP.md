@@ -1,13 +1,13 @@
 # Development roadmap
 
-**Phase 0 is established. Phases 1 and 2 are complete and acceptance-tested.** Phase 2's simultaneous dual-gain implementation passed on source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally. The [Phase 2 completion report](PHASE2_COMPLETION.md) and [retained evidence index](evidence/phase2-release-record.json) identify the accepted gates and passing workflows. The historical Phase 1 acceptance remains identified in its [completion report](PHASE1_COMPLETION.md). No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
+**Phase 0 is established. Phases 1 and 2 are complete and acceptance-tested. Phase 3 is implemented and undergoing exact-source release verification.** Its [usage](PHASE3_USAGE.md), [design](PHASE3_DESIGN.md), [parameter sources](PHASE3_SOURCES.md), and [artifact contract](PHASE3_ARTIFACTS.md) describe the spatial layer. Historical accepted Phase 2 source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) passed in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally; its [completion report](PHASE2_COMPLETION.md) and [evidence](evidence/phase2-release-record.json) remain preserved. No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
 
 | Phase | Goal | Acceptance evidence |
 | --- | --- | --- |
 | 0 | Reproducible repository with two pinned upstream submodules | `.gitmodules`, 160000 gitlinks, clean `main`, integrity check passing |
 | 1 | Generic spectral Bayer sensor baseline | Known photon-to-electron conversion, shot-noise scaling, deterministic tests, scene-to-RAW demo |
 | 2 | Simultaneous high/low-gain readout of shared charge | Independent electronic noise, gain/clipping checks, guarded observable merge, synthetic bundles and repeatable artifacts |
-| 3 | ALEV4-inspired geometry and optics | Documented pixel grid and sensor dimensions, calibrated/assumed CFA spectral response, measured or stated PSF/MTF |
+| 3 | ALEV4-inspired geometry and optics | Sourced Open Gate geometry, crop/CFA binding, conservative spectral sampling, stated PSF/MTF, restricted nonuniform ISET comparison, verified spatial artifacts |
 | 4 | Sensor noise and readout realism | PRNU/DSNU, row/column structure, dark-frame behaviour, clipping and exposure-index sweeps |
 | 5 | RAW and ARRI-compatible post-capture color transforms | Labelled synthetic RAW, reproducible demosaic/color pipeline, numeric LogC4/AWG4 transform tests |
 | 6 | Real-camera characterization | Controlled exposure brackets, Xyla chart, dark/flat frames, color charts and comparison metrics with uncertainties |
@@ -44,13 +44,46 @@ The accepted source passed 62 Phase 2 numerical groups, all 92 Phase 1 regressio
 
 The Phase 2 core-only entrypoint deliberately reports `phase2_passed=false`. A passing numerical report alone does not replace the artifact and independent-repeat gates. The [usage guide](PHASE2_USAGE.md), [bundle contract](PHASE2_ARTIFACTS.md), and [review ledger](PHASE2_REVIEW_LOG.md) describe the accepted implementation and its verification work; the retained reports keep the source revision that actually produced them.
 
-## Next: Phase 3 geometry and optics
+## Phase 3 implementation and release gate
 
-The next development phase is **Phase 3: ALEV4-inspired geometry and optics**. Its Phase 2 acceptance prerequisite is now satisfied. Begin with the source register and Slice 3A in the [Phase 3 plan](PHASE3_PLAN.md): explicit pixel-grid coordinates, active cropping, CFA phase, and identity regressions. Identify the origin and confidence of every geometry, CFA, and optical parameter. Published dimensions, assumed spectral curves, fitted values, and controlled measurements must remain distinguishable.
+The ordered [Phase 3 plan](PHASE3_PLAN.md) has been implemented: explicit
+geometry and crop parity, conservative cell-average spatial sampling, finite
+PSF filtering and physical-frequency MTF, a restricted nonuniform ISETCam
+adapter, and both preserved readouts behind a spatial wrapper. Published Open
+Gate counts/pitch are traceable; Bayer origin, QE and optical kernels remain
+explicit assumptions. ISET optical point samples receive declared bilinear
+reconstruction with independent footprint integration and refinement evidence.
 
-Implement and test pixel-grid/CFA origin conventions, physical image extent and spatial sampling, followed by a documented PSF/MTF model and independently checked spatial integration. The current ISETCam adapter only validates a uniform field; nonuniform optical images require a separate resampling/integration contract. Retain both existing readout modes and their acceptance gates while adding this layer.
+The complete acceptance command requires all of the following on one identified
+clean source revision:
 
-A physically plausible optical model is not automatically a calibrated ALEV4 model. Structured noise, color transforms, and real-camera fitting retain their later phases instead of being silently folded into geometry work.
+1. Every Phase 3 numerical group, genuine ISET uniform/ramp/checker/edge
+   comparison, and the complete Phase 2/Phase 1 prerequisites.
+2. Native malformed-artifact and runner-failure checks, independent Python
+   fixtures and verifiers, and truthful failure/incomplete status handling.
+3. Eight complete spatial demo bundles, including noisy simultaneous dual
+   gain, with independently reconstructed optics, overlap, expected electrons,
+   observable readout checks and file hashes.
+4. Fresh-process byte-identical repeats for all three phases, with distinct
+   nonaliased artifact sets and their unchanged earlier-phase contracts.
+5. Clean pinned dependencies before and after execution, source cleanliness,
+   exact commands/runtime/checksums, and observed release CI evidence.
+
+Core-only numerical execution and seven-frame demos remain incomplete. The
+source geometry does not establish measured optical response, calibration,
+complete die dimensions, arbitrary ISET imports, or full-frame throughput.
+
+## Next: Phase 4 sensor noise and readout realism
+
+After Phase 3 acceptance, follow the [Phase 4 plan](PHASE4_PLAN.md). Start by
+separating a persistent sensor realization from frame/exposure randomness.
+Define PRNU, dark current/DSNU and their units/order before adding row/column
+or temporal electronics. Fixed maps must retain full-grid coordinates through
+crops; dual gain must continue to share one photocharge and one physical well.
+Use zero-effect identity, analytical means/variances/covariances and controlled
+exposure sweeps as gates. Assumed parameters remain labelled until measured
+datasets support them. Color transforms and real-camera calibration retain
+Phases 5 and 6.
 
 ## Calibration gate
 

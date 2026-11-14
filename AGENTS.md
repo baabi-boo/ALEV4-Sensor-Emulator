@@ -26,6 +26,27 @@ other contributors' changes and coordinate ownership when agents share files.
   dependencies, and failed assertions. Do not silently replace a required gate
   with a fallback or report a skipped test as passed.
 
+## Spatial model contract
+
+- Keep geometry separate from the existing readout schemas. Use one-based
+  full-grid ROI coordinates, metres, and crop-adjusted Bayer parity; validate
+  already bound readouts instead of silently repairing conflicting fields.
+- Spatial inputs are cell-average spectral photon irradiance. Conservative
+  sampling returns density, so pixel area, fill factor, exposure, QE and bin
+  widths remain applied once by the existing spectral integration stage.
+- Filter spectral planes before the CFA. Require explicit PSF sampling,
+  origin, spectral association and complete support. Post-optics ISET output
+  receives no implicit second PSF; native point samples require a declared
+  reconstruction before they become cell averages.
+- Preserve physical coordinates through serialization. Use the Phase 3
+  numeric-token reader for spatial manifests; never conceal decoder rounding
+  by relaxing coverage, snapping edges or renormalizing missing support.
+- Keep published Open Gate geometry, assumed CFA/QE/PSF parameters and real
+  measurements distinct. The geometry profile does not establish total die
+  dimensions, camera crop origins, measured optical response or calibration.
+- Follow the Phase 3 usage/artifact contracts and preserve all earlier phase
+  gates. Core-only numerical or demo results must remain visibly incomplete.
+
 ## Boundaries and dependencies
 
 This is an independent, uncalibrated research model. Label assumed parameters

@@ -1,4 +1,4 @@
-# Validation plan
+# Validation gates and evidence
 
 ## Current evidence boundary
 
@@ -17,11 +17,20 @@ passed on the tested source.
 The [Phase 2 completion report](PHASE2_COMPLETION.md) and
 [retained evidence index](evidence/phase2-release-record.json) identify the
 commands, inventories, runtime, source/dependency revisions, checksums, and CI
-results. These current Phase 1 regressions supplement its historical acceptance;
+results. Those Phase 1 regressions supplement its historical acceptance;
 the older 91-group/29-test results are not relabelled as Phase 2 evidence.
 Native MATLAB execution and calibrated ALEV4 equivalence remain unverified.
-Source lint is useful but is not runtime evidence. The next implementation
-work follows the [Phase 3 geometry and optics plan](PHASE3_PLAN.md).
+Source lint is useful but is not runtime evidence.
+
+**Phase 3 is implemented; final exact-source release acceptance is pending.**
+Its geometry, spatial sampling, PSF/MTF, strict artifacts, and restricted real
+ISETCam comparison are described in the [usage guide](PHASE3_USAGE.md) and
+[design contract](PHASE3_DESIGN.md). A development pilot or a dirty worktree's
+observed baseline HEAD does not identify the later changed source. Earlier
+passes are not a claim that the current tree or its CI has passed. Final
+counts and outcomes belong to evidence retained for the exact tested revision,
+not a hardcoded target in this document. Phase 3 preserves every earlier
+phase's numerical, artifact, failure-reporting, and fresh-process repeat gate.
 
 ## Scientific targets
 
@@ -181,15 +190,216 @@ Phase 2's dedicated workflow adds its own execution and artifact checks. A runti
 installation, source review, partial report or unsupported skip cannot replace
 the complete release gate.
 
+## Phase 3 spatial acceptance (no camera required)
+
+The [Phase 3 numerical runner](../matlab/run_phase3_tests.m) requires nine
+separate suite gates. Every suite must report `status='passed'`, scalar logical
+`passed=true`, a positive integer `test_count`, and the matching inventory of
+uniquely named passing groups. Missing suites, malformed inventories, duplicate
+group names, nonlogical pass flags, failed assertions, and skipped required
+work prevent a numerical pass. Full execution also requires the nested
+Phase 2 report with `phase1_required=true` and the complete passing Phase 1
+ISETCam prerequisite.
+
+| Report gate | Executed suite | Evidence required |
+| --- | --- | --- |
+| `geometry` | [test_phase3_geometry.m](../matlab/tests/test_phase3_geometry.m) | Hand-calculated physical edges/centres; all full-grid Bayer patterns and crop parities; singleton/odd/boundary ROIs; published geometry versus assumptions; unchanged single/dual readout settings and seeded identity |
+| `geometry_edges` | [test_phase3_geometry_edges.m](../matlab/tests/test_phase3_geometry_edges.m) | Canonical numeric representations; bounded descriptors without large allocation; strict source IDs and complete readout binding; conflicting size/pitch/CFA rejection; output limits before optics; no RNG consumption |
+| `sampling` | [test_phase3_sampling.m](../matlab/tests/test_phase3_sampling.m) | Independent scalar rectangle intersections; integral conservation over the same physical region; noninteger ratios, offsets, crops and refinement; strict complete coverage; exact copy paths; area/fill/exposure factors applied once |
+| `optics` | [test_phase3_optics.m](../matlab/tests/test_phase3_optics.m) | Independent finite convolution for even/asymmetric origins; valid-support physical crops; impulse orientation and support; spectral association; complex DFT and binomial cosine oracles; separate continuous aperture reference; flat/edge/sinusoid behavior before CFA |
+| `integration` | [test_phase3_integration.m](../matlab/tests/test_phase3_integration.m) | Scalar optics-to-overlap-to-charge-to-ADC oracle; preserved seeded single/dual identity and shared charge; explicit binding and operation order; rejected second PSF for post-optics data; crop CFA, spectral mapping and collection exactly once |
+| `spatial_io` | [test_phase3_artifacts.m](../matlab/tests/test_phase3_artifacts.m) | Independent binary order and SHA-256; strict numeric-token/kind retention; exact coordinates and tiny values; corruption despite recomputed hashes; complete nested associations; regular nonaliased files; no overwrite and owned staging/publication cleanup |
+| `numerical_edges` | [test_phase3_numerical_edges.m](../matlab/tests/test_phase3_numerical_edges.m) | Translated-coordinate precision, physical area limits, supported weighted versus exact-copy subnormal behavior, overlap/point-reconstruction underflow, binary64 tokens, extreme MTF/aperture scales, and RNG restoration on early/late failures |
+| `demo_contract` | [test_phase3_demo.m](../matlab/tests/test_phase3_demo.m) | Fixed core fixture names/settings; decoded byte-derived summaries; analytical spatial/readout expectations; noisy observable constraints; same-process repeat; no overwrite; missing ISET refuses full completion; caller state restoration |
+| `iset_spatial` | [test_phase3_iset.m](../matlab/tests/test_phase3_iset.m) | Genuine pinned uniform/ramp/checker/edge scene → optics → Bayer execution; bilinear point reconstruction and independent footprint integrals; native and source-cell refinement; no second optics; exposure scaling, explicit missing-dependency failures, and caller session/preferences/RNG restoration |
+
+`run_phase3_tests(..., false)` deliberately omits `iset_spatial` and the
+Phase 2/Phase 1 prerequisite, reports `core_only`, and leaves
+`phase3_passed=false`. The eight standalone suites cannot substitute for the
+ninth gate. A successful full numerical report likewise does not regenerate
+the three phases' separate release demos or establish their file independence.
+
+### Spatial mathematics and restricted ISET comparison
+
+Input is cell-average spectral photon irradiance on explicit physical edges.
+The independent overlap oracle computes intersections of individual source
+rectangles and complete target footprints; it does not reuse the production
+sparse matrices. Conservation compares integrals over the same physical
+region. A crop is checked against its own source integral. The sampled output
+remains density, with pitch squared, fill factor, exposure, QE and bin widths
+applied once by the preserved spectral integrator. Missing support is an
+error, not permission to extrapolate, snap coordinates or renormalize weights.
+
+Optical tests filter spectral planes before CFA selection and distinguish
+convolution from correlation through asymmetric kernels and explicit origin
+offsets. The reported complex OTF is compared with an independent direct DFT;
+the `[1/4 1/2 1/4]` kernel supplies a separate cosine oracle. The ideal
+continuous square-aperture sinc is an optional reference, not a second blur
+or an assumed exact transfer function for every discrete sampler. Unsupported
+numerical ranges fail explicitly instead of erasing small positive support.
+
+The real ISET fixture uses a declared 16-by-16 full-fill geometry and native
+sampling that leaves the upstream extra Gaussian regridding prefilter at
+1-by-1. Native optical output is **post-optics point samples**.
+`isetPointGrid` defines a piecewise-bilinear reconstruction, requires every
+interior native knot among the cell edges, and converts each cell to its
+four-corner average without extrapolation. Independent footprint integrals,
+native quadrature refinement, source-cell refinement and deliberately coarse
+controls test that approximation. Converted cell averages enter the wrapper
+as `post_optics` with `psf=[]`. This evidence covers the four declared
+fixtures and their stated model, not arbitrary ISET imports or measured ARRI
+optics. The [source register](PHASE3_SOURCES.md) identifies the pinned upstream
+functions and separates published geometry from assumptions.
+
+### Spatial wire format and independent artifacts
+
+The [spatial bundle contract](PHASE3_ARTIFACTS.md) retains original, optical,
+sampled and expected-charge arrays, optional PSF coefficients, and the
+unchanged Phase 1/2 readout payloads. Native and Python readers check exact
+inventory, regular distinct files, lengths, hashes, plane-major/row-major
+little-endian bytes, shapes, units, complete configuration, source lists,
+operation order and nested metadata associations. They recompute convolution,
+overlap and expected electrons. Corruption tests update hashes as well as data
+to ensure a valid digest cannot conceal an invalid physical association.
+
+The metadata vocabulary is deliberately bounded: ASCII object keys match
+`[A-Za-z][A-Za-z0-9_]{0,62}` with the frozen MATLAB/Octave keyword exclusions,
+so the limit is **63 characters** independent of host `namelengthmax`.
+Each object has at most **256 fields**, and nesting admits at most **64
+object/array containers**, including the outer object. Manifests are bounded
+at 2,000,000 UTF-8 bytes and spatial payloads at 100 million numeric samples.
+These are format limits, not full-frame memory or throughput guarantees.
+
+`spatialDecodeJson` validates original strings and keys, applies bounded strict
+grammar/duplicate checks, and parses original numeric lexemes using
+`str2double`. Its retained native kind metadata distinguishes numeric scalars,
+vectors and matrices: `[value]` cannot satisfy a scalar schema, and an extra
+array wrapper cannot silently change a declared shape. Explicit single-bin
+QE handling remains supported. Tests cover exact 17-digit binary64 coordinate
+round trips, signed zero, tiny values and underflow, duplicate/normalized or
+nonportable keys, booleans as dimensions, malformed Unicode/surrogates,
+embedded NULs, and unsupported ragged/mixed arrays. No relaxed coverage
+tolerance or edge snapping hides decoder rounding. Phase 1/2 encoders and
+their existing precision allowances remain unchanged; their nested manifests
+also undergo strict grammar checks before the existing readout reader runs.
+
+The Python verifier uses independent scalar arithmetic on decoded bytes.
+For deterministic fixtures it reconstructs charge, clipping, ADC rounding and
+observable dual-gain merge; for noisy fixtures it checks observable readout
+and flag constraints plus same-runtime repeated artifacts. Neither hashes nor
+metadata establish arbitrary unrecorded analog history or a latent noise
+realization. Numerical noise tests and the preserved earlier-phase covariance
+gates supply that separate model evidence.
+
+The complete demo has eight bundles: `identity_single`, `flat_binomial`,
+`shifted_impulse`, `edge`, `sinusoid`, `crop_cfa`, `dual_spatial`, and
+`iset_checker`. Core-only generation has seven fixtures and explicitly records
+`demo_complete=false`. The full verifier rejects that incomplete set. A
+same-process test repeat is useful regression evidence, but release acceptance
+requires separate processes and independent file identities.
+
+### Failure and incomplete-result gates
+
+[test_phase3_runner_failure.py](../scripts/test_phase3_runner_failure.py)
+executes the real runner in owned temporary repositories with small control
+suites. It tests missing prerequisites, missing/false/skipped ISET work,
+malformed suite inventories, invalid pass flags, duplicate groups, failed
+Phase 2/Phase 1 prerequisites, injected assertions, and core-only status.
+These fixture suites establish runner control flow, not scientific or ISET
+acceptance. Phase 1 and Phase 2 subprocess failure checks remain required.
+
+The runner invalidates stale success before setup. Failures after successful
+invalidation must leave a fresh failed report. Initial write refusal can leave
+old bytes on disk, final write refusal can leave incomplete evidence, and an
+error after the runner returns can coexist with a passing numerical report.
+The **current process exit and complete gate results govern acceptance** in
+all cases; an older or locally passing report cannot rescue a failed command.
+
+### Complete release CLI and its 16 external commands
+
+Use a clean committed checkout, initialized clean pinned dependencies, Git,
+Python 3.10 or newer, and GNU Octave with its `image` package. From the
+repository root, choose an output directory that does not already exist:
+
+```bash
+python3 scripts/run_phase3_acceptance.py --octave octave --output-root outputs/phase3-release --expected-commit "$(git rev-parse HEAD)"
+```
+
+The [acceptance orchestrator](../scripts/run_phase3_acceptance.py) executes
+these **16 external commands in order**. In this inventory, `R` denotes the
+selected output root and `S` the observed source commit. Each Octave expression
+uses `octave --no-gui --quiet --eval "addpath('matlab'); EXPRESSION"`; Python
+commands use the interpreter that launched the orchestrator. This is an
+inventory of the complete CLI, not a replacement for its internal checks and
+report copying.
+
+| Order | Recorded command label | CLI or Octave expression |
+| --- | --- | --- |
+| 1 | `dependencies-before` | `python3 scripts/verify_submodules.py --require-checkout` |
+| 2 | `python-tests` | `python3 -m unittest discover -s scripts/tests -v` |
+| 3 | `all-numerical-gates` | `r=run_phase3_tests('R/phase3/validation',true); assert(r.phase3_passed);` |
+| 4 | `phase1-runner-failures` | `python3 scripts/test_runner_failure.py --octave octave` |
+| 5 | `phase2-runner-failures` | `python3 scripts/test_phase2_runner_failure.py --octave octave` |
+| 6 | `phase3-runner-failures` | `python3 scripts/test_phase3_runner_failure.py --octave octave` |
+| 7 | `phase1-demo` | `setup_project(true); phase1_demo('R/phase1/demo');` |
+| 8 | `phase1-demo-repeat` | `setup_project(true); phase1_demo('R/phase1/demo-repeat');` |
+| 9 | `phase1-artifact-verification` | `python3 scripts/verify_phase1_artifacts.py R/phase1 --expected-commit S --compare-dir R/phase1/demo-repeat` |
+| 10 | `phase2-demo` | `setup_project(true); phase2_demo('R/phase2/demo');` |
+| 11 | `phase2-demo-repeat` | `setup_project(true); phase2_demo('R/phase2/demo-repeat');` |
+| 12 | `phase2-artifact-verification` | `python3 scripts/verify_phase2_artifacts.py R/phase2 --expected-commit S --compare-dir R/phase2/demo-repeat` |
+| 13 | `phase3-demo` | `setup_project(true); phase3_demo('R/phase3/demo');` |
+| 14 | `phase3-demo-repeat` | `setup_project(true); phase3_demo('R/phase3/demo-repeat');` |
+| 15 | `phase3-artifact-verification` | `python3 scripts/verify_phase3_artifacts.py R/phase3 --expected-commit S --compare-dir R/phase3/demo-repeat` |
+| 16 | `dependencies-after` | `python3 scripts/verify_submodules.py --require-checkout` |
+
+Each primary/repeat demo runs in a separate numerical process. Before each
+artifact verifier, the orchestrator checks that the phase and demo directories
+are regular non-symlink directories, every artifact is a regular file, and
+primary/repeat device/inode identity sets are disjoint, including cross-name
+hardlinks. Those checks apply to **all three phases**, independently of any
+individual verifier's legacy behavior. Verifiers then require complete
+matching inventories and byte-identical repeated contents, without normalizing
+or ignoring differences. Nested Phase 1/2 numerical reports are copied into
+their respective verifier roots with their original source/runtime identity.
+
+The orchestrator removes caller `GIT_*` environment overrides from both its
+own Git reads and every child gate, so alternate worktrees, indexes or Git
+configuration cannot redirect the evidence source. It confirms the actual
+repository root, expected commit, unchanged HEAD, source cleanliness at both
+ends, and pinned clean dependencies before and after execution. Source
+cleanliness also rejects `assume-unchanged` and `skip-worktree` flags in the
+root and initialized recursive submodule indexes, including gitlinks; ordinary
+Git status alone can conceal changed tracked bytes with those flags. It records
+each command, exit status and output, internal repeat-identity checks, reports,
+runtime/source/dependency associations, and hashes in `acceptance.json` and
+the selected output tree. The
+[Phase 3 CI workflow](../.github/workflows/phase3-tests.yml) invokes this same
+CLI; the workflow definition itself establishes no observed CI pass.
+
+For edited source, append `--development` and use a new output root. It runs
+the same scientific, dependency, artifact and repeat gates, but a successful
+run records `status='development_passed'` and `release_accepted=false` even
+if the source happened to be clean. A dirty tree's HEAD is not a content
+identity for uncommitted changes. Release mode requires every command and
+internal check to pass on one identified clean source revision; retain that
+receipt and the actual CI outcome before claiming release acceptance. A later
+change requires evidence on the changed source.
+
 ## Tests reserved for later phases
 
-- ALEV4-inspired geometry and calibrated optical response, including explicit
-  spatial sampling, PSF/MTF and nonuniform scene validation.
+- Measured ALEV4 optical response and calibration beyond Phase 3's published
+  geometry, assumed finite PSFs, and restricted nonuniform ISET fixtures.
 - Dark current, PRNU/DSNU, row/column correlations, temperature and exposure-index effects.
 - Demosaic/color characterization and neutral/color-chart expectations.
 - AWG4/LogC4 numeric reference vectors and encoding/decoding roundtrips, separate from sensor physics.
 - Motion/timing behavior and measured-camera gain, noise, transition/SNR and
   exposure-latitude comparisons under controlled conditions.
+
+After the Phase 3 release gate, the next implementation work follows the
+[Phase 4 sensor noise and readout plan](PHASE4_PLAN.md). Its persistent sensor
+realizations, PRNU/DSNU and dark-signal model must preserve zero-effect
+identity, crop coordinates, and the shared-charge simultaneous readout while
+adding independent statistical evidence for the new effects.
 
 ## Controlled-camera experiments needed
 
@@ -214,6 +424,15 @@ photodiode, and finite invalid estimates must not be interpreted without their
 masks. Final execution counts and measured values are recorded with their
 tested revision in the [Phase 2 completion report](PHASE2_COMPLETION.md), not
 inferred from this validation plan.
+
+Phase 3 adds `phase3-validation.json` with nine suite inventories and the nested
+Phase 2/Phase 1 prerequisites, `phase3-demo-summary.json`, and the hashed
+spatial bundles. Complete acceptance also retains the three phases' separate
+artifact receipts, failure-test reports, fresh-process repeat identity checks,
+all external command exits, and aggregate `acceptance.json`. A successful
+development receipt remains distinct from release acceptance. Retained
+noiseless spatial arrays support checking the declared operations; they do not
+grant an observed-channel merge access to hidden charge or calibrate the model.
 
 Observed Git HEADs do not prove a clean worktree or object identity by themselves. The strict dependency script and a clean CI checkout provide the corresponding execution evidence. Unknown provenance is labelled unavailable, not replaced by guessed revisions. Reproducibility applies to the recorded runtime/version; matching random streams across MATLAB and Octave is not promised.
 

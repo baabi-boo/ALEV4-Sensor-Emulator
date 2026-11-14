@@ -1,16 +1,19 @@
 # Phase 3 plan: explicit geometry and tested optics
 
-**Status: planned, not implemented or accepted by this document.** Start this
-phase after the identified Phase 2 release gates pass. The next deliverable is
-a spatial sensor model that feeds the existing single- and simultaneous
+**Status: the five ordered slices below are implemented; exact-source release
+verification is in progress.** This document retains the original development
+plan and its acceptance requirements. The implemented [design](PHASE3_DESIGN.md),
+[usage guide](PHASE3_USAGE.md), [source register](PHASE3_SOURCES.md), and
+[artifact contract](PHASE3_ARTIFACTS.md) define the current interfaces. The
+spatial sensor model feeds the existing single- and simultaneous
 dual-gain readouts without changing their charge/noise contracts. The
 [roadmap](ROADMAP.md), [architecture](ARCHITECTURE.md), and
 [Phase 2 design](PHASE2_DESIGN.md) remain the starting references.
 
-This plan supplies no newly verified ARRI dimensions, pixel pitch, CFA curves,
-or optical measurements. Obtain primary sources before adding a target-specific
-preset. A documented assumption can support a generic experiment; it cannot be
-silently relabelled as a measured ALEV4 parameter.
+The source register now supplies verified published Open Gate dimensions and
+nominal pitch. CFA origin, effective QE and optical kernels remain assumptions,
+with no measured ALEV4 response claimed. The original source and ordering
+requirements below remain useful for future extensions.
 
 ## Finite scope and entry conditions
 
@@ -38,8 +41,8 @@ Before editing production code:
 
 ## Slice 3A — geometry, coordinates, and crop identity
 
-Implement this slice first. Proposed helper names below are design targets,
-not existing APIs: `createSensorGeometry` and `sensorGrid`. Use a separate
+This slice was implemented first. The helper names below are now existing
+APIs: `createSensorGeometry` and `sensorGrid`. Use a separate
 geometry configuration rather than adding unrecognized fields to existing
 Phase 1/2 sensor structs.
 
@@ -236,13 +239,11 @@ the hardware claim. Controlled real-camera characterization and parameter
 fitting remain Phase 6, and neither a plausible image nor a matching MTF at
 one condition establishes complete sensor equivalence.
 
-## First assignment for the next agent
+## Handoff after the implemented slices
 
-Read the accepted release evidence, create the parameter source register and
-Phase 3 geometry design, then implement only Slice 3A with independent grid,
-crop, CFA-parity, and identity-regression tests. Record which proposed fields
-were accepted, which sources were actually read, and which assumptions remain.
-Do not change existing default readouts or implement PSF/resampling until the
-geometry contract and its tests are reviewable. Continue through the ordered
-slices after that foundation passes, updating the handoff and evidence at each
-completed boundary.
+Preserve the source register, numerical contract, all earlier phase APIs and
+the complete acceptance command. Close the Phase 3 release gate only with
+identified clean-source execution and retained CI/artifact evidence. Then
+start the sensor-realization and fixed-pattern contract in the
+[Phase 4 plan](PHASE4_PLAN.md). Do not promote synthetic geometry/optics checks
+to camera calibration or change the established one-charge dual-gain model.

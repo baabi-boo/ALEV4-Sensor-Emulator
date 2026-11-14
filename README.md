@@ -2,13 +2,24 @@
 
 A research-oriented, **independent and unaffiliated** project working toward an ALEV4-inspired camera sensor model.
 
-> **Phase 2 status: complete and acceptance-tested.** The simultaneous high- and low-gain implementation passed in GNU Octave **8.4.0 in GitHub CI** and **9.4.0 locally** at source commit [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c). The [completion report](docs/PHASE2_COMPLETION.md) and [retained evidence index](docs/evidence/phase2-release-record.json) identify the commands, results, artifacts, and passing workflows. There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution remains unverified.
+> **Phase 3 is implemented; exact-source release verification is in progress.** The spatial layer adds physical geometry, conservative sampling, explicit PSF/MTF, and a restricted nonuniform ISETCam comparison ahead of the preserved single- and dual-gain readouts. See the [usage guide](docs/PHASE3_USAGE.md), [numerical contract](docs/PHASE3_DESIGN.md), and [parameter source register](docs/PHASE3_SOURCES.md). There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution remains unverified.
 
-The accepted source passed **62 Phase 2 numerical groups, all 92 Phase 1 regression groups, and 47 Python tests**, together with failure-reporting checks and independently verified, byte-identical fresh-process demos for both phases. Phase 2, Phase 1, and repository-integrity workflows all passed on that revision.
+Phase 2 remains complete and acceptance-tested at source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c), in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally. That source passed **62 Phase 2 numerical groups, all 92 Phase 1 regression groups, and 47 Python tests**, plus failure checks and independently verified fresh-process demos. The [Phase 2 completion report](docs/PHASE2_COMPLETION.md) retains its historical evidence; all of those gates remain required by Phase 3.
 
 Phase 1 remains complete and acceptance-tested in GNU Octave 8.4.0. Its historical acceptance covered 91 numerical test groups, 29 Python tests, failure reporting, genuine ISETCam integration, and repeated-process artifacts. Those results and their exact revision remain recorded in the [Phase 1 completion report](docs/PHASE1_COMPLETION.md); they are not substituted for Phase 2 release evidence.
 
-## What Phase 2 adds
+## What Phase 3 adds
+
+- Explicit full-grid coordinates, one-based active crops, physical pixel centres and edges, and crop-adjusted Bayer phase. Geometry binds to either existing readout without changing its electronics.
+- An opt-in ALEXA 35 Open Gate geometry profile using published 4608-by-3164 photosites and 6.075 micrometre pitch. The caller supplies the assumed Bayer origin; the profile does not establish total die size, measured QE or optical response.
+- Conservative rectangle-overlap averaging of cell-average spectral photon irradiance, with complete footprint coverage and exact aligned-copy paths. Pixel area, fill factor, exposure, QE and bin width are applied once by the existing integration stage.
+- Shared or per-bin finite optical PSFs with explicit sampling, origin and valid-support crop. Physical-frequency complex OTF/MTF is separate from an optional continuous pixel-aperture reference.
+- A restricted real ISETCam uniform/ramp/checker/edge comparison. Native point samples receive a declared bilinear reconstruction, independent footprint integration and refinement checks; already computed optics receive no implicit second PSF.
+- Eight spatial demo fixtures, versioned hashed input/optical/sample/readout bundles, strict native decoding, independent Python scalar verification, and a complete acceptance command preserving every earlier phase gate.
+
+The [source register](docs/PHASE3_SOURCES.md) distinguishes published geometry from derived dimensions and assumed spectral/optical parameters. These results validate the declared mathematical model; real-camera characterization remains later work.
+
+## The preserved Phase 2 readout
 
 - **One exposure and one sampled photocharge array**, shared by two electronic paths after physical full-well clipping.
 - Independent high/low read noises, gains in DN/electron, black offsets, and 2–16-bit ADCs, with retained signed readouts and separate clipping diagnostics.
@@ -29,11 +40,11 @@ Both phases use the same spectral integration helper. This is a sensor-physics f
 
 | Component | Location | Role |
 | --- | --- | --- |
-| Standalone numerical core | `matlab/+alev4/` | Shared spectral integration, single/dual readout, observable merge, and synthetic I/O |
-| ISETCam | `third_party/isetcam` | Pinned scene/optics/Bayer reference used by the retained `alev4.isetBaseline` gate |
+| Standalone numerical core | `matlab/+alev4/` | Geometry, optics, spatial/spectral integration, single/dual readout, observable merge, and synthetic I/O |
+| ISETCam | `third_party/isetcam` | Pinned scene/optics/Bayer reference for the retained uniform baseline and restricted nonuniform fixtures |
 | ISETHdrsensor | `third_party/isethdrsensor` | Pinned HDR research dependency; not executed by the current single/dual core |
 | Numerical and file tests | `matlab/tests/`, `scripts/tests/` | Analytical physics, statistical noise, error handling, provenance, and corruption checks |
-| Acceptance workflows | `.github/workflows/` | Separate Phase 1 and Phase 2 gates plus repository integrity |
+| Acceptance workflows | `.github/workflows/` | Phase 3 with preserved Phase 1/2 gates, separate earlier-phase workflows, and repository integrity |
 
 The upstream projects remain separately maintained Git submodules. The simultaneous dual-gain model is implemented in this repository; linking ISETHdrsensor's RGBW/multi-capture research does not supply ARRI's proprietary readout architecture.
 
@@ -46,14 +57,12 @@ git clone https://github.com/baabi-boo/ALEV4-Sensor-Emulator.git
 cd ALEV4-Sensor-Emulator
 git submodule update --init --recursive --depth 1
 python3 scripts/verify_submodules.py --require-checkout
-python3 -m unittest discover -s scripts/tests -v
-octave --no-gui --quiet --eval "addpath('matlab'); report=run_phase2_tests('outputs/phase2/validation',true); assert(report.phase2_passed);"
-octave --no-gui --quiet --eval "addpath('matlab'); setup_project(false); phase2_demo('outputs/phase2/demo');"
+python3 scripts/run_phase3_acceptance.py --output-root outputs/phase3-acceptance
 ```
 
-The Phase 2 runner executes its numerical suites and the complete Phase 1 numerical/ISETCam prerequisite. **Full release acceptance also requires** failure-path checks, independent artifact verification, repetition in a fresh process, and the retained Phase 1 artifact gates. Follow the exact commands in [Phase 2 usage](docs/PHASE2_USAGE.md) and [Phase 1 usage](docs/PHASE1_USAGE.md).
+The acceptance command requires a clean checkout and a new output directory. It executes all numerical suites, Python and runner-failure tests, all three phases' demos and fresh-process repeats, independent artifact verification, and dependency checks before and after execution. It records the exact source revision, commands, exit statuses and file hashes. For an edited working tree, `--development` runs the same gates but deliberately leaves `release_accepted=false`.
 
-Use fresh demo directories on subsequent runs: existing outputs are deliberately not overwritten. A core-only invocation reports `phase2_passed=false`; it is a development check, not complete acceptance. The existing `run_phase1_tests` and `phase1_demo` entrypoints remain available.
+The [Phase 3 usage guide](docs/PHASE3_USAGE.md) includes small single/dual examples, the PSF and ISET interfaces, and individual numerical/demo/verifier commands. Use fresh demo directories on subsequent runs. Core-only numerical or seven-frame demo execution remains visibly incomplete. All Phase 1/2 entrypoints and their [Phase 1](docs/PHASE1_USAGE.md)/[Phase 2](docs/PHASE2_USAGE.md) usage guides remain available.
 
 For MATLAB, use the same `.m` entrypoints after `addpath('matlab')`. The ISETCam integration path requires the Image Processing Toolbox. These interfaces are documented for verification; native MATLAB has not been executed as part of the retained acceptance evidence.
 
@@ -63,17 +72,21 @@ For MATLAB, use the same `.m` entrypoints after `addpath('matlab')`. The ISETCam
 | --- | --- | --- |
 | Phase 1 single gain | Row-major, little-endian uint16 DN plus JSON; optional grayscale Bayer preview | `ALEV4-SYNTHETIC-RAW`; [Phase 1 usage](docs/PHASE1_USAGE.md) |
 | Phase 2 simultaneous dual gain | Two uint16 DN planes, signed float64 electrons, diagnostic/validity flags, and JSON | `ALEV4-SYNTHETIC-DUAL-GAIN`; [bundle specification](docs/PHASE2_ARTIFACTS.md) |
+| Phase 3 spatial exposure | Float64 input, optical, sampled and expected-charge planes; optional PSF; preserved single/dual payloads; hashed manifest | `ALEV4-SYNTHETIC-SPATIAL`; [spatial specification](docs/PHASE3_ARTIFACTS.md) |
 
-Both formats identify configuration, exposure, seed, units, runtime, and observed Git revisions. Neither is ARRIRAW or DNG. Format limits are 100 million pixels and 2,000,000 UTF-8 metadata bytes; these limits are not large-frame memory or throughput guarantees. The dual-gain reader checks the merge against recorded channels, and Python independently checks bytes, fixed fixtures, and evidence associations.
+All formats identify configuration, exposure, seed, units, runtime, and observed Git revisions. None is ARRIRAW or DNG. Readout limits are 100 million pixels and 2,000,000 UTF-8 metadata bytes; spatial cubes are limited to 100 million numeric samples. These bounds are not full-frame memory or throughput guarantees. The dual-gain reader checks the merge against recorded channels, and the spatial readers independently reconstruct the declared deterministic operations. Source labels are provenance associations, not cryptographic proof of execution.
 
 ## Next development phase
 
-The next development phase is **Phase 3: ALEV4-inspired geometry and optics**. Start with the source register and the pixel-grid, active-crop, and CFA-parity contract in [Slice 3A of the Phase 3 plan](docs/PHASE3_PLAN.md). Later slices add conservative spatial sampling, a stated PSF/MTF model, a restricted nonuniform ISETCam comparison, and spatial provenance. The current uniform-field ISETCam adapter is not a general nonuniform-scene importer or a calibrated optical model.
+After the Phase 3 release gate, the next development phase is **Phase 4: sensor noise and readout realism**. The [Phase 4 plan](docs/PHASE4_PLAN.md) starts with an explicit persistent sensor-realization contract for PRNU/DSNU and exposure-dependent dark signal, followed by row/column and temporal electronic structure. It requires zero-effect identity, known statistical covariances, fixed-pattern versus temporal separation, and preservation of the one-shared-charge dual-gain contract.
 
-Phases 4–7 retain structured noise/readout realism, demosaic and AWG4/LogC4 transforms, controlled real-camera characterization, and performance/reporting. Published sensor geometry and exposure latitude remain research targets rather than properties established by these generic models. LogC4 is a post-capture encoding; a plausible preview or a matching dynamic-range number does not establish sensor equivalence.
+Phases 5–7 retain demosaic and AWG4/LogC4 transforms, controlled real-camera characterization, and performance/reporting. Published geometry is sourced; actual ALEV4 spectral, optical and noise behaviour remains uncalibrated. LogC4 is a post-capture encoding; a plausible preview or a matching dynamic-range number does not establish sensor equivalence.
 
 ## Documentation
 
+- [Phase 3 usage and acceptance commands](docs/PHASE3_USAGE.md)
+- [Phase 3 numerical contract](docs/PHASE3_DESIGN.md), [source register](docs/PHASE3_SOURCES.md), and [spatial bundle format](docs/PHASE3_ARTIFACTS.md)
+- [Phase 4 implementation plan](docs/PHASE4_PLAN.md)
 - [Phase 2 completion report and evidence](docs/PHASE2_COMPLETION.md)
 - [Phase 2 usage and acceptance commands](docs/PHASE2_USAGE.md)
 - [Phase 2 numerical contract](docs/PHASE2_DESIGN.md) and [bundle format](docs/PHASE2_ARTIFACTS.md)
