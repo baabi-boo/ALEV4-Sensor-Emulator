@@ -1,0 +1,101 @@
+{
+  "artifact_count": 31,
+  "artifact_sha256": {
+    "dark.flags.u8": "8618e11eba42a0233b20aba6433449e328352ee7197f79cad4b9ef781c43c789",
+    "dark.high.raw": "c929702f31e1a01d022dec10422031f9dd25abce27fde5b15ace0cc3c621a0ef",
+    "dark.json": "6902cdb8e0ed734c28d6dc9239a9e2b551a07881c7bad0a44fe454dc4a880009",
+    "dark.low.raw": "c929702f31e1a01d022dec10422031f9dd25abce27fde5b15ace0cc3c621a0ef",
+    "dark.merged.f64": "be9e113f04e9b1cbccfa3bfb8c705def32f015c23c10234216b2aa4f117b812b",
+    "highlight.flags.u8": "6b274746e23f5e0e5adf77db258a13f9b12bf03bb9dc5269d4ebce08ccf47106",
+    "highlight.high.raw": "46156a21d90fbaac2ac61841bbdc686628c33c766714f7eef878e9f249279533",
+    "highlight.json": "4516def1c573480eecc3b447e5961fa5ec51f27cb0dc774490eb8219be75a7b5",
+    "highlight.low.raw": "9fe4abcf5a1702ce286d85abf4906dc7b083d33bf34c9c3b171083d4d31cc9e1",
+    "highlight.merged.f64": "062d50024112b2e583a6bce44b2a2e7b30283d43c6de4c74c3ac5a3927aca399",
+    "noisy.flags.u8": "8618e11eba42a0233b20aba6433449e328352ee7197f79cad4b9ef781c43c789",
+    "noisy.high.raw": "5beebec289944f9e7a61cdccd1ebb6bac2759d8b09981f053942101f0ccb68b1",
+    "noisy.json": "d4a479c3df3a1fa8f2f2c8ba7fd79901e0f4df2832d2176d992bc8a91a61ba38",
+    "noisy.low.raw": "f7096a5382f4a70e00f37ce3551b647f00695ef053e308fbc50433bf52e74864",
+    "noisy.merged.f64": "7b8bcafee1360ff6309ed2e36bbae200f511d0e834ae9ff5a6d229ed5d5e2072",
+    "phase2-demo-summary.json": "996c40ffcdebcf9e73de9fa3006df2f9aae73a7f91c36c15dfc571eb5b215256",
+    "saturation.flags.u8": "27243d5335061c457c39934aa282998de467daa4ea82eb4c75e71050d9bcda2a",
+    "saturation.high.raw": "46156a21d90fbaac2ac61841bbdc686628c33c766714f7eef878e9f249279533",
+    "saturation.json": "b37e36f41c659edc1cda32cf4acac39d6b9827bd0fb92026dc734cf4fa938818",
+    "saturation.low.raw": "03ecdafedac0c7c1237089c687a00fc1b8b7b1194536e8605a3e2fb5a9e5c732",
+    "saturation.merged.f64": "1321e76a3b6e72d354c32d22bf18f0acd21aefc5deba1c66f23f92e36e57fff7",
+    "shadow.flags.u8": "8618e11eba42a0233b20aba6433449e328352ee7197f79cad4b9ef781c43c789",
+    "shadow.high.raw": "2424b622045d5daf3da6c833a4df9609af1dd3224f08e751ca162563111fed7c",
+    "shadow.json": "5cd1a97d4600a62a8676fd5d1e98294a74321a1d0bdb884eaa842f09e08b3118",
+    "shadow.low.raw": "51cf956efb892cbf350108e684344f9c1af609478875c2b7b8f421e8460a6785",
+    "shadow.merged.f64": "bcf67a5cd03bcc23e8ba2e78b002ae322fd1459cf03508914a603d67c8469fd0",
+    "transition.flags.u8": "80adc9d1d13ededa363ce912f473cc216d38f2ebe20f88dc48b33c2dceecae95",
+    "transition.high.raw": "9518001f67b41b8233ba7a402c7dacc874918ae791cb7c064d0b97a474592540",
+    "transition.json": "3618a8d6825c9ece94b0119db1b80752e0a2a30ca74228e967ab1a0b300635b6",
+    "transition.low.raw": "b1ccbec6070c4d5da7dac5932ef5586992586f830f3301fe0d6f1853a4716157",
+    "transition.merged.f64": "cf6cc1a69d28d732ff58212791775f9241c6089bd83807470f8cfc8ea7ec9cdb"
+  },
+  "calibrated_alev4": false,
+  "compared_demo_byte_identical": true,
+  "frame_count": 6,
+  "frames": {
+    "dark": {
+      "full_well_saturation_fraction": 0.0,
+      "high_adc_clipping_fraction": 0.0,
+      "low_adc_clipping_fraction": 0.0,
+      "mean_expected_electrons": 0.0,
+      "mean_merged_electrons": 0.0,
+      "reconstruction_valid_fraction": 1.0
+    },
+    "highlight": {
+      "full_well_saturation_fraction": 0.0,
+      "high_adc_clipping_fraction": 1.0,
+      "low_adc_clipping_fraction": 0.0,
+      "mean_expected_electrons": 12000.0,
+      "mean_merged_electrons": 12000.0,
+      "reconstruction_valid_fraction": 1.0
+    },
+    "noisy": {
+      "full_well_saturation_fraction": 0.0,
+      "high_adc_clipping_fraction": 0.0,
+      "low_adc_clipping_fraction": 0.0,
+      "mean_expected_electrons": 250.0,
+      "mean_merged_electrons": 250.1995880064088,
+      "reconstruction_valid_fraction": 1.0
+    },
+    "saturation": {
+      "full_well_saturation_fraction": 1.0,
+      "high_adc_clipping_fraction": 1.0,
+      "low_adc_clipping_fraction": 0.0,
+      "mean_expected_electrons": 40000.0,
+      "mean_merged_electrons": 30000.0,
+      "reconstruction_valid_fraction": 0.0
+    },
+    "shadow": {
+      "full_well_saturation_fraction": 0.0,
+      "high_adc_clipping_fraction": 0.0,
+      "low_adc_clipping_fraction": 0.0,
+      "mean_expected_electrons": 10.0,
+      "mean_merged_electrons": 10.0,
+      "reconstruction_valid_fraction": 1.0
+    },
+    "transition": {
+      "full_well_saturation_fraction": 0.0,
+      "high_adc_clipping_fraction": 0.4085603112840467,
+      "low_adc_clipping_fraction": 0.0,
+      "mean_expected_electrons": 912.0,
+      "mean_merged_electrons": 912.0,
+      "reconstruction_valid_fraction": 1.0
+    }
+  },
+  "numerical_test_groups": 62,
+  "phase": 2,
+  "runtime": {
+    "name": "GNU Octave",
+    "version": "8.4.0"
+  },
+  "source": {
+    "isetcam_head": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+    "isethdrsensor_head": "ee2dacceb456516de3ecefadd72955154cf3cabe",
+    "repository_head": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2"
+  },
+  "status": "passed"
+}

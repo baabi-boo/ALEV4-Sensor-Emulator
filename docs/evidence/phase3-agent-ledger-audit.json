@@ -1,0 +1,37 @@
+{
+  "byte_identical_reports": 57,
+  "completed_by_wave": {
+    "1": 6,
+    "2": 6,
+    "3": 6,
+    "4": 6,
+    "5": 6,
+    "6": 6,
+    "7": 6,
+    "8": 6,
+    "9": 6,
+    "10": 6
+  },
+  "completed_reports_checked": 60,
+  "digests": {
+    "archive_index_sha256": "b3121d9f1fb15cb7b0411f16c70a45b179422bf914e88a376fa2ddf766d6d2b1",
+    "archived_report_inventory_sha256": "1ec701a0d0c693cb7f04de57d5b1e23fa5cba6778ea2de3f48a065f228f9aeec",
+    "assignment_ledger_sha256": "3269723ccbc370da6a754a42f8bb566423f4a5dc5432ea813296049ce9d12aed",
+    "markdown_ledger_sha256": "9096d7c837011082a72ccc1008830e6438fd4855efae2f25ae3f1fd43473572e",
+    "verified_original_report_inventory_sha256": "99a972e5fe86797a4f5fa54090588c6498aaa2ac2ccfe8228a77c61ec476d2de"
+  },
+  "evidence_scope": "Checks consistency of root-recorded task assignments, archived reports, original report bytes and Markdown links; does not independently observe tool spawns or establish the reports' substantive execution claims.",
+  "expected_completed": 60,
+  "inventory_digest_encoding": "SHA-256 of ASCII JSON mapping report filename to {\"bytes\":N,\"sha256\":H}; sorted keys, compact comma/colon separators, no trailing newline",
+  "logged_assignments_checked": 60,
+  "markdown_rows_and_report_links_checked": 60,
+  "mode": "final",
+  "normalized_reports": [
+    "w05_f.md",
+    "w07_a.md",
+    "w09_a.md"
+  ],
+  "ok": true,
+  "original_reports_present": 60,
+  "pending_original_reports_not_required": 0
+}

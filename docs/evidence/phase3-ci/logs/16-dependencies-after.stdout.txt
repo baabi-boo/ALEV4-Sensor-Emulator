@@ -1,0 +1,3 @@
+OK third_party/isetcam -> 3e0253421752eb72f2d1353327dffd0d433abdaf
+OK third_party/isethdrsensor -> ee2dacceb456516de3ecefadd72955154cf3cabe
+PASS: both dependencies are pinned, declared Git submodules with clean matching checkouts

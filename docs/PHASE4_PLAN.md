@@ -2,9 +2,10 @@
 
 **Status: planned; no Phase 4 implementation or acceptance is claimed.** This
 plan develops the [roadmap](ROADMAP.md) target for PRNU/DSNU, row/column
-structure, dark-frame behavior, and clipping/exposure-index sweeps. Complete
-Phase 3 release evidence is an entry condition; the existence of its spatial
-APIs or a development-only pass does not satisfy that condition.
+structure, dark-frame behavior, and clipping/exposure-index sweeps. The
+[accepted Phase 3 record](PHASE3_COMPLETION.md) now supplies the required entry
+evidence. Re-run the preserved baseline on the selected starting revision
+before changing production behavior.
 
 Phase 4 will extend the generic sensor model with explicit, reproducible noise
 components. It will not establish calibrated ALEV4 parameters. Color transforms
@@ -207,8 +208,8 @@ Complete acceptance must require:
    summaries, hashes, limits, and the observed release CI result. Native MATLAB
    remains unverified until its relevant gates actually execute.
 
-The first concrete next step is to finish and retain Phase 3 acceptance, then
-write the Phase 4 component-order/configuration design and provenance register.
+The first concrete next step is to write the Phase 4 component-order/configuration
+design and provenance register against the accepted Phase 3 baseline.
 Only after reviewing those contracts should Slice 4A introduce the disabled
 model and fixed-map identity tests. Plausible structured noise by itself is
 not sensor calibration or evidence of measured ARRI dynamic range.

@@ -1,8 +1,10 @@
 # Phase 3 plan: explicit geometry and tested optics
 
-**Status: the five ordered slices below are implemented; exact-source release
-verification is in progress.** This document retains the original development
-plan and its acceptance requirements. The implemented [design](PHASE3_DESIGN.md),
+**Status: all five ordered slices are complete and acceptance-tested.** The
+[completion record](PHASE3_COMPLETION.md) identifies the tested implementation,
+local/CI runtimes, independent artifact checks, and retained evidence. This
+document retains the original development plan and its acceptance requirements.
+The implemented [design](PHASE3_DESIGN.md),
 [usage guide](PHASE3_USAGE.md), [source register](PHASE3_SOURCES.md), and
 [artifact contract](PHASE3_ARTIFACTS.md) define the current interfaces. The
 spatial sensor model feeds the existing single- and simultaneous

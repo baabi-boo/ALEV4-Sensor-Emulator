@@ -22,14 +22,28 @@ the older 91-group/29-test results are not relabelled as Phase 2 evidence.
 Native MATLAB execution and calibrated ALEV4 equivalence remain unverified.
 Source lint is useful but is not runtime evidence.
 
-**Phase 3 is implemented; final exact-source release acceptance is pending.**
-Its geometry, spatial sampling, PSF/MTF, strict artifacts, and restricted real
-ISETCam comparison are described in the [usage guide](PHASE3_USAGE.md) and
-[design contract](PHASE3_DESIGN.md). A development pilot or a dirty worktree's
-observed baseline HEAD does not identify the later changed source. Earlier
-passes are not a claim that the current tree or its CI has passed. Final
-counts and outcomes belong to evidence retained for the exact tested revision,
-not a hardcoded target in this document. Phase 3 preserves every earlier
+**Phase 3 is complete and acceptance-tested.** The tested implementation is
+[`beedd8bfd1cea3c722409ef0f959fcec5420c5f2`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/beedd8bfd1cea3c722409ef0f959fcec5420c5f2).
+Both GNU Octave 9.4.0 locally and 8.4.0 in GitHub CI passed all 16 acceptance
+commands, including 135 Phase 3 numerical groups across all nine required
+suites, the preserved 62 Phase 2 groups and 92 Phase 1 regression groups, and
+145 Python tests in each execution. Numerical group counts describe named
+groups that may contain several assertions. All four candidate workflows
+passed, and the downloaded CI archive passed independent verification.
+
+The 43 Phase 3 runner failure/control scenarios are separate from scientific
+acceptance. They passed alongside the five Phase 2 scenarios and preserved
+Phase 1 failure check. Complete fresh-process demos and independent artifact
+checks passed for all three phases, with 31, 31, and 66 files in each respective
+primary/repeat set. Each pair had distinct file identities and byte-identical
+contents. The [completion record](PHASE3_COMPLETION.md) and
+[release evidence index](evidence/phase3-release-record.json) retain the measured
+source/runtime associations. Later documentation and evidence commits do not
+relabel these results as executions of a newer SHA.
+
+The [usage guide](PHASE3_USAGE.md) and [design contract](PHASE3_DESIGN.md)
+describe the spatial model. Earlier development pilots and dirty-tree reports
+remain distinct from the final execution. Phase 3 preserves every earlier
 phase's numerical, artifact, failure-reporting, and fresh-process repeat gate.
 
 ## Scientific targets
@@ -395,11 +409,14 @@ change requires evidence on the changed source.
 - Motion/timing behavior and measured-camera gain, noise, transition/SNR and
   exposure-latitude comparisons under controlled conditions.
 
-After the Phase 3 release gate, the next implementation work follows the
+The next implementation work follows the
 [Phase 4 sensor noise and readout plan](PHASE4_PLAN.md). Its persistent sensor
 realizations, PRNU/DSNU and dark-signal model must preserve zero-effect
 identity, crop coordinates, and the shared-charge simultaneous readout while
-adding independent statistical evidence for the new effects.
+adding independent statistical evidence for the new effects. The initial
+contract must distinguish exposure-dependent dark-current rates from
+exposure-independent electronic offsets and retain fixed-map values in
+full-grid coordinates through crops.
 
 ## Controlled-camera experiments needed
 

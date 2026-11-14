@@ -2,10 +2,11 @@
 
 Phase 3 adds physical pixel geometry, conservative spatial averaging, an
 explicit finite PSF/MTF model, and spatial bundles around the existing single-
-and simultaneous dual-gain readouts. These interfaces are implemented in the
-current development tree. This guide is not a release-acceptance record; the
-complete gates below must run on the identified source before acceptance is
-claimed. All examples are synthetic and uncalibrated.
+and simultaneous dual-gain readouts. These interfaces are acceptance-tested at
+source `beedd8bfd1cea3c722409ef0f959fcec5420c5f2`. The
+[completion record](PHASE3_COMPLETION.md) retains the executed gates and evidence;
+the complete gates below remain required for acceptance of a later source.
+All examples are synthetic and uncalibrated.
 
 The [design](PHASE3_DESIGN.md) defines the numerical model, the
 [source register](PHASE3_SOURCES.md) distinguishes published geometry from

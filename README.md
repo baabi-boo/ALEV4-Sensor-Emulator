@@ -2,7 +2,9 @@
 
 A research-oriented, **independent and unaffiliated** project working toward an ALEV4-inspired camera sensor model.
 
-> **Phase 3 is implemented; exact-source release verification is in progress.** The spatial layer adds physical geometry, conservative sampling, explicit PSF/MTF, and a restricted nonuniform ISETCam comparison ahead of the preserved single- and dual-gain readouts. See the [usage guide](docs/PHASE3_USAGE.md), [numerical contract](docs/PHASE3_DESIGN.md), and [parameter source register](docs/PHASE3_SOURCES.md). There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution remains unverified.
+> **Phase 3 is complete and acceptance-tested.** The spatial layer adds physical geometry, conservative sampling, explicit PSF/MTF, and a restricted nonuniform ISETCam comparison ahead of the preserved single- and dual-gain readouts. See the [completion record](docs/PHASE3_COMPLETION.md), [usage guide](docs/PHASE3_USAGE.md), [numerical contract](docs/PHASE3_DESIGN.md), and [parameter source register](docs/PHASE3_SOURCES.md). There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution remains unverified.
+
+Phase 3 source [`beedd8bfd1cea3c722409ef0f959fcec5420c5f2`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/beedd8bfd1cea3c722409ef0f959fcec5420c5f2) passed all 16 acceptance commands in GNU Octave **9.4.0 locally** and **8.4.0 in GitHub CI**: **135 Phase 3 numerical groups across all nine required suites, 62 Phase 2 groups, 92 Phase 1 regression groups, and 145 Python tests** in each execution. Separate runner failure/control checks and independently verified fresh-process repeats passed for all three phases. All four candidate workflows passed, and the downloaded CI archive and its artifacts were independently verified. These results identify that implementation commit; later documentation and evidence commits do not change the recorded tested source.
 
 Phase 2 remains complete and acceptance-tested at source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c), in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally. That source passed **62 Phase 2 numerical groups, all 92 Phase 1 regression groups, and 47 Python tests**, plus failure checks and independently verified fresh-process demos. The [Phase 2 completion report](docs/PHASE2_COMPLETION.md) retains its historical evidence; all of those gates remain required by Phase 3.
 
@@ -78,12 +80,14 @@ All formats identify configuration, exposure, seed, units, runtime, and observed
 
 ## Next development phase
 
-After the Phase 3 release gate, the next development phase is **Phase 4: sensor noise and readout realism**. The [Phase 4 plan](docs/PHASE4_PLAN.md) starts with an explicit persistent sensor-realization contract for PRNU/DSNU and exposure-dependent dark signal, followed by row/column and temporal electronic structure. It requires zero-effect identity, known statistical covariances, fixed-pattern versus temporal separation, and preservation of the one-shared-charge dual-gain contract.
+The next development phase is **Phase 4: sensor noise and readout realism**. The [Phase 4 plan](docs/PHASE4_PLAN.md) starts with a persistent full-grid sensor realization whose PRNU and fixed maps retain their identity through crops. Its dark-signal contract distinguishes exposure-dependent dark-current rates from exposure-independent electronic offsets before adding row/column and temporal structure. Acceptance requires zero-effect identity, known statistical covariances, fixed-pattern versus temporal separation, and preservation of the one-shared-charge dual-gain contract.
 
 Phases 5–7 retain demosaic and AWG4/LogC4 transforms, controlled real-camera characterization, and performance/reporting. Published geometry is sourced; actual ALEV4 spectral, optical and noise behaviour remains uncalibrated. LogC4 is a post-capture encoding; a plausible preview or a matching dynamic-range number does not establish sensor equivalence.
 
 ## Documentation
 
+- [Phase 3 completion record and retained evidence](docs/PHASE3_COMPLETION.md)
+- [Phase 3 implementation and review ledger](docs/PHASE3_REVIEW_LOG.md)
 - [Phase 3 usage and acceptance commands](docs/PHASE3_USAGE.md)
 - [Phase 3 numerical contract](docs/PHASE3_DESIGN.md), [source register](docs/PHASE3_SOURCES.md), and [spatial bundle format](docs/PHASE3_ARTIFACTS.md)
 - [Phase 4 implementation plan](docs/PHASE4_PLAN.md)

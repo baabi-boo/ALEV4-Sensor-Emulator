@@ -1,0 +1,9 @@
+{
+  "nonzero_exit": 1,
+  "observed_error": "ALEV4:MissingSubmodules",
+  "runtime": "GNU Octave",
+  "runtime_version": "8.4.0",
+  "stale_success_removed": true,
+  "status": "passed",
+  "test": "failed_rerun_invalidates_stale_success"
+}

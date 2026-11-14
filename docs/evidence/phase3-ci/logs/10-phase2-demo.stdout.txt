@@ -1,0 +1,7 @@
+dark: expected 0 e-, merged 0 e-, valid 1.0000
+shadow: expected 10 e-, merged 10 e-, valid 1.0000
+transition: expected 912 e-, merged 912 e-, valid 1.0000
+highlight: expected 12000 e-, merged 12000 e-, valid 1.0000
+saturation: expected 40000 e-, merged 30000 e-, valid 0.0000
+noisy: expected 250 e-, merged 250.2 e-, valid 1.0000
+Phase 2 demo completed: 6 synthetic bundles.

@@ -1,0 +1,77 @@
+PASS: Phase 3 geometry, 12 test groups.
+PASS: Phase 3 geometry edge cases, 10 test groups.
+PASS: Phase 3 conservative sampling, 13 test groups.
+PASS: Phase 3 optics, 15 test groups.
+PASS: Phase 3 integration, 12 test groups.
+PASS: Phase 3 spatial artifacts, 28 test groups.
+PASS: Phase 3 numerical edges, 17 test groups.
+Phase 3 demo wrote 7 spatial fixtures; complete=0.
+Phase 3 demo wrote 7 spatial fixtures; complete=0.
+PASS: Phase 3 demonstration contract, 14 test groups (core fixtures only).
+PASS: Phase 3 restricted ISET spatial comparison, 14 test groups.
+PASS: Phase 2 core invariants, 9 test groups.
+PASS: Phase 2 configuration and RAW boundaries, 7 test groups.
+PASS: Phase 2 noise statistics, 8 test groups.
+PASS: Phase 2 RAW bundle validation, 16 test groups.
+PASS: Phase 2 numerical edges, 8 test groups.
+PASS: Phase 2 spectral properties, 7 test groups.
+dark: expected 0 e-, merged 0 e-, valid 1.0000
+shadow: expected 10 e-, merged 10 e-, valid 1.0000
+transition: expected 912 e-, merged 912 e-, valid 1.0000
+highlight: expected 12000 e-, merged 12000 e-, valid 1.0000
+saturation: expected 40000 e-, merged 30000 e-, valid 0.0000
+noisy: expected 250 e-, merged 250.2 e-, valid 1.0000
+Phase 2 demo completed: 6 synthetic bundles.
+dark: expected 0 e-, merged 0 e-, valid 1.0000
+shadow: expected 10 e-, merged 10 e-, valid 1.0000
+transition: expected 912 e-, merged 912 e-, valid 1.0000
+highlight: expected 12000 e-, merged 12000 e-, valid 1.0000
+saturation: expected 40000 e-, merged 30000 e-, valid 0.0000
+noisy: expected 250 e-, merged 250.2 e-, valid 1.0000
+Phase 2 demo completed: 6 synthetic bundles.
+dark: expected 0 e-, merged 0 e-, valid 1.0000
+shadow: expected 10 e-, merged 10 e-, valid 1.0000
+transition: expected 912 e-, merged 912 e-, valid 1.0000
+highlight: expected 12000 e-, merged 12000 e-, valid 1.0000
+saturation: expected 40000 e-, merged 30000 e-, valid 0.0000
+noisy: expected 250 e-, merged 250.2 e-, valid 1.0000
+Phase 2 demo completed: 6 synthetic bundles.
+PASS: Phase 2 demonstration contract, 7 test groups.
+PASS: Git provenance, 9 test groups.
+PASS: Phase 1 core, 13 test groups.
+PASS: Configuration edge regressions, 4 test groups.
+PASS: Spectral properties, 6 test groups.
+PASS: Input representation, 7 test groups.
+PASS: Fixture edges, 7 test groups.
+PASS: Numerical edge regressions, 6 test groups.
+PASS: Poisson edges, 6 test groups.
+RAW I/O PASS: asymmetric_row_major_little_endian
+RAW I/O PASS: scalar_roundtrip_all_bayer_patterns
+RAW I/O PASS: single_row_roundtrip_all_bayer_patterns
+RAW I/O PASS: single_column_roundtrip_all_bayer_patterns
+RAW I/O PASS: complete_metadata
+RAW I/O PASS: tiny_numeric_metadata_preservation
+RAW I/O PASS: single_wavelength_odd_shape
+RAW I/O PASS: overwrite_and_partial_pair_protection
+RAW I/O PASS: invalid_export_rejection
+RAW I/O PASS: invalid_metadata_rejection
+RAW I/O PASS: malformed_json_rejection
+RAW I/O PASS: shared_manifest_byte_limit
+RAW I/O PASS: truncated_and_extra_bytes
+RAW I/O PASS: payload_adc_bounds
+RAW I/O PASS: invalid_and_missing_paths
+black: exposure 0.01 s, mean 0 e-, full-well saturation 0.0000
+flat: exposure 0.01 s, mean 16886 e-, full-well saturation 0.0000
+ramp: exposure 0.01 s, mean 8436.05 e-, full-well saturation 0.0000
+checker: exposure 0.01 s, mean 8442.99 e-, full-well saturation 0.0000
+exposure_025x: exposure 0.0025 s, mean 4221.5 e-, full-well saturation 0.0000
+exposure_050x: exposure 0.005 s, mean 8442.99 e-, full-well saturation 0.0000
+exposure_100x: exposure 0.01 s, mean 16886 e-, full-well saturation 0.0000
+exposure_200x: exposure 0.02 s, mean 33772 e-, full-well saturation 0.7500
+exposure_400x: exposure 0.04 s, mean 67543.9 e-, full-well saturation 1.0000
+Demo completed: 9 synthetic frames, ISET status not_run.
+PASS: Demo contract, 5 test groups (core-only fixture).
+PASS ISETCam integration: max relative errors 1.53e-07 / 1.53e-07; exposure linearity 0.
+Phase 1 required gates passed: 1 (GNU Octave 9.4.0)
+Phase 2 numerical gates passed: 1 (GNU Octave 9.4.0)
+Phase 3 numerical gates passed: 1 (GNU Octave 9.4.0)

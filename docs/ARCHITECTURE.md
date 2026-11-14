@@ -2,12 +2,15 @@
 
 The main repository is the **integration and independent sensor-model implementation layer**. It does not fork, rewrite, or vendor the full history of ISETCam or ISETHdrsensor. Phase 1 provides the accepted generic single-gain baseline; its [completion report](PHASE1_COMPLETION.md) records the historical tested revision. Phase 2 adds accepted simultaneous dual gain; its [completion report](PHASE2_COMPLETION.md) identifies the tested source and retained evidence.
 
-Phase 3 is implemented in the current development tree. It places physical
-geometry, optional optical filtering, and conservative spatial sampling ahead
-of those preserved readouts. Exact-source release verification is still in
-progress; implementation, development execution, and a clean-source release
-pass are separate claims. See the [usage guide](PHASE3_USAGE.md),
-[numerical contract](PHASE3_DESIGN.md), and [validation gates](VALIDATION.md).
+Phase 3 places physical geometry, optional optical filtering, and conservative
+spatial sampling ahead of those preserved readouts. Its implementation commit
+`beedd8bfd1cea3c722409ef0f959fcec5420c5f2` is complete and acceptance-tested
+in GNU Octave 9.4.0 locally and 8.4.0 in GitHub CI. All four candidate workflows
+passed, and the downloaded CI archive was independently verified. The
+[completion record](PHASE3_COMPLETION.md) retains that tested identity
+separately from later documentation and evidence commits.
+See the [usage guide](PHASE3_USAGE.md), [numerical contract](PHASE3_DESIGN.md),
+and [validation gates](VALIDATION.md).
 
 ## Spatial front end and geometry binding
 
@@ -193,10 +196,12 @@ native sensor/pixel configurations, measured ALEV4 OLPF, or calibrated lens MTF.
 
 ## Planned later layers and exclusions
 
-After Phase 3's exact-source release gate, the next development work is
+The next development work is
 [Phase 4 sensor noise and readout realism](PHASE4_PLAN.md): persistent sensor
-realizations, PRNU/DSNU, exposure-dependent dark signal, and structured
-electronic noise while preserving shared dual-gain charge. Demosaic and color
+realizations anchored to the full grid, PRNU/DSNU, and structured electronic
+noise while preserving shared dual-gain charge. Its initial contract separates
+exposure-dependent dark-current rates from exposure-independent electronic
+offsets and keeps fixed maps stable through crops. Demosaic and color
 characterization, AWG4/LogC4 encoding, controlled real-camera comparisons, and
 performance reporting retain their later roadmap phases.
 

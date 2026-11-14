@@ -1,6 +1,6 @@
 # Development roadmap
 
-**Phase 0 is established. Phases 1 and 2 are complete and acceptance-tested. Phase 3 is implemented and undergoing exact-source release verification.** Its [usage](PHASE3_USAGE.md), [design](PHASE3_DESIGN.md), [parameter sources](PHASE3_SOURCES.md), and [artifact contract](PHASE3_ARTIFACTS.md) describe the spatial layer. Historical accepted Phase 2 source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) passed in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally; its [completion report](PHASE2_COMPLETION.md) and [evidence](evidence/phase2-release-record.json) remain preserved. No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
+**Phase 0 is established. Phases 1, 2, and 3 are complete and acceptance-tested.** The Phase 3 [completion record](PHASE3_COMPLETION.md), [usage](PHASE3_USAGE.md), [design](PHASE3_DESIGN.md), [parameter sources](PHASE3_SOURCES.md), and [artifact contract](PHASE3_ARTIFACTS.md) describe the spatial layer and measured evidence. Historical accepted Phase 2 source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) passed in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally; its [completion report](PHASE2_COMPLETION.md) and [evidence](evidence/phase2-release-record.json) remain preserved. No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
 
 | Phase | Goal | Acceptance evidence |
 | --- | --- | --- |
@@ -44,7 +44,19 @@ The accepted source passed 62 Phase 2 numerical groups, all 92 Phase 1 regressio
 
 The Phase 2 core-only entrypoint deliberately reports `phase2_passed=false`. A passing numerical report alone does not replace the artifact and independent-repeat gates. The [usage guide](PHASE2_USAGE.md), [bundle contract](PHASE2_ARTIFACTS.md), and [review ledger](PHASE2_REVIEW_LOG.md) describe the accepted implementation and its verification work; the retained reports keep the source revision that actually produced them.
 
-## Phase 3 implementation and release gate
+## Accepted Phase 3 implementation and release gate
+
+Implementation commit
+[`beedd8bfd1cea3c722409ef0f959fcec5420c5f2`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/beedd8bfd1cea3c722409ef0f959fcec5420c5f2)
+passed 135 Phase 3 numerical groups across all nine suites, the preserved
+62 Phase 2 groups and 92 Phase 1 regression groups, and 145 Python tests
+in both GNU Octave 9.4.0 locally and 8.4.0 in GitHub CI. All 16 acceptance
+commands, runner failure/control checks, and independent fresh-process artifact
+repeats passed in each execution. All four candidate workflows passed, and the
+downloaded CI archive was independently verified. The
+[completion record](PHASE3_COMPLETION.md) and
+[release evidence index](evidence/phase3-release-record.json) keep this source
+identity distinct from later documentation and evidence commits.
 
 The ordered [Phase 3 plan](PHASE3_PLAN.md) has been implemented: explicit
 geometry and crop parity, conservative cell-average spatial sampling, finite
@@ -75,11 +87,13 @@ complete die dimensions, arbitrary ISET imports, or full-frame throughput.
 
 ## Next: Phase 4 sensor noise and readout realism
 
-After Phase 3 acceptance, follow the [Phase 4 plan](PHASE4_PLAN.md). Start by
-separating a persistent sensor realization from frame/exposure randomness.
-Define PRNU, dark current/DSNU and their units/order before adding row/column
-or temporal electronics. Fixed maps must retain full-grid coordinates through
-crops; dual gain must continue to share one photocharge and one physical well.
+Follow the [Phase 4 plan](PHASE4_PLAN.md). Start by
+separating a persistent full-grid sensor realization from frame/exposure
+randomness. Define PRNU and distinguish exposure-dependent dark-current rates
+from exposure-independent electronic offsets, with explicit units and stage
+order, before adding row/column or temporal electronics. Fixed maps must retain
+their full-grid identity through crops; dual gain must continue to share one
+photocharge and one physical well.
 Use zero-effect identity, analytical means/variances/covariances and controlled
 exposure sweeps as gates. Assumed parameters remain labelled until measured
 datasets support them. Color transforms and real-camera calibration retain

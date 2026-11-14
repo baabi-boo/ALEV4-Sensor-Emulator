@@ -1,0 +1,1155 @@
+{
+  "schema_version": "1.0",
+  "record_kind": "derived_ci_api_summary",
+  "created_utc": "2026-11-14T04:57:24.685213+00:00",
+  "repository": "baabi-boo/ALEV4-Sensor-Emulator",
+  "source_revision": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+  "source_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+  "derived_from": {
+    "scratch_path": "/workspace/scratch/b34757889887/phase3-candidate-ci-observation.json",
+    "record_kind": "derived_github_actions_execution_observation",
+    "bytes": 43637,
+    "sha256": "65c186b288432c0c0ff2823ddf0bcd4e20b72056e4a957469f71ef3038f1251d",
+    "retained_in_repository": false,
+    "original_generated_at": "2026-11-14T04:50:54.701Z",
+    "original_observer": {
+      "agent": 49,
+      "wave": "9A",
+      "scope": "Read-only observation of actual candidate CI execution and selected files from the Phase 3 archive downloaded/extracted separately by root; no archive download or repository mutation by this observer."
+    }
+  },
+  "observation_window": {
+    "first_run_observation": "2026-11-14T04:45:37.000Z",
+    "last_run_observation": "2026-11-14T04:48:53.522Z"
+  },
+  "status": "passed",
+  "all_four_workflows_completed_success": true,
+  "observed_job_count": 4,
+  "observed_required_authored_step_count": 28,
+  "observed_api_step_count": 40,
+  "source_of_required_steps": "Authored steps in the four frozen candidate workflow files, matched to each actual API job step list. Counts exclude GitHub setup, checkout post-processing and completion steps.",
+  "runs": [
+    {
+      "id": 43558156924,
+      "name": "Phase 3 geometry and optics validation",
+      "path": ".github/workflows/phase3-tests.yml",
+      "workflow_id": 418020956,
+      "run_number": 1,
+      "run_attempt": 1,
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+      "head_commit_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-14T04:44:48Z",
+      "run_started_at": "2026-11-14T04:44:48Z",
+      "updated_at": "2026-11-14T04:48:31Z",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156924",
+      "repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "head_repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "verification": {
+        "expected_repository": true,
+        "expected_workflow_path": true,
+        "expected_source": true,
+        "push_on_main": true,
+        "run_completed_success": true,
+        "all_expected_jobs_returned": true,
+        "all_jobs_completed_success": true,
+        "all_required_steps_completed_success": true,
+        "all_api_steps_completed_success": true
+      },
+      "jobs_observed_at": "2026-11-14T04:48:47.765Z",
+      "jobs": [
+        {
+          "id": 132335613420,
+          "run_id": 43558156924,
+          "run_attempt": 1,
+          "workflow_name": "Phase 3 geometry and optics validation",
+          "name": "octave-validation",
+          "head_branch": "main",
+          "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-14T04:44:52Z",
+          "completed_at": "2026-11-14T04:48:30Z",
+          "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156924/job/132335613420",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "runner_name": "GitHub Actions 1000000299",
+          "required_authored_steps": [
+            "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+            "Install numerical runtime",
+            "Complete spatial and preserved Phase 1/2 acceptance",
+            "Retain exact-source validation and artifact evidence"
+          ],
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-14T04:44:53Z",
+              "completed_at": "2026-11-14T04:44:56Z"
+            },
+            {
+              "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-14T04:44:56Z",
+              "completed_at": "2026-11-14T04:45:16Z"
+            },
+            {
+              "name": "Install numerical runtime",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-14T04:45:16Z",
+              "completed_at": "2026-11-14T04:46:10Z"
+            },
+            {
+              "name": "Complete spatial and preserved Phase 1/2 acceptance",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-14T04:46:10Z",
+              "completed_at": "2026-11-14T04:48:25Z"
+            },
+            {
+              "name": "Retain exact-source validation and artifact evidence",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-14T04:48:25Z",
+              "completed_at": "2026-11-14T04:48:28Z"
+            },
+            {
+              "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-14T04:48:28Z",
+              "completed_at": "2026-11-14T04:48:28Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-14T04:48:28Z",
+              "completed_at": "2026-11-14T04:48:28Z"
+            }
+          ],
+          "all_required_steps_present_once": true,
+          "all_required_steps_completed_success": true,
+          "all_api_steps_completed_success": true
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14099350761,
+          "node_id": "MDg6QXJ0aWZhY3QxNDA5OTM1MDc2MQ==",
+          "name": "phase3-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "size_in_bytes": 1046280,
+          "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14099350761",
+          "archive_download_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14099350761/zip",
+          "expired": false,
+          "digest": "sha256:660e1bfe5811b1f707405022059c9c217621b6fdb692801d9606bd24318159be",
+          "created_at": "2026-11-14T04:48:28Z",
+          "updated_at": "2026-11-14T04:48:28Z",
+          "expires_at": "2026-11-28T04:48:25Z",
+          "workflow_run": {
+            "id": 43558156924,
+            "repository_id": 1454419692,
+            "head_repository_id": 1454419692,
+            "head_branch": "main",
+            "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2"
+          }
+        }
+      ],
+      "artifacts_downloaded_by_this_observer": false,
+      "run_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156924",
+      "jobs_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156924/jobs?per_page=100",
+      "observation_input_paths": {
+        "raw_run_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156924.json",
+        "raw_jobs_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156924.json",
+        "classification": "Unversioned scratch observation inputs; hashes are listed in observation_inputs."
+      }
+    },
+    {
+      "id": 43558156897,
+      "name": "Phase 1 numerical validation",
+      "path": ".github/workflows/phase1-tests.yml",
+      "workflow_id": 415310907,
+      "run_number": 12,
+      "run_attempt": 1,
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+      "head_commit_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-14T04:44:48Z",
+      "run_started_at": "2026-11-14T04:44:48Z",
+      "updated_at": "2026-11-14T04:46:08Z",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156897",
+      "repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "head_repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "verification": {
+        "expected_repository": true,
+        "expected_workflow_path": true,
+        "expected_source": true,
+        "push_on_main": true,
+        "run_completed_success": true,
+        "all_expected_jobs_returned": true,
+        "all_jobs_completed_success": true,
+        "all_required_steps_completed_success": true,
+        "all_api_steps_completed_success": true
+      },
+      "jobs_observed_at": "2026-11-14T04:46:32.761Z",
+      "jobs": [
+        {
+          "id": 132335613365,
+          "run_id": 43558156897,
+          "run_attempt": 1,
+          "workflow_name": "Phase 1 numerical validation",
+          "name": "octave-validation",
+          "head_branch": "main",
+          "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-14T04:44:51Z",
+          "completed_at": "2026-11-14T04:46:07Z",
+          "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156897/job/132335613365",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "runner_name": "GitHub Actions 1000000298",
+          "required_authored_steps": [
+            "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+            "Verify exact scientific dependency checkouts",
+            "Test independent validation utilities",
+            "Install numerical runtime",
+            "Complete Phase 1 acceptance suite",
+            "Verify failures invalidate stale success reports",
+            "Generate reproducible demo artifacts",
+            "Repeat demo in a fresh process",
+            "Independently verify artifacts and reproducibility",
+            "Confirm dependencies were not modified",
+            "Upload numerical evidence and synthetic RAW"
+          ],
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-14T04:44:52Z",
+              "completed_at": "2026-11-14T04:44:53Z"
+            },
+            {
+              "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-14T04:44:53Z",
+              "completed_at": "2026-11-14T04:45:09Z"
+            },
+            {
+              "name": "Verify exact scientific dependency checkouts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-14T04:45:09Z",
+              "completed_at": "2026-11-14T04:45:09Z"
+            },
+            {
+              "name": "Test independent validation utilities",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-14T04:45:09Z",
+              "completed_at": "2026-11-14T04:45:22Z"
+            },
+            {
+              "name": "Install numerical runtime",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-14T04:45:22Z",
+              "completed_at": "2026-11-14T04:45:56Z"
+            },
+            {
+              "name": "Complete Phase 1 acceptance suite",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-14T04:45:56Z",
+              "completed_at": "2026-11-14T04:46:01Z"
+            },
+            {
+              "name": "Verify failures invalidate stale success reports",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-14T04:46:01Z",
+              "completed_at": "2026-11-14T04:46:01Z"
+            },
+            {
+              "name": "Generate reproducible demo artifacts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-14T04:46:01Z",
+              "completed_at": "2026-11-14T04:46:03Z"
+            },
+            {
+              "name": "Repeat demo in a fresh process",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-14T04:46:03Z",
+              "completed_at": "2026-11-14T04:46:04Z"
+            },
+            {
+              "name": "Independently verify artifacts and reproducibility",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-14T04:46:04Z",
+              "completed_at": "2026-11-14T04:46:04Z"
+            },
+            {
+              "name": "Confirm dependencies were not modified",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-14T04:46:04Z",
+              "completed_at": "2026-11-14T04:46:05Z"
+            },
+            {
+              "name": "Upload numerical evidence and synthetic RAW",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12,
+              "started_at": "2026-11-14T04:46:05Z",
+              "completed_at": "2026-11-14T04:46:06Z"
+            },
+            {
+              "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24,
+              "started_at": "2026-11-14T04:46:06Z",
+              "completed_at": "2026-11-14T04:46:07Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25,
+              "started_at": "2026-11-14T04:46:07Z",
+              "completed_at": "2026-11-14T04:46:07Z"
+            }
+          ],
+          "all_required_steps_present_once": true,
+          "all_required_steps_completed_success": true,
+          "all_api_steps_completed_success": true
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14099022008,
+          "node_id": "MDg6QXJ0aWZhY3QxNDA5OTAyMjAwOA==",
+          "name": "phase1-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "size_in_bytes": 99897,
+          "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14099022008",
+          "archive_download_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14099022008/zip",
+          "expired": false,
+          "digest": "sha256:6648dd7357d3521c8c988fdca1a3bf2f66374c6667ec807735144b04095a6c73",
+          "created_at": "2026-11-14T04:46:06Z",
+          "updated_at": "2026-11-14T04:46:06Z",
+          "expires_at": "2026-11-28T04:46:05Z",
+          "workflow_run": {
+            "id": 43558156897,
+            "repository_id": 1454419692,
+            "head_repository_id": 1454419692,
+            "head_branch": "main",
+            "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2"
+          }
+        }
+      ],
+      "artifacts_downloaded_by_this_observer": false,
+      "run_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156897",
+      "jobs_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156897/jobs?per_page=100",
+      "observation_input_paths": {
+        "raw_run_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156897.json",
+        "raw_jobs_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156897.json",
+        "classification": "Unversioned scratch observation inputs; hashes are listed in observation_inputs."
+      }
+    },
+    {
+      "id": 43558156994,
+      "name": "Phase 2 dual-gain validation",
+      "path": ".github/workflows/phase2-tests.yml",
+      "workflow_id": 417964380,
+      "run_number": 3,
+      "run_attempt": 1,
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+      "head_commit_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-14T04:44:48Z",
+      "run_started_at": "2026-11-14T04:44:48Z",
+      "updated_at": "2026-11-14T04:46:27Z",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156994",
+      "repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "head_repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "verification": {
+        "expected_repository": true,
+        "expected_workflow_path": true,
+        "expected_source": true,
+        "push_on_main": true,
+        "run_completed_success": true,
+        "all_expected_jobs_returned": true,
+        "all_jobs_completed_success": true,
+        "all_required_steps_completed_success": true,
+        "all_api_steps_completed_success": true
+      },
+      "jobs_observed_at": "2026-11-14T04:46:32.761Z",
+      "jobs": [
+        {
+          "id": 132335613698,
+          "run_id": 43558156994,
+          "run_attempt": 1,
+          "workflow_name": "Phase 2 dual-gain validation",
+          "name": "octave-validation",
+          "head_branch": "main",
+          "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-14T04:44:52Z",
+          "completed_at": "2026-11-14T04:46:26Z",
+          "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156994/job/132335613698",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "runner_name": "GitHub Actions 1000000301",
+          "required_authored_steps": [
+            "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+            "Verify exact scientific dependency checkouts",
+            "Test independent validation utilities",
+            "Install numerical runtime",
+            "Complete Phase 2 numerical suites and Phase 1 prerequisite",
+            "Verify failures invalidate stale success reports",
+            "Generate simultaneous dual-gain demo artifacts",
+            "Repeat demo in a fresh process",
+            "Independently verify artifacts and reproducibility",
+            "Confirm dependencies were not modified",
+            "Upload numerical evidence and simultaneous readouts"
+          ],
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-14T04:44:53Z",
+              "completed_at": "2026-11-14T04:44:55Z"
+            },
+            {
+              "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-14T04:44:55Z",
+              "completed_at": "2026-11-14T04:45:11Z"
+            },
+            {
+              "name": "Verify exact scientific dependency checkouts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-14T04:45:11Z",
+              "completed_at": "2026-11-14T04:45:12Z"
+            },
+            {
+              "name": "Test independent validation utilities",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-11-14T04:45:12Z",
+              "completed_at": "2026-11-14T04:45:19Z"
+            },
+            {
+              "name": "Install numerical runtime",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-11-14T04:45:19Z",
+              "completed_at": "2026-11-14T04:46:06Z"
+            },
+            {
+              "name": "Complete Phase 2 numerical suites and Phase 1 prerequisite",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-14T04:46:06Z",
+              "completed_at": "2026-11-14T04:46:17Z"
+            },
+            {
+              "name": "Verify failures invalidate stale success reports",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-14T04:46:17Z",
+              "completed_at": "2026-11-14T04:46:17Z"
+            },
+            {
+              "name": "Generate simultaneous dual-gain demo artifacts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-11-14T04:46:17Z",
+              "completed_at": "2026-11-14T04:46:18Z"
+            },
+            {
+              "name": "Repeat demo in a fresh process",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-11-14T04:46:18Z",
+              "completed_at": "2026-11-14T04:46:19Z"
+            },
+            {
+              "name": "Independently verify artifacts and reproducibility",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-11-14T04:46:19Z",
+              "completed_at": "2026-11-14T04:46:19Z"
+            },
+            {
+              "name": "Confirm dependencies were not modified",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 11,
+              "started_at": "2026-11-14T04:46:19Z",
+              "completed_at": "2026-11-14T04:46:19Z"
+            },
+            {
+              "name": "Upload numerical evidence and simultaneous readouts",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 12,
+              "started_at": "2026-11-14T04:46:19Z",
+              "completed_at": "2026-11-14T04:46:21Z"
+            },
+            {
+              "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 24,
+              "started_at": "2026-11-14T04:46:21Z",
+              "completed_at": "2026-11-14T04:46:21Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 25,
+              "started_at": "2026-11-14T04:46:21Z",
+              "completed_at": "2026-11-14T04:46:21Z"
+            }
+          ],
+          "all_required_steps_present_once": true,
+          "all_required_steps_completed_success": true,
+          "all_api_steps_completed_success": true
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 14099900003,
+          "node_id": "MDg6QXJ0aWZhY3QxNDA5OTkwMDAwMw==",
+          "name": "phase2-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "size_in_bytes": 44432,
+          "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14099900003",
+          "archive_download_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14099900003/zip",
+          "expired": false,
+          "digest": "sha256:27ee6d8a0fa7d772ad4e06bdeff697b19c9c226cf9168cc8c3b89fff8f74316f",
+          "created_at": "2026-11-14T04:46:21Z",
+          "updated_at": "2026-11-14T04:46:21Z",
+          "expires_at": "2026-11-28T04:46:19Z",
+          "workflow_run": {
+            "id": 43558156994,
+            "repository_id": 1454419692,
+            "head_repository_id": 1454419692,
+            "head_branch": "main",
+            "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2"
+          }
+        }
+      ],
+      "artifacts_downloaded_by_this_observer": false,
+      "run_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156994",
+      "jobs_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156994/jobs?per_page=100",
+      "observation_input_paths": {
+        "raw_run_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156994.json",
+        "raw_jobs_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156994.json",
+        "classification": "Unversioned scratch observation inputs; hashes are listed in observation_inputs."
+      }
+    },
+    {
+      "id": 43558156929,
+      "name": "Repository integrity",
+      "path": ".github/workflows/repository-integrity.yml",
+      "workflow_id": 415088941,
+      "run_number": 5,
+      "run_attempt": 1,
+      "event": "push",
+      "head_branch": "main",
+      "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+      "head_commit_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-14T04:44:48Z",
+      "run_started_at": "2026-11-14T04:44:48Z",
+      "updated_at": "2026-11-14T04:44:57Z",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156929",
+      "repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "head_repository": {
+        "id": 1454419692,
+        "full_name": "baabi-boo/ALEV4-Sensor-Emulator"
+      },
+      "verification": {
+        "expected_repository": true,
+        "expected_workflow_path": true,
+        "expected_source": true,
+        "push_on_main": true,
+        "run_completed_success": true,
+        "all_expected_jobs_returned": true,
+        "all_jobs_completed_success": true,
+        "all_required_steps_completed_success": true,
+        "all_api_steps_completed_success": true
+      },
+      "jobs_observed_at": "2026-11-14T04:45:47.760Z",
+      "jobs": [
+        {
+          "id": 132335613494,
+          "run_id": 43558156929,
+          "run_attempt": 1,
+          "workflow_name": "Repository integrity",
+          "name": "submodule-links",
+          "head_branch": "main",
+          "head_sha": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-11-14T04:44:51Z",
+          "completed_at": "2026-11-14T04:44:56Z",
+          "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156929/job/132335613494",
+          "labels": [
+            "ubuntu-latest"
+          ],
+          "runner_name": "GitHub Actions 1000000300",
+          "required_authored_steps": [
+            "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+            "Verify pinned upstream Git links"
+          ],
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-11-14T04:44:52Z",
+              "completed_at": "2026-11-14T04:44:52Z"
+            },
+            {
+              "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-11-14T04:44:53Z",
+              "completed_at": "2026-11-14T04:44:54Z"
+            },
+            {
+              "name": "Verify pinned upstream Git links",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-11-14T04:44:54Z",
+              "completed_at": "2026-11-14T04:44:54Z"
+            },
+            {
+              "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-11-14T04:44:54Z",
+              "completed_at": "2026-11-14T04:44:54Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-11-14T04:44:54Z",
+              "completed_at": "2026-11-14T04:44:54Z"
+            }
+          ],
+          "all_required_steps_present_once": true,
+          "all_required_steps_completed_success": true,
+          "all_api_steps_completed_success": true
+        }
+      ],
+      "artifacts": [],
+      "artifacts_downloaded_by_this_observer": false,
+      "run_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156929",
+      "jobs_api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156929/jobs?per_page=100",
+      "observation_input_paths": {
+        "raw_run_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156929.json",
+        "raw_jobs_response": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156929.json",
+        "classification": "Unversioned scratch observation inputs; hashes are listed in observation_inputs."
+      }
+    }
+  ],
+  "runtime_observations": {
+    "phase1": {
+      "runtime": "GNU Octave",
+      "version": "8.4.0",
+      "basis": "Explicit executed required-gates summary in actual job log.",
+      "python_test_count": 145
+    },
+    "phase2": {
+      "runtime": "GNU Octave",
+      "version": "8.4.0",
+      "basis": "Explicit executed required-gates summary in actual job log.",
+      "python_test_count": 145
+    },
+    "phase3": {
+      "runtime": "GNU Octave",
+      "version": "8.4.0",
+      "installed_octave_package_version": "8.4.0-1build5",
+      "basis": "Actual Phase 3 installation log plus direct read of phase3-validation.json from root's downloaded/extracted candidate artifact.",
+      "numerical_report_runtime_verified_by_this_observer": true,
+      "extracted_report_observation": {
+        "path": "/workspace/scratch/b34757889887/phase3-candidate-ci-extracted/phase3/validation/phase3-validation.json",
+        "size_bytes": 97832,
+        "sha256": "585738c7d93e1d2b18da1fd5f20e71532164bef7f47f75388f864196ac0d701d",
+        "runtime": "GNU Octave",
+        "runtime_version": "8.4.0",
+        "status": "passed",
+        "provenance": {
+          "repository_head": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+          "isetcam_head": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+          "isethdrsensor_head": "ee2dacceb456516de3ecefadd72955154cf3cabe",
+          "meaning": "Observed Git HEADs; an empty value means unavailable. Uncommitted edits, object existence and agreement with dependency gitlinks are not established by these metadata observations."
+        },
+        "phase3_passed": true,
+        "phase3_suite_counts": {},
+        "phase2_runtime": "GNU Octave",
+        "phase2_runtime_version": "8.4.0",
+        "acceptance_source_revision": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+        "acceptance_source_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+        "acceptance_status": "passed",
+        "release_accepted": true
+      }
+    }
+  },
+  "phase3_acceptance_log_observation": {
+    "command_labels_observed": 16,
+    "status": "passed",
+    "release_accepted": true,
+    "source_revision": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+    "basis": "Actual job log aggregate output and completed successful acceptance step; nested receipt/content verification is separately required."
+  },
+  "log_excerpts": {
+    "phase1": {
+      "runtime": [
+        {
+          "line": 63097,
+          "text": "2026-11-14T04:46:01.4121604Z Phase 1 required gates passed: 1 (GNU Octave 8.4.0)"
+        }
+      ],
+      "python": [
+        {
+          "line": 336,
+          "text": "2026-11-14T04:45:22.2039895Z Ran 145 tests in 12.260s"
+        }
+      ],
+      "upload": [
+        {
+          "line": 85200,
+          "text": "2026-11-14T04:46:05.9948132Z SHA256 digest of uploaded artifact zip is 6648dd7357d3521c8c988fdca1a3bf2f66374c6667ec807735144b04095a6c73"
+        },
+        {
+          "line": 85203,
+          "text": "2026-11-14T04:46:06.3565912Z Artifact phase1-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2 has been successfully uploaded! Final size is 99897 bytes. Artifact ID is 14099022008"
+        },
+        {
+          "line": 85204,
+          "text": "2026-11-14T04:46:06.3569170Z Artifact download URL: https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156897/artifacts/14099022008"
+        }
+      ],
+      "repeat": [
+        {
+          "line": 85164,
+          "text": "2026-11-14T04:46:04.9195504Z   \"compared_demo_byte_identical\": true,"
+        }
+      ]
+    },
+    "phase2": {
+      "runtime": [
+        {
+          "line": 67874,
+          "text": "2026-11-14T04:46:17.3216145Z Phase 1 required gates passed: 1 (GNU Octave 8.4.0)"
+        },
+        {
+          "line": 67875,
+          "text": "2026-11-14T04:46:17.3216448Z Phase 2 numerical gates passed: 1 (GNU Octave 8.4.0)"
+        }
+      ],
+      "python": [
+        {
+          "line": 336,
+          "text": "2026-11-14T04:45:19.7089452Z Ran 145 tests in 6.785s"
+        }
+      ],
+      "upload": [
+        {
+          "line": 68168,
+          "text": "2026-11-14T04:46:20.7836025Z SHA256 digest of uploaded artifact zip is 27ee6d8a0fa7d772ad4e06bdeff697b19c9c226cf9168cc8c3b89fff8f74316f"
+        },
+        {
+          "line": 68171,
+          "text": "2026-11-14T04:46:21.3682274Z Artifact phase2-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2 has been successfully uploaded! Final size is 44432 bytes. Artifact ID is 14099900003"
+        },
+        {
+          "line": 68172,
+          "text": "2026-11-14T04:46:21.3683560Z Artifact download URL: https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156994/artifacts/14099900003"
+        }
+      ],
+      "repeat": []
+    },
+    "phase3": {
+      "installed_octave_package": [
+        {
+          "line": 917,
+          "text": "2026-11-14T04:46:00.0511286Z Setting up octave (8.4.0-1build5) ..."
+        }
+      ],
+      "command_labels": [
+        {
+          "line": 941,
+          "text": "2026-11-14T04:46:11.0433238Z Running dependencies-before"
+        },
+        {
+          "line": 942,
+          "text": "2026-11-14T04:46:11.0957038Z Running python-tests"
+        },
+        {
+          "line": 943,
+          "text": "2026-11-14T04:46:18.0906619Z Running all-numerical-gates"
+        },
+        {
+          "line": 944,
+          "text": "2026-11-14T04:48:09.2617499Z Running phase1-runner-failures"
+        },
+        {
+          "line": 945,
+          "text": "2026-11-14T04:48:09.3557376Z Running phase2-runner-failures"
+        },
+        {
+          "line": 946,
+          "text": "2026-11-14T04:48:09.7178414Z Running phase3-runner-failures"
+        },
+        {
+          "line": 947,
+          "text": "2026-11-14T04:48:13.0370001Z Running phase1-demo"
+        },
+        {
+          "line": 948,
+          "text": "2026-11-14T04:48:13.8794066Z Running phase1-demo-repeat"
+        },
+        {
+          "line": 949,
+          "text": "2026-11-14T04:48:14.7201074Z Running phase1-artifact-verification"
+        },
+        {
+          "line": 950,
+          "text": "2026-11-14T04:48:14.7695927Z Running phase2-demo"
+        },
+        {
+          "line": 951,
+          "text": "2026-11-14T04:48:15.5190591Z Running phase2-demo-repeat"
+        },
+        {
+          "line": 952,
+          "text": "2026-11-14T04:48:16.2748994Z Running phase2-artifact-verification"
+        },
+        {
+          "line": 953,
+          "text": "2026-11-14T04:48:16.4648708Z Running phase3-demo"
+        },
+        {
+          "line": 954,
+          "text": "2026-11-14T04:48:20.8250481Z Running phase3-demo-repeat"
+        },
+        {
+          "line": 955,
+          "text": "2026-11-14T04:48:25.1959671Z Running phase3-artifact-verification"
+        },
+        {
+          "line": 956,
+          "text": "2026-11-14T04:48:25.3144075Z Running dependencies-after"
+        }
+      ],
+      "aggregate_result": [
+        {
+          "line": 957,
+          "text": "2026-11-14T04:48:25.4199626Z {\"status\": \"passed\", \"release_accepted\": true, \"source_revision\": \"beedd8bfd1cea3c722409ef0f959fcec5420c5f2\", \"output_root\": \"/home/runner/work/ALEV4-Sensor-Emulator/ALEV4-Sensor-Emulator/outputs/phase3-acceptance\"}"
+        }
+      ],
+      "upload": [
+        {
+          "line": 974,
+          "text": "2026-11-14T04:48:27.7425854Z SHA256 digest of uploaded artifact zip is 660e1bfe5811b1f707405022059c9c217621b6fdb692801d9606bd24318159be"
+        },
+        {
+          "line": 977,
+          "text": "2026-11-14T04:48:28.3205587Z Artifact phase3-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2 has been successfully uploaded! Final size is 1046280 bytes. Artifact ID is 14099350761"
+        },
+        {
+          "line": 978,
+          "text": "2026-11-14T04:48:28.3206364Z Artifact download URL: https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43558156924/artifacts/14099350761"
+        }
+      ]
+    }
+  },
+  "observation_inputs": [
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/artifacts-43558156897.json",
+      "bytes": 778,
+      "sha256": "9cc5bc45f361ec236cbcd794b0fb1453f0ec08a7266c442bf6deee5b4893c1a1",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/artifacts-43558156924.json",
+      "bytes": 780,
+      "sha256": "f6796ac40449f4c86fb3417f3513fe46cd59edbc3354a75000ea779ab6ae7054",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/artifacts-43558156994.json",
+      "bytes": 778,
+      "sha256": "a97e1e99b3213234b084f3130cfc69b8b8a2943657f7943bd6c9c3467145254e",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156897.json",
+      "bytes": 3497,
+      "sha256": "32215b83ff7e7a63ba6afc0c6b3ca7345a3d72ba13cff444cc093af933f270bc",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156924.json",
+      "bytes": 2261,
+      "sha256": "eab06070e1a7ff4f850d524eeafb563ecb9358763dd1027162a7a79d6ec852eb",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156929.json",
+      "bytes": 1862,
+      "sha256": "c81f2924b98f32ef54f04d499904c8a3adae9837ea2114a7d9a047f84f66d072",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-jobs-43558156994.json",
+      "bytes": 3540,
+      "sha256": "b84830d2dd61779f36bfeb42adef5e19eb1418d9aec09ce1aa9375c2baa64319",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156897.json",
+      "bytes": 13670,
+      "sha256": "b6fc0a377906b094b553404bea6432e30a043245510653f6329e88287647da47",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156924.json",
+      "bytes": 13679,
+      "sha256": "c9345aa0bc4088ce495907a2f48b625f327d8fd0fe2d6582adf330c9c9211b9c",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156929.json",
+      "bytes": 13669,
+      "sha256": "a6df2eb3f9116c4f85273fa7c9d2be7d053302de05376dd79746e9ca137fb419",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/final-run-43558156994.json",
+      "bytes": 13669,
+      "sha256": "47797ea5d2cbe609d5b0698bf503f7d710cee66179f8847d58599dd3389de61b",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-jobs-43558156897.json",
+      "bytes": 2957,
+      "sha256": "70ffc4c7a2edaa36a2f52aa8a0c58aedd194f7f50dc26dd95c5a59fa42c3d597",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-jobs-43558156924.json",
+      "bytes": 1936,
+      "sha256": "0f2c6980d4bb8f5b54093ce7347066003b2185cfdc97b69c000b8fb2aa4393af",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-jobs-43558156929.json",
+      "bytes": 1862,
+      "sha256": "c81f2924b98f32ef54f04d499904c8a3adae9837ea2114a7d9a047f84f66d072",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-jobs-43558156994.json",
+      "bytes": 3000,
+      "sha256": "f7a1ac6e74eef22e6d964e9187f90527d2d31f3e574a8542a3ee1bc1e2716d37",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-run-43558156897.json",
+      "bytes": 13667,
+      "sha256": "76d599e8de291c243aadae4400c86f11bcf33fafc6c6faa8c46516254e95ea82",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-run-43558156924.json",
+      "bytes": 13676,
+      "sha256": "a6b9a8072f6bd93ddd1986b39fb02cf5d45bb77de48868b9cc79f925cbf2cd47",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-run-43558156929.json",
+      "bytes": 13669,
+      "sha256": "a6df2eb3f9116c4f85273fa7c9d2be7d053302de05376dd79746e9ca137fb419",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "raw_github_api_response_json",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/initial-run-43558156994.json",
+      "bytes": 13666,
+      "sha256": "881f524d4b128f77ae49d66df3c46c345b741ccd1f911d4e1a97c95754bc26b6",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "decoded_full_job_log",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/integrity-job.log",
+      "bytes": 15651,
+      "sha256": "51a1b35f080b864205e3501d090bac70866fee0e39a0c7e25617c0b46875e385",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "decoded_full_job_log",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/phase1-job.log",
+      "bytes": 5741047,
+      "sha256": "1dde342421aae8a9c5059867f4d5a123d0d1e34e89531445ca09fe74e7f6176c",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "decoded_full_job_log",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/phase2-job.log",
+      "bytes": 4663227,
+      "sha256": "03824be0a922eb697af5edcad489a9052cc51cefa7bf1a933d4df3f95e587e24",
+      "retained_in_repository": false
+    },
+    {
+      "record_kind": "unversioned_observation_input",
+      "input_kind": "decoded_full_job_log",
+      "scratch_path": "/workspace/scratch/b34757889887/phase3-ci-observation-raw/phase3-job.log",
+      "bytes": 98810,
+      "sha256": "136be9709e273bf9af83f76c4acb746af45648483babfc04c258701f16922fca",
+      "retained_in_repository": false
+    }
+  ],
+  "input_retention_policy": "The raw API response JSON and decoded full job logs listed here were read and hashed in scratch. They are observation inputs, not versioned retained originals. This derived summary is the versioned record of their selected observations; the retained phase3-ci execution reports/logs are a separate selection from the downloaded artifact.",
+  "validation": {
+    "all_observation_input_bytes_and_hashes_verified": true,
+    "final_run_and_job_fields_matched_raw_api_inputs": true,
+    "all_required_authored_steps_present_once_and_successful": true,
+    "all_api_steps_completed_successfully": true,
+    "quoted_log_line_numbers_and_text_matched_inputs": true,
+    "source_tree_and_dependency_gitlinks_verified_against_candidate_objects": true
+  },
+  "limitations": [
+    "This is a derived CI API and job-log summary, not an original API payload. Unversioned observation inputs may not remain available.",
+    "The original observer did not download or exhaustively audit artifact contents. The separate downloaded-archive audit and local recheck records establish those narrower byte and scalar-verification results.",
+    "Observed success belongs to the exact source revision above. A later documentation/evidence descendant is a different revision and needs its own observed CI status when that revision's CI is reported.",
+    "Historical source-clean flags and dependency records are evidence from the execution, not independent recreation of the original CI machine.",
+    "GNU Octave results do not establish native MATLAB execution, measured ARRI calibration, or cross-runtime random-stream identity."
+  ]
+}

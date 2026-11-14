@@ -1,7 +1,7 @@
 # Phase 3 implementation and review ledger
 
-**Status: in progress.** The requested scope is 60 distinct delegated tasks
-in ten waves of six. This snapshot records only completed task reports.
+**Status: completed.** All 60 distinct delegated tasks in ten waves of six
+are recorded below. Every report comes from an actual assigned task.
 Workers ran within the available three-worker concurrency limit; root
 integration and follow-up turns do not count as additional agents.
 
@@ -9,6 +9,9 @@ The [machine-readable index](development/phase3/agent-report-index.json) binds
 each archived report to its task name, size and SHA-256; explicitly recorded
 terminal-blank-line normalization retains the original size/hash. Development
 reports are not substitutes for exact-source release acceptance.
+
+The [final archive validation](evidence/phase3-agent-ledger-audit.json)
+checks all 60 report identities, hashes, links, and six-task wave inventories.
 
 | No. | Wave | Delegated task | Report |
 | --- | --- | --- | --- |
@@ -51,3 +54,24 @@ reports are not substitutes for exact-source release acceptance.
 | 37 | 7 | `/root/w07_a_legacy_and_dependency_review` | [w07_a.md](development/phase3/agent-reports/w07_a.md) |
 | 38 | 7 | `/root/w07_b_cross_reader_parity` | [w07_b.md](development/phase3/agent-reports/w07_b.md) |
 | 39 | 7 | `/root/w07_c_runtime_portability_review` | [w07_c.md](development/phase3/agent-reports/w07_c.md) |
+| 40 | 7 | `/root/w07_d_acceptance_failure_recheck` | [w07_d.md](development/phase3/agent-reports/w07_d.md) |
+| 41 | 7 | `/root/w07_e_release_fixture_science_review` | [w07_e.md](development/phase3/agent-reports/w07_e.md) |
+| 42 | 7 | `/root/w07_f_documented_workflow_review` | [w07_f.md](development/phase3/agent-reports/w07_f.md) |
+| 43 | 8 | `/root/w08_a_release_evidence_design` | [w08_a.md](development/phase3/agent-reports/w08_a.md) |
+| 44 | 8 | `/root/w08_b_git_release_preflight` | [w08_b.md](development/phase3/agent-reports/w08_b.md) |
+| 45 | 8 | `/root/w08_c_candidate_gate_observer` | [w08_c.md](development/phase3/agent-reports/w08_c.md) |
+| 46 | 8 | `/root/w08_d_release_manifest_observer` | [w08_d.md](development/phase3/agent-reports/w08_d.md) |
+| 47 | 8 | `/root/w08_e_ci_release_readiness` | [w08_e.md](development/phase3/agent-reports/w08_e.md) |
+| 48 | 8 | `/root/w08_f_evidence_retention_review` | [w08_f.md](development/phase3/agent-reports/w08_f.md) |
+| 49 | 9 | `/root/w09_a_ci_execution_observer` | [w09_a.md](development/phase3/agent-reports/w09_a.md) |
+| 50 | 9 | `/root/w09_b_lossless_evidence_retention` | [w09_b.md](development/phase3/agent-reports/w09_b.md) |
+| 51 | 9 | `/root/w09_c_release_documentation` | [w09_c.md](development/phase3/agent-reports/w09_c.md) |
+| 52 | 9 | `/root/w09_d_ci_archive_audit` | [w09_d.md](development/phase3/agent-reports/w09_d.md) |
+| 53 | 9 | `/root/w09_e_downloaded_scalar_recheck` | [w09_e.md](development/phase3/agent-reports/w09_e.md) |
+| 54 | 9 | `/root/w09_f_release_evidence_catalog` | [w09_f.md](development/phase3/agent-reports/w09_f.md) |
+| 55 | 10 | `/root/w10_a_phase4_readiness` | [w10_a.md](development/phase3/agent-reports/w10_a.md) |
+| 56 | 10 | `/root/w10_b_user_documentation_audit` | [w10_b.md](development/phase3/agent-reports/w10_b.md) |
+| 57 | 10 | `/root/w10_c_agent_ledger_audit` | [w10_c.md](development/phase3/agent-reports/w10_c.md) |
+| 58 | 10 | `/root/w10_d_release_scope_preservation` | [w10_d.md](development/phase3/agent-reports/w10_d.md) |
+| 59 | 10 | `/root/w10_e_publication_preflight` | [w10_e.md](development/phase3/agent-reports/w10_e.md) |
+| 60 | 10 | `/root/w10_f_final_handoff_audit` | [w10_f.md](development/phase3/agent-reports/w10_f.md) |

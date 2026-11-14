@@ -1,0 +1,388 @@
+{
+  "schema_version": "1.0",
+  "record_kind": "derived_download_audit",
+  "status": "passed",
+  "audit_agent": 52,
+  "wave": "9D",
+  "audited_utc": "2026-11-14T04:53:33.411182+00:00",
+  "scope": "Independent byte, archive-safety, extraction, receipt/provenance-consistency and durable-retention audit of the already downloaded CI ZIP; no scientific scalar verifier or native numerical test was rerun.",
+  "scalar_reverification_pending": false,
+  "scalar_reverification_note": "Agent 53 separately executed the three candidate Python artifact verifiers. Agent 52 inspected that execution record and directly verified all three retained stdout receipts against the downloaded archive; no scalar verifier was executed by this archive auditor.",
+  "source_revision": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+  "source_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+  "archive": {
+    "filename": "phase3-candidate-ci-evidence.zip",
+    "artifact_id": 14099350761,
+    "artifact_name": "phase3-evidence-beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+    "run_id": 43558156924,
+    "run_attempt": 1,
+    "repository": "baabi-boo/ALEV4-Sensor-Emulator",
+    "head_branch": "main",
+    "recorded_run_status": "completed",
+    "recorded_run_conclusion": "success",
+    "size_bytes": 1046280,
+    "sha256": "660e1bfe5811b1f707405022059c9c217621b6fdb692801d9606bd24318159be",
+    "expires_at": "2026-11-28T04:48:25Z",
+    "expired_at_api_observation": false,
+    "member_count": 294,
+    "regular_file_members": 294,
+    "directory_members": 0,
+    "uncompressed_bytes": 15363342,
+    "api_artifact_metadata_sha256": "f6796ac40449f4c86fb3417f3513fe46cd59edbc3354a75000ea779ab6ae7054",
+    "api_run_metadata_sha256": "c9345aa0bc4088ce495907a2f48b625f327d8fd0fe2d6582adf330c9c9211b9c",
+    "metadata_basis": "Previously captured GitHub API JSON was read locally and cross-checked against the downloaded bytes; this auditor did not perform a new network request."
+  },
+  "archive_and_extraction_checks": {
+    "zip_exact_member_count": true,
+    "zip_no_duplicate_names": true,
+    "zip_no_casefold_collisions": true,
+    "zip_member_paths_safe": true,
+    "zip_all_members_regular_files": true,
+    "zip_no_symlink_members": true,
+    "zip_no_encryption": true,
+    "zip_crc_and_structure_valid": true,
+    "zip_uncompressed_lengths_match": true,
+    "extraction_root_regular_directory": true,
+    "extraction_only_regular_files_and_directories": true,
+    "extraction_exact_file_inventory": true,
+    "extraction_all_bytes_match_archive": true,
+    "extraction_all_file_inodes_distinct": true
+  },
+  "inventories": {
+    "canonical_encoding": "UTF-8/ASCII JSON with sorted keys, separators comma/colon, no whitespace or trailing newline; entries map relative path to bytes and sha256.",
+    "full_archive_file_count": 294,
+    "full_archive_inventory_sha256": "3a2bccd057941291dd20ca2e223cae682ce789daf9094a6a934bbf673acb7d70",
+    "receipt_listed_file_count": 293,
+    "receipt_inventory_sha256": "6c48d276afd62d45e69d69d27fb7ed681156d0f041d7eed68610180ea6d4dbe8",
+    "receipt_excludes_only_itself": true,
+    "extracted_file_count": 294,
+    "extraction_matches_archive_exactly": true,
+    "json_files_parsed": 82,
+    "zip_counts_by_top_level": {
+      "acceptance.json": 1,
+      "logs": 26,
+      "phase1": 64,
+      "phase2": 64,
+      "phase3": 139
+    }
+  },
+  "acceptance_receipt": {
+    "retained_path": "docs/evidence/phase3-ci/acceptance.json",
+    "bytes": 53929,
+    "sha256": "8e88b7a0aaed8ce0930ce34562233ac0843b5e32035ca1f95abab2f896a12153",
+    "status": "passed",
+    "release_accepted": true,
+    "development": false,
+    "source_revision": "beedd8bfd1cea3c722409ef0f959fcec5420c5f2",
+    "source_tree": "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e",
+    "source_clean_at_start": true,
+    "source_clean_at_end": true,
+    "started_utc": "2026-11-14T04:46:11.042779+00:00",
+    "finished_utc": "2026-11-14T04:48:25.418881+00:00",
+    "synthetic": true,
+    "calibrated_alev4": false,
+    "native_matlab_executed": false,
+    "all_293_listed_lengths_and_hashes_verified": true
+  },
+  "commands": {
+    "count": 16,
+    "all_exact_argv_output_paths_and_zero_exits_match_required_sequence": true,
+    "canonical_command_records_sha256": "d4c1ae3995a267d92d4f20c193848744ea3a6db98e48e0b31655d64b9705340d",
+    "exact_argv_record": "docs/evidence/phase3-ci/acceptance.json#/commands",
+    "results": [
+      {
+        "number": 1,
+        "label": "dependencies-before",
+        "exit_code": 0
+      },
+      {
+        "number": 2,
+        "label": "python-tests",
+        "exit_code": 0
+      },
+      {
+        "number": 3,
+        "label": "all-numerical-gates",
+        "exit_code": 0
+      },
+      {
+        "number": 4,
+        "label": "phase1-runner-failures",
+        "exit_code": 0
+      },
+      {
+        "number": 5,
+        "label": "phase2-runner-failures",
+        "exit_code": 0
+      },
+      {
+        "number": 6,
+        "label": "phase3-runner-failures",
+        "exit_code": 0
+      },
+      {
+        "number": 7,
+        "label": "phase1-demo",
+        "exit_code": 0
+      },
+      {
+        "number": 8,
+        "label": "phase1-demo-repeat",
+        "exit_code": 0
+      },
+      {
+        "number": 9,
+        "label": "phase1-artifact-verification",
+        "exit_code": 0
+      },
+      {
+        "number": 10,
+        "label": "phase2-demo",
+        "exit_code": 0
+      },
+      {
+        "number": 11,
+        "label": "phase2-demo-repeat",
+        "exit_code": 0
+      },
+      {
+        "number": 12,
+        "label": "phase2-artifact-verification",
+        "exit_code": 0
+      },
+      {
+        "number": 13,
+        "label": "phase3-demo",
+        "exit_code": 0
+      },
+      {
+        "number": 14,
+        "label": "phase3-demo-repeat",
+        "exit_code": 0
+      },
+      {
+        "number": 15,
+        "label": "phase3-artifact-verification",
+        "exit_code": 0
+      },
+      {
+        "number": 16,
+        "label": "dependencies-after",
+        "exit_code": 0
+      }
+    ],
+    "command_output_file_count": 32
+  },
+  "provenance": {
+    "runtime": "GNU Octave",
+    "runtime_version": "8.4.0",
+    "dependency_pins": {
+      "isetcam_head": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+      "isethdrsensor_head": "ee2dacceb456516de3ecefadd72955154cf3cabe"
+    },
+    "candidate_tree_and_gitlinks_checked_against_local_git_objects": true,
+    "dependency_before_after_logs_identical_and_report_clean_pins": true,
+    "observed_json_identity_fields": {
+      "isetcam_head": {
+        "3e0253421752eb72f2d1353327dffd0d433abdaf": 86
+      },
+      "isethdrsensor_head": {
+        "ee2dacceb456516de3ecefadd72955154cf3cabe": 86
+      },
+      "repository_head": {
+        "beedd8bfd1cea3c722409ef0f959fcec5420c5f2": 86
+      },
+      "runtime_version": {
+        "8.4.0": 67
+      },
+      "source_revision": {
+        "beedd8bfd1cea3c722409ef0f959fcec5420c5f2": 1
+      },
+      "source_tree": {
+        "4da5c68c7e6dbeb13f2e2e04179c2ea5535e390e": 1
+      }
+    },
+    "runtime_fields_checked": 82,
+    "all_runtime_fields_consistent": true,
+    "nested_phase2_report_equals_regression_file": true,
+    "nested_phase1_reports_equal_regression_file": true,
+    "phase1_and_phase2_copied_report_bytes_identical": true,
+    "numerical_report_hashes": {
+      "phase3/validation/phase3-validation.json": "585738c7d93e1d2b18da1fd5f20e71532164bef7f47f75388f864196ac0d701d",
+      "phase3/validation/phase2-regression/phase2-validation.json": "5aed416381f9f570e7d0cc22ba13518026c066d95a0f094f13aa96b4658c1cf9",
+      "phase3/validation/phase2-regression/phase1-regression/phase1-validation.json": "0c23fa2b56a2540cb15e662edb113b43e2d53bbe70cbbde32a7ec7c44af40cda"
+    },
+    "recorded_numerical_group_counts": {
+      "1": 92,
+      "2": 62,
+      "3": 135
+    },
+    "recorded_phase3_suite_group_counts": {
+      "geometry": 12,
+      "geometry_edges": 10,
+      "sampling": 13,
+      "optics": 15,
+      "integration": 12,
+      "spatial_io": 28,
+      "numerical_edges": 17,
+      "demo_contract": 14,
+      "iset_spatial": 14
+    },
+    "python_tests_recorded_in_log": 145
+  },
+  "repeat_sets": [
+    {
+      "phase": 1,
+      "fixtures": 10,
+      "files_per_set": 31,
+      "primary": "phase1/demo",
+      "repeat": "phase1/demo-repeat",
+      "corresponding_bytes_identical": true,
+      "zip_entries_distinct": true,
+      "extracted_file_identities_disjoint": true,
+      "relative_inventory_sha256": "34cc162e9fc02defe9106e0b9c49d9fcd251d1e1184263b329cbcb7465e100d3"
+    },
+    {
+      "phase": 2,
+      "fixtures": 6,
+      "files_per_set": 31,
+      "primary": "phase2/demo",
+      "repeat": "phase2/demo-repeat",
+      "corresponding_bytes_identical": true,
+      "zip_entries_distinct": true,
+      "extracted_file_identities_disjoint": true,
+      "relative_inventory_sha256": "89bf3f6c64de2961a3c332de6a6293127fd8342e89c36557013a20384e31a4a1"
+    },
+    {
+      "phase": 3,
+      "fixtures": 8,
+      "files_per_set": 66,
+      "primary": "phase3/demo",
+      "repeat": "phase3/demo-repeat",
+      "corresponding_bytes_identical": true,
+      "zip_entries_distinct": true,
+      "extracted_file_identities_disjoint": true,
+      "relative_inventory_sha256": "1aa073fea15c86d881fdac848aa079acb76f3d107e4fd1123e0e5a8c70a333b1"
+    }
+  ],
+  "retained_original_records": {
+    "retention_catalog_sha256": "31fa88ac1b3a8c6af5d6cc4a0fdfc56b3d65b0becbec9690fa7a5c2db5daf987",
+    "record_count": 44,
+    "identity_storage_count": 39,
+    "gzip_storage_count": 5,
+    "original_bytes": 13207338,
+    "stored_bytes": 581966,
+    "every_stored_length_and_sha256_verified": true,
+    "every_original_length_and_sha256_verified": true,
+    "every_decoded_file_equals_archive_member": true,
+    "deterministic_gzip_policy_verified": true,
+    "missing_or_extra_retained_files": 0,
+    "canonical_retained_inventory_sha256": "ecbfa7c1e7917da8b54011365c5ad451d8e0d374028a08a61ddbd1c9bfe7d493",
+    "retained_paths": [
+      "docs/evidence/phase3-ci/acceptance.json",
+      "docs/evidence/phase3-ci/logs/01-dependencies-before.stderr.txt",
+      "docs/evidence/phase3-ci/logs/01-dependencies-before.stdout.txt",
+      "docs/evidence/phase3-ci/logs/02-python-tests.stderr.txt",
+      "docs/evidence/phase3-ci/logs/02-python-tests.stdout.txt",
+      "docs/evidence/phase3-ci/logs/03-all-numerical-gates.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/03-all-numerical-gates.stdout.txt",
+      "docs/evidence/phase3-ci/logs/04-phase1-runner-failures.stderr.txt",
+      "docs/evidence/phase3-ci/logs/05-phase2-runner-failures.stderr.txt",
+      "docs/evidence/phase3-ci/logs/06-phase3-runner-failures.stderr.txt",
+      "docs/evidence/phase3-ci/logs/07-phase1-demo.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/07-phase1-demo.stdout.txt",
+      "docs/evidence/phase3-ci/logs/08-phase1-demo-repeat.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/08-phase1-demo-repeat.stdout.txt",
+      "docs/evidence/phase3-ci/logs/09-phase1-artifact-verification.stderr.txt",
+      "docs/evidence/phase3-ci/logs/10-phase2-demo.stderr.txt",
+      "docs/evidence/phase3-ci/logs/10-phase2-demo.stdout.txt",
+      "docs/evidence/phase3-ci/logs/11-phase2-demo-repeat.stderr.txt",
+      "docs/evidence/phase3-ci/logs/11-phase2-demo-repeat.stdout.txt",
+      "docs/evidence/phase3-ci/logs/12-phase2-artifact-verification.stderr.txt",
+      "docs/evidence/phase3-ci/logs/13-phase3-demo.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/13-phase3-demo.stdout.txt",
+      "docs/evidence/phase3-ci/logs/14-phase3-demo-repeat.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/14-phase3-demo-repeat.stdout.txt",
+      "docs/evidence/phase3-ci/logs/15-phase3-artifact-verification.stderr.txt",
+      "docs/evidence/phase3-ci/logs/16-dependencies-after.stderr.txt",
+      "docs/evidence/phase3-ci/logs/16-dependencies-after.stdout.txt",
+      "docs/evidence/phase3-ci/phase1/demo-repeat/phase1-demo-summary.json",
+      "docs/evidence/phase3-ci/phase1/demo/phase1-demo-summary.json",
+      "docs/evidence/phase3-ci/phase1/validation/phase1-acceptance.json",
+      "docs/evidence/phase3-ci/phase1/validation/phase1-validation.json",
+      "docs/evidence/phase3-ci/phase2/demo-repeat/phase2-demo-summary.json",
+      "docs/evidence/phase3-ci/phase2/demo/phase2-demo-summary.json",
+      "docs/evidence/phase3-ci/phase2/validation/phase2-acceptance.json",
+      "docs/evidence/phase3-ci/phase2/validation/phase2-validation.json",
+      "docs/evidence/phase3-ci/phase3/demo-repeat/phase3-demo-summary.json",
+      "docs/evidence/phase3-ci/phase3/demo/phase3-demo-summary.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase1-runner-failures.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase2-regression/phase1-regression/phase1-validation.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase2-regression/phase2-validation.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase2-runner-failures.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase3-acceptance.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase3-runner-failures.json",
+      "docs/evidence/phase3-ci/phase3/validation/phase3-validation.json"
+    ],
+    "gzip_paths": [
+      "docs/evidence/phase3-ci/logs/03-all-numerical-gates.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/07-phase1-demo.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/08-phase1-demo-repeat.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/13-phase3-demo.stderr.txt.gz",
+      "docs/evidence/phase3-ci/logs/14-phase3-demo-repeat.stderr.txt.gz"
+    ]
+  },
+  "results": {
+    "checks_passed": 300,
+    "checks_failed": 0,
+    "byte_and_provenance_audit_passed": true
+  },
+  "limitations": [
+    "Recorded clean-source flags, dependency logs and source/runtime metadata are historical execution evidence, not an independent recreation of the CI machine.",
+    "Separate demo command records support the original fresh-process claim; this audit directly establishes distinct ZIP members, distinct extracted file identities and exact corresponding bytes.",
+    "This audit did not rerun scientific scalar verifiers, ISETCam, Octave or MATLAB. Agent 53's separate successful scalar executions are cross-referenced above.",
+    "The 44 retained original records preserve selected reports/logs and the complete receipt inventory; they do not retain all 294 archive payloads in Git.",
+    "No native MATLAB, calibrated ALEV4 identity, measured dynamic range, genuine ARRIRAW or cross-runtime random-stream equivalence is established."
+  ],
+  "separate_scalar_reverification": {
+    "executing_agent": 53,
+    "record_path": "docs/evidence/phase3-ci-recheck/recheck-run.json",
+    "record_bytes": 8592,
+    "record_sha256": "8821a271d5fda24d8c779185f8358b2e390ff840855288a9de5e6bea0bbf046d",
+    "recorded_status": "passed",
+    "recorded_finished_utc": "2026-11-14T04:52:17.465433+00:00",
+    "local_verifier_runtime": "CPython 3.12.14",
+    "all_three_recorded_exits_zero": true,
+    "all_three_recorded_stderr_streams_empty": true,
+    "retained_receipts_verified": [
+      {
+        "phase": 1,
+        "path": "docs/evidence/phase3-ci-recheck/phase1-acceptance.json",
+        "bytes": 624,
+        "sha256": "043749ec9266c6238af8181b41e4a671432646248f2cc142d5e6e791ca22d752",
+        "equals_original_archive_receipt": true,
+        "recorded_exit_status": 0,
+        "recorded_stderr_bytes": 0
+      },
+      {
+        "phase": 2,
+        "path": "docs/evidence/phase3-ci-recheck/phase2-acceptance.json",
+        "bytes": 5019,
+        "sha256": "fb710448f42b6d41f944a59db76f6f3208f5431e8d6c3c3e0452ee43caf37433",
+        "equals_original_archive_receipt": true,
+        "recorded_exit_status": 0,
+        "recorded_stderr_bytes": 0
+      },
+      {
+        "phase": 3,
+        "path": "docs/evidence/phase3-ci-recheck/phase3-acceptance.json",
+        "bytes": 11676,
+        "sha256": "472f7222e315ed6313c942e823c37427cae24b8fbe750b6de76683f7b88109d0",
+        "equals_original_archive_receipt": true,
+        "recorded_exit_status": 0,
+        "recorded_stderr_bytes": 0
+      }
+    ],
+    "cross_reference_checked_utc": "2026-11-14T04:53:59.091625+00:00"
+  }
+}
