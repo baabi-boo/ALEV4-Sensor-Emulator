@@ -2,19 +2,36 @@
 
 ## Current evidence boundary
 
-Phase 1 is **complete and acceptance-tested in GNU Octave 8.4.0**. The full workflow passed 91 numerical groups across 11 suites, 29 Python tests, the stale-report failure regression, genuine ISETCam integration, independent artifact validation and byte-identical repeated-process demos. The [completion report](PHASE1_COMPLETION.md) identifies the exact tested revision and preserves numerical evidence. Native MATLAB execution has not been verified. Source lint is useful but is not runtime evidence.
+Phase 1's **historical acceptance in GNU Octave 8.4.0** passed 91 numerical groups across 11 suites, 29 Python tests, the stale-report failure regression, genuine ISETCam integration, independent artifact validation and byte-identical repeated-process demos. The [Phase 1 completion report](PHASE1_COMPLETION.md) identifies that exact tested revision and preserves its original evidence.
 
-Phase 2's simultaneous dual-gain implementation and acceptance gates are in
-place; **release acceptance is in progress**. Passing development checks do not
-identify a future release revision. Final test inventories, commands, runtime,
-source revision, CI results and retained receipts belong in the
-[Phase 2 completion report](PHASE2_COMPLETION.md). Phase 1's recorded acceptance
-remains historical evidence, and its gates must also pass on the Phase 2
-release source. No native MATLAB or calibrated ALEV4 pass is implied.
+Phase 2 is **complete and acceptance-tested** on source
+[`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c),
+in GNU Octave **8.4.0 in GitHub CI** and **9.4.0 locally**. That revision passed
+62 Phase 2 numerical groups, all 92 current Phase 1 regression groups, and
+47 Python tests. Five Phase 2 failure scenarios and the preserved Phase 1
+failure check passed. Both phases' independently verified demonstrations were
+byte-identical across fresh processes: six Phase 2 frames and ten Phase 1
+frames, with 31 files in each demonstration. All three release workflows
+passed on the tested source.
+
+The [Phase 2 completion report](PHASE2_COMPLETION.md) and
+[retained evidence index](evidence/phase2-release-record.json) identify the
+commands, inventories, runtime, source/dependency revisions, checksums, and CI
+results. These current Phase 1 regressions supplement its historical acceptance;
+the older 91-group/29-test results are not relabelled as Phase 2 evidence.
+Native MATLAB execution and calibrated ALEV4 equivalence remain unverified.
+Source lint is useful but is not runtime evidence. The next implementation
+work follows the [Phase 3 geometry and optics plan](PHASE3_PLAN.md).
 
 ## Scientific targets
 
-Use ARRI's official public specifications as **reference claims**, not as already validated simulation properties. ALEXA 35: 4608 × 3164 Bayer photosites and advertised 17 stops of exposure latitude. ARRI describes simultaneous dual-gain readout; it does not publish a complete device-level noise/electronics model for reproduction.
+Use ARRI's official public specifications as **reference claims**, not as already
+validated simulation properties. The [ALEXA 35 technical data](https://www.arri.com/en/cine-systems/cine-cameras/legacy-cine-cameras/alexa-35)
+identifies 4608 × 3164 maximum Bayer photosites and advertises 17 stops of
+exposure latitude. ARRI's [ALEV architecture description](https://www.arri.com/en/learn/arri-camera-technology/alev-sensors)
+describes simultaneous readout paths with different amplification. The referenced
+public specifications do not provide a complete calibrated noise/electronics
+model for reproducing this sensor.
 
 ## Phase 1 synthetic acceptance (no camera required)
 
@@ -48,7 +65,7 @@ duplicate group name, or unsuccessful assertion prevents numerical acceptance.
 | `core` | [test_phase2_core.m](../matlab/tests/test_phase2_core.m) | Independent transfer functions; one shared charge realization; separate ADC/full-well saturation; RAW-only rail fallback; default and fractional-black merge ramps; reproducibility and fixed Gaussian draw order |
 | `config_edges` | [test_phase2_config.m](../matlab/tests/test_phase2_config.m) | Strict nested configuration; canonical shared fields; usable ADC depths; gain/headroom ordering; exact merge-margin boundaries; malformed and supported RAW representations |
 | `noise` | [test_phase2_noise.m](../matlab/tests/test_phase2_noise.m) | Read-noise moments and independence; shared shot covariance; difference-noise variance; signed dark readout; quantized shadow moments; noisy highlights; electronic noise after well clipping; incorrect-model negative controls |
-| `raw_io` | [test_phase2_raw.m](../matlab/tests/test_phase2_raw.m) | Independent byte-order/float oracles; complete metadata and original JSON keys; payload/flag corruption; portable file associations; no-overwrite, alias and symlink behavior; staged-publication failure cleanup |
+| `raw_io` | [test_phase2_raw.m](../matlab/tests/test_phase2_raw.m) | Independent byte-order/float oracles; complete metadata and original JSON keys; tiny/extreme-scale numeric fidelity and prepublication precision rejection; payload/flag corruption; portable file associations; no-overwrite, alias and symlink behavior; staged-publication failure cleanup |
 | `numerical_edges` | [test_phase2_numerical_edges.m](../matlab/tests/test_phase2_numerical_edges.m) | Seed/Poisson limits; zero collection versus underflow/overflow; supported numeric representations; both readout overflow paths; extreme finite merge endpoints; RNG restoration on failure |
 | `spectral_properties` | [test_phase2_spectral.m](../matlab/tests/test_phase2_spectral.m) | Nonuniform scalar spectral oracle; all Bayer phases and singleton/odd geometries; Phase 1 parity; physical scaling; bin refinement; explicit energy conversion; input/RNG isolation |
 | `demo_contract` | [test_phase2_demo.m](../matlab/tests/test_phase2_demo.m) | Exact six-frame configuration and seeds; readback-derived summaries; physical validity; finite noisy output; reserved-path preflight; unrelated-file preservation; same-process determinism |
@@ -73,14 +90,17 @@ deliberately incorrect clamp applied after read noise. Physical saturation
 continues to exclude reconstruction validity; a finite low-gain code cannot
 recover the lost incident signal.
 
-Noiseless handoff tests require nondecreasing reconstruction and a convex
-per-path quantization-error bound. They include a fractional low-path black
-level near high-gain rail exclusion. Configuration validation reserves half a
-low-gain quantization step plus its documented floating-point margin before the
-high channel becomes unusable. Shadow-noise expectations use actual Gaussian
-rounding-bin probabilities rather than assuming uniform quantization error.
-These checks do not establish an optimal or unbiased noisy transition
-estimator; the observed low-channel weighting can introduce selection bias.
+Noiseless tests of the guarded high-gain upper handoff require nondecreasing
+reconstruction and a convex per-path quantization-error bound. They include a
+fractional low-path black level near high-gain rail exclusion. Configuration
+validation reserves half a low-gain quantization step plus its documented
+floating-point margin before the high channel becomes unusable. This is not
+a global monotonicity guarantee: a separate custom-black-offset regression
+retains the documented downward step when lower-rail fallback changes paths.
+Shadow-noise expectations use actual Gaussian rounding-bin probabilities
+rather than assuming uniform quantization error. These checks do not establish
+an optimal or unbiased noisy transition estimator; the observed low-channel
+weighting can introduce selection bias.
 
 ### Bundle and independent artifact gates
 
@@ -93,6 +113,14 @@ flag consistency. Tests reject duplicate or normalized JSON keys, missing
 recorded parameters, changed payloads, unsafe associations and contradictory
 validity. The native file-identity checks depend on `lstat` or JVM facilities;
 the Python verifier remains mandatory for complete artifact acceptance.
+
+Metadata regressions cover tiny positive and extreme-scale values, numeric
+round-trip guards, and rejection before files are published when precision
+cannot be preserved. The [bundle contract](PHASE2_ARTIFACTS.md) specifies
+17-significant-digit emission and the native decoder's own-magnitude
+four-ULP guard, including exact zero and integers within `flintmax` and rejection
+of sign changes or nonzero values becoming zero. This metadata guard is
+separate from the reader's 64-ULP merged-payload comparison.
 
 The Python verifier derives deterministic demo expectations independently and
 recomputes reported metrics from decoded bytes. It does not reproduce a

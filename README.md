@@ -2,7 +2,9 @@
 
 A research-oriented, **independent and unaffiliated** project working toward an ALEV4-inspired camera sensor model.
 
-> **Phase 2 status: implemented; release acceptance in progress.** The repository now includes simultaneous high- and low-gain readouts, a guarded merge using recorded RAW, and independent bundle verification. The [Phase 2 completion report](docs/PHASE2_COMPLETION.md) is the authority for the final tested revision, retained evidence, and release outcome. There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution remains unverified.
+> **Phase 2 status: complete and acceptance-tested.** The simultaneous high- and low-gain implementation passed in GNU Octave **8.4.0 in GitHub CI** and **9.4.0 locally** at source commit [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c). The [completion report](docs/PHASE2_COMPLETION.md) and [retained evidence index](docs/evidence/phase2-release-record.json) identify the commands, results, artifacts, and passing workflows. There is **no calibrated ALEV4 model, demonstrated 17-stop performance, or genuine ARRIRAW encoder**. Native MATLAB execution remains unverified.
+
+The accepted source passed **62 Phase 2 numerical groups, all 92 Phase 1 regression groups, and 47 Python tests**, together with failure-reporting checks and independently verified, byte-identical fresh-process demos for both phases. Phase 2, Phase 1, and repository-integrity workflows all passed on that revision.
 
 Phase 1 remains complete and acceptance-tested in GNU Octave 8.4.0. Its historical acceptance covered 91 numerical test groups, 29 Python tests, failure reporting, genuine ISETCam integration, and repeated-process artifacts. Those results and their exact revision remain recorded in the [Phase 1 completion report](docs/PHASE1_COMPLETION.md); they are not substituted for Phase 2 release evidence.
 
@@ -66,7 +68,7 @@ Both formats identify configuration, exposure, seed, units, runtime, and observe
 
 ## Next development phase
 
-After Phase 2 release acceptance, the next roadmap item is **Phase 3: ALEV4-inspired geometry and optics**. It will establish documented sensor dimensions and pixel-grid conventions, explicitly assumed or measured CFA response, and tested spatial/PSF/MTF behavior. The current uniform-field ISETCam adapter is not a general nonuniform-scene importer or a calibrated optical model.
+The next development phase is **Phase 3: ALEV4-inspired geometry and optics**. Start with the source register and the pixel-grid, active-crop, and CFA-parity contract in [Slice 3A of the Phase 3 plan](docs/PHASE3_PLAN.md). Later slices add conservative spatial sampling, a stated PSF/MTF model, a restricted nonuniform ISETCam comparison, and spatial provenance. The current uniform-field ISETCam adapter is not a general nonuniform-scene importer or a calibrated optical model.
 
 Phases 4–7 retain structured noise/readout realism, demosaic and AWG4/LogC4 transforms, controlled real-camera characterization, and performance/reporting. Published sensor geometry and exposure latitude remain research targets rather than properties established by these generic models. LogC4 is a post-capture encoding; a plausible preview or a matching dynamic-range number does not establish sensor equivalence.
 

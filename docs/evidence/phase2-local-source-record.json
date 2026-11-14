@@ -1,0 +1,50 @@
+{
+  "record_kind": "local_exact_source_acceptance",
+  "observed_at_utc": "2026-11-14T02:57:19.604058+00:00",
+  "repository_head": "ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+  "tree_sha": "a2606b1bb3ab4b648fdf2695859de83750deb4f9",
+  "worktree_clean": true,
+  "strict_dependency_check": {
+    "command": "python3 scripts/verify_submodules.py --require-checkout",
+    "exit_code": 0,
+    "stdout": "OK third_party/isetcam -> 3e0253421752eb72f2d1353327dffd0d433abdaf\nOK third_party/isethdrsensor -> ee2dacceb456516de3ecefadd72955154cf3cabe\nPASS: both dependencies are pinned, declared Git submodules with clean matching checkouts\n"
+  },
+  "files": {
+    "outputs/release-phase2/validation/phase2-validation.json": {
+      "sha256": "72e34ca3977a1f90ad61a209b15b419dd67339175c7f42ec71cb8efca69090bf",
+      "bytes": 39047
+    },
+    "outputs/release-phase2/validation/phase2-acceptance.json": {
+      "sha256": "c7cc22ae2fceb2d92907308e79b79899d113a52ab64c8c0cca4e7018c61146a9",
+      "bytes": 5019
+    },
+    "outputs/release-phase2/validation/phase2-runner-failures.json": {
+      "sha256": "64da0ba9d29f140acb132b3d25cd53423342db5cb8484c0d26acd706d2d39107",
+      "bytes": 1290
+    },
+    "outputs/release-phase2/validation/phase1-runner-failures.json": {
+      "sha256": "a8cd1bb25c28dc2003dce8cebe50c20cd7fed388c7935352ab310b9cfa447a97",
+      "bytes": 235
+    },
+    "outputs/release-phase2/demo/phase2-demo-summary.json": {
+      "sha256": "440631c7ba337a02cb3d2a10a63bd53e0c4066746973f1498f82f36b1261efd3",
+      "bytes": 2381
+    },
+    "outputs/release-phase1/validation/phase1-acceptance.json": {
+      "sha256": "03eb1ef13df31ebb523a613f877bb972e0832f1667b6476415fd0a6807b0ac53",
+      "bytes": 624
+    },
+    "outputs/release-phase1/validation/phase1-artifact-integrity.json": {
+      "sha256": "5cd44e1d8a7883d940fba92c488a209dfc5d48a112a3f50b5ccd3b34181bc93f",
+      "bytes": 5386
+    },
+    "outputs/release-phase1/validation/phase1-validation.json": {
+      "sha256": "de0e768ab7d23244b322fce5b6420158986e515000ec6c1b220148c4a127c1ca",
+      "bytes": 25075
+    },
+    "outputs/release-python.log": {
+      "sha256": "d013781ded37201ffed66599fa6dd8d49d5c08bcf2513f12a0cf49c62de14bd4",
+      "bytes": 6427
+    }
+  }
+}

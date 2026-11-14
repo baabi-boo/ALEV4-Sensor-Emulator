@@ -1,0 +1,52 @@
+test_analytic_mean_not_trusted (test_verify_phase1_artifacts.ArtifactTests.test_analytic_mean_not_trusted) ... ok
+test_every_numerical_gate_is_required (test_verify_phase1_artifacts.ArtifactTests.test_every_numerical_gate_is_required) ... ok
+test_exact_repeat (test_verify_phase1_artifacts.ArtifactTests.test_exact_repeat) ... ok
+test_failed_or_missing_gate (test_verify_phase1_artifacts.ArtifactTests.test_failed_or_missing_gate) ... ok
+test_format_and_config (test_verify_phase1_artifacts.ArtifactTests.test_format_and_config) ... ok
+test_good_and_independent_formula (test_verify_phase1_artifacts.ArtifactTests.test_good_and_independent_formula) ... ok
+test_invalid_json (test_verify_phase1_artifacts.ArtifactTests.test_invalid_json) ... ok
+test_preview (test_verify_phase1_artifacts.ArtifactTests.test_preview) ... ok
+test_raw_size_and_range (test_verify_phase1_artifacts.ArtifactTests.test_raw_size_and_range) ... ok
+test_repeat_cannot_compare_same_directory_or_alias (test_verify_phase1_artifacts.ArtifactTests.test_repeat_cannot_compare_same_directory_or_alias) ... ok
+test_source_mismatch (test_verify_phase1_artifacts.ArtifactTests.test_source_mismatch) ... ok
+test_spectral_bin_edges_must_be_positive_and_finite (test_verify_phase1_artifacts.ArtifactTests.test_spectral_bin_edges_must_be_positive_and_finite) ... ok
+test_symlink (test_verify_phase1_artifacts.ArtifactTests.test_symlink) ... ok
+test_traversal (test_verify_phase1_artifacts.ArtifactTests.test_traversal) ... ok
+test_complete_artificial_fixture_and_independent_numbers (test_verify_phase2_artifacts.Phase2ArtifactTests.test_complete_artificial_fixture_and_independent_numbers) ... ok
+test_config_quantization_guard_uses_scale_relative_ulps (test_verify_phase2_artifacts.Phase2ArtifactTests.test_config_quantization_guard_uses_scale_relative_ulps) ... ok
+test_config_requires_quantization_margin_and_usable_adc_codes (test_verify_phase2_artifacts.Phase2ArtifactTests.test_config_requires_quantization_margin_and_usable_adc_codes) ... ok
+test_control_characters_rejected_even_for_existing_matching_files (test_verify_phase2_artifacts.Phase2ArtifactTests.test_control_characters_rejected_even_for_existing_matching_files) ... ok
+test_cross_filename_hardlinked_repeat_rejected (test_verify_phase2_artifacts.Phase2ArtifactTests.test_cross_filename_hardlinked_repeat_rejected) ... ok
+test_every_suite_required_and_individual_failures (test_verify_phase2_artifacts.Phase2ArtifactTests.test_every_suite_required_and_individual_failures) ... ok
+test_flags_cannot_hide_rail_or_physical_saturation (test_verify_phase2_artifacts.Phase2ArtifactTests.test_flags_cannot_hide_rail_or_physical_saturation) ... ok
+test_malformed_json_duplicates_nonfinite_and_booleans (test_verify_phase2_artifacts.Phase2ArtifactTests.test_malformed_json_duplicates_nonfinite_and_booleans) ... ok
+test_metadata_cannot_default_missing_parameters (test_verify_phase2_artifacts.Phase2ArtifactTests.test_metadata_cannot_default_missing_parameters) ... ok
+test_payload_lengths_adc_limits_and_merged_corruption (test_verify_phase2_artifacts.Phase2ArtifactTests.test_payload_lengths_adc_limits_and_merged_corruption) ... ok
+test_phase1_prerequisite_and_iset_required (test_verify_phase2_artifacts.Phase2ArtifactTests.test_phase1_prerequisite_and_iset_required) ... ok
+test_phase1_prerequisite_flag_must_be_literal_true (test_verify_phase2_artifacts.Phase2ArtifactTests.test_phase1_prerequisite_flag_must_be_literal_true) ... ok
+test_repeat_and_changed_bytes (test_verify_phase2_artifacts.Phase2ArtifactTests.test_repeat_and_changed_bytes) ... ok
+test_same_directory_and_hardlinked_repeat_rejected (test_verify_phase2_artifacts.Phase2ArtifactTests.test_same_directory_and_hardlinked_repeat_rejected) ... ok
+test_source_and_runtime_associations (test_verify_phase2_artifacts.Phase2ArtifactTests.test_source_and_runtime_associations) ... ok
+test_summary_is_recomputed_and_fixtures_fixed (test_verify_phase2_artifacts.Phase2ArtifactTests.test_summary_is_recomputed_and_fixtures_fixed) ... ok
+test_units_authenticity_and_layout (test_verify_phase2_artifacts.Phase2ArtifactTests.test_units_authenticity_and_layout) ... ok
+test_unsafe_file_association_and_symlinks (test_verify_phase2_artifacts.Phase2ArtifactTests.test_unsafe_file_association_and_symlinks) ... ok
+test_checkout_cannot_inherit_parent_git_repository (test_verify_submodules.VerifySubmodulesTests.test_checkout_cannot_inherit_parent_git_repository) ... ok
+test_cli_success (test_verify_submodules.VerifySubmodulesTests.test_cli_success) ... ok
+test_default_and_checkout_modes_accept_clean_pins (test_verify_submodules.VerifySubmodulesTests.test_default_and_checkout_modes_accept_clean_pins) ... ok
+test_default_mode_does_not_require_initialized_checkouts (test_verify_submodules.VerifySubmodulesTests.test_default_mode_does_not_require_initialized_checkouts) ... ok
+test_ignored_data_is_allowed (test_verify_submodules.VerifySubmodulesTests.test_ignored_data_is_allowed) ... ok
+test_missing_or_malformed_declaration_fails (test_verify_submodules.VerifySubmodulesTests.test_missing_or_malformed_declaration_fails) ... ok
+test_missing_origin_is_rejected (test_verify_submodules.VerifySubmodulesTests.test_missing_origin_is_rejected) ... ok
+test_missing_section_or_path_fails (test_verify_submodules.VerifySubmodulesTests.test_missing_section_or_path_fails) ... ok
+test_plain_file_instead_of_committed_gitlink_fails (test_verify_submodules.VerifySubmodulesTests.test_plain_file_instead_of_committed_gitlink_fails) ... ok
+test_staged_edits_are_rejected (test_verify_submodules.VerifySubmodulesTests.test_staged_edits_are_rejected) ... ok
+test_tracked_edits_are_rejected (test_verify_submodules.VerifySubmodulesTests.test_tracked_edits_are_rejected) ... ok
+test_untracked_files_are_rejected (test_verify_submodules.VerifySubmodulesTests.test_untracked_files_are_rejected) ... ok
+test_wrong_checkout_commit_is_rejected (test_verify_submodules.VerifySubmodulesTests.test_wrong_checkout_commit_is_rejected) ... ok
+test_wrong_gitmodules_url_is_rejected_without_echo (test_verify_submodules.VerifySubmodulesTests.test_wrong_gitmodules_url_is_rejected_without_echo) ... ok
+test_wrong_origin_is_rejected_without_disclosing_credentials (test_verify_submodules.VerifySubmodulesTests.test_wrong_origin_is_rejected_without_disclosing_credentials) ... ok
+
+----------------------------------------------------------------------
+Ran 47 tests in 4.337s
+
+OK

@@ -65,14 +65,24 @@ crop offsets. Cropping one row or column changes that phase; it does not
 restart the full-grid color pattern arbitrarily. Keep this image coordinate
 system distinct from any future world/camera coordinate transform.
 
+Define the geometry-to-readout binding explicitly: the active readout's
+`image_size` is the ROI height/width, `pixel_pitch_m` equals the geometry pitch,
+and `cfa_pattern` is the derived active Bayer pattern. Construct and validate
+a separate readout configuration with those fields; preserve the caller's
+configuration and all other spectral, collection, and electronic settings. If an
+API also accepts an already bound readout, reject conflicting size, pitch, or
+CFA values. A spatial footprint and a different collection-area pitch would
+otherwise describe different pixels.
+
 **Slice 3A acceptance:** independent center/edge calculations, full/active
 extent consistency, odd and singleton grids, every crop-offset parity,
 out-of-bounds/overflow rejection, and agreement between a crop of the full
-Bayer map and a directly generated active Bayer map. An identity full-grid
-crop must reproduce current single/dual expectations and RAW for the same
-inputs and seed. Anisotropic pixels and subpixel aperture shapes are outside
-this first slice; accepting them would require an explicit collection-area
-and aperture-contract extension.
+Bayer map and a directly generated active Bayer map. Verify the derived
+readout binding, rejection of conflicting bindings, and caller-configuration
+immutability. An identity full-grid crop must reproduce current single/dual
+expectations and RAW for the same inputs and seed. Anisotropic pixels and
+subpixel aperture shapes are outside this first slice; accepting them would
+require an explicit collection-area and aperture-contract extension.
 
 ## Slice 3B — spectral spatial grid and conservative sampling
 
@@ -113,6 +123,13 @@ declared origin and spatial sampling, and is normalized to unit total weight.
 Require one kernel shared across wavelengths or one explicitly associated
 with every input spectral bin; never silently interpolate a missing kernel.
 
+The initial discrete convolution requires a uniform spatial input grid whose
+row/column spacing matches the kernel sampling. Reject nonuniform pre-PSF
+grids or mismatched sampling unless the caller explicitly requests a separately
+validated conservative remapping step and records it in the operation order.
+Applying one array kernel directly across unequal physical cell widths would
+not implement the stated spatially invariant PSF.
+
 Use a declared input halo and retain only the region with complete kernel
 support for the initial boundary policy. Record resulting grid/crop offsets.
 Do not renormalize a truncated edge kernel to hide missing incident light.
@@ -133,6 +150,8 @@ single magnitude curve.
   shifting the impulse shifts the result consistently.
 - Identity PSF reproduces the preceding phase exactly, including no accidental
   extra area, exposure, QE, or fill-factor multiplication.
+- Nonuniform grids and mismatched kernel/input sampling reject before filtering;
+  any explicit remapping path retains its own conservation and identity checks.
 - Flat-field preservation is checked on the fully supported region, with edge
   loss accounted for explicitly.
 - Direct small-kernel spatial calculations and an independent DFT agree on

@@ -1,0 +1,533 @@
+{
+  "schema_version": "1.0",
+  "record_kind": "derived_phase2_release_evidence_index",
+  "status": "accepted_implementation",
+  "tested_source": {
+    "repository": "baabi-boo/ALEV4-Sensor-Emulator",
+    "commit": "ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+    "tree": "a2606b1bb3ab4b648fdf2695859de83750deb4f9",
+    "url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+    "dependencies": {
+      "isetcam_head": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+      "isethdrsensor_head": "ee2dacceb456516de3ecefadd72955154cf3cabe"
+    }
+  },
+  "scope": "Generic, uncalibrated simultaneous dual-gain model with preserved Phase 1 acceptance. No native MATLAB execution, calibrated camera identity, measured 17-stop performance, or ARRIRAW encoding is established.",
+  "revision_policy": "Every original record retains its actual tested source and runtime. Later documentation/evidence commits do not relabel these executions. This index does not identify or predict the eventual documentation commit or its CI result.",
+  "runtimes": {
+    "ci": {
+      "name": "GNU Octave",
+      "version": "8.4.0",
+      "os": "Ubuntu 24.04.5",
+      "evidence": "Original log lines are retained in the explicitly normalized log-excerpt records. Workflow/job summaries are retained here; full original GitHub API responses remain in ignored execution outputs."
+    },
+    "local": {
+      "name": "GNU Octave",
+      "version": "9.4.0"
+    },
+    "native_matlab_executed": false,
+    "general_cross_runtime_byte_or_rng_guarantee": false
+  },
+  "accepted_results": {
+    "phase2_test_groups": 62,
+    "phase2_suite_groups": {
+      "core": 9,
+      "config_edges": 7,
+      "noise": 8,
+      "raw_io": 16,
+      "numerical_edges": 8,
+      "spectral_properties": 7,
+      "demo_contract": 7
+    },
+    "phase1_test_groups": 92,
+    "phase1_suite_groups": {
+      "provenance_tests": 9,
+      "core": 13,
+      "config_edges": 4,
+      "spectral_properties": 6,
+      "input_representation": 7,
+      "fixture_edges": 7,
+      "numerical_edges": 6,
+      "poisson_edges": 6,
+      "raw_io": 15,
+      "demo_contract": 5,
+      "iset": 14
+    },
+    "python_tests": 47,
+    "phase2_failure_scenarios": 5,
+    "preserved_phase1_failure_scenarios": 1,
+    "phase2_demo_frames": 6,
+    "phase2_demo_files_per_process": 31,
+    "preserved_phase1_demo_frames": 10,
+    "preserved_phase1_demo_files_per_process": 31,
+    "fresh_process_byte_repeat_passed": true,
+    "local_source_clean_at_acceptance": true,
+    "strict_dependency_checks_passed": true
+  },
+  "ci": {
+    "workflow_results": [
+      {
+        "id": 43548974450,
+        "name": "Phase 1 numerical validation",
+        "head_sha": "ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43548974450",
+        "run_started_at": "2026-11-14T02:56:17Z",
+        "updated_at": "2026-11-14T02:57:26Z",
+        "path": ".github/workflows/phase1-tests.yml",
+        "event": "push",
+        "head_branch": "main",
+        "jobs": [
+          {
+            "id": 132306766314,
+            "name": "octave-validation",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43548974450/job/132306766314",
+            "started_at": "2026-11-14T02:56:20Z",
+            "completed_at": "2026-11-14T02:57:26Z",
+            "duration_seconds": 66,
+            "required_steps_passed": true,
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify exact scientific dependency checkouts",
+                "conclusion": "success"
+              },
+              {
+                "name": "Test independent validation utilities",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install numerical runtime",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete Phase 1 acceptance suite",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify failures invalidate stale success reports",
+                "conclusion": "success"
+              },
+              {
+                "name": "Generate reproducible demo artifacts",
+                "conclusion": "success"
+              },
+              {
+                "name": "Repeat demo in a fresh process",
+                "conclusion": "success"
+              },
+              {
+                "name": "Independently verify artifacts and reproducibility",
+                "conclusion": "success"
+              },
+              {
+                "name": "Confirm dependencies were not modified",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload numerical evidence and synthetic RAW",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 43548974435,
+        "name": "Repository integrity",
+        "head_sha": "ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43548974435",
+        "run_started_at": "2026-11-14T02:56:17Z",
+        "updated_at": "2026-11-14T02:56:25Z",
+        "path": ".github/workflows/repository-integrity.yml",
+        "event": "push",
+        "head_branch": "main",
+        "jobs": [
+          {
+            "id": 132306765916,
+            "name": "submodule-links",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43548974435/job/132306765916",
+            "started_at": "2026-11-14T02:56:19Z",
+            "completed_at": "2026-11-14T02:56:24Z",
+            "duration_seconds": 5,
+            "required_steps_passed": true,
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify pinned upstream Git links",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": 43548974466,
+        "name": "Phase 2 dual-gain validation",
+        "head_sha": "ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43548974466",
+        "run_started_at": "2026-11-14T02:56:17Z",
+        "updated_at": "2026-11-14T02:57:45Z",
+        "path": ".github/workflows/phase2-tests.yml",
+        "event": "push",
+        "head_branch": "main",
+        "jobs": [
+          {
+            "id": 132306766229,
+            "name": "octave-validation",
+            "status": "completed",
+            "conclusion": "success",
+            "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43548974466/job/132306766229",
+            "started_at": "2026-11-14T02:56:20Z",
+            "completed_at": "2026-11-14T02:57:44Z",
+            "duration_seconds": 84,
+            "required_steps_passed": true,
+            "steps": [
+              {
+                "name": "Set up job",
+                "conclusion": "success"
+              },
+              {
+                "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify exact scientific dependency checkouts",
+                "conclusion": "success"
+              },
+              {
+                "name": "Test independent validation utilities",
+                "conclusion": "success"
+              },
+              {
+                "name": "Install numerical runtime",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete Phase 2 numerical suites and Phase 1 prerequisite",
+                "conclusion": "success"
+              },
+              {
+                "name": "Verify failures invalidate stale success reports",
+                "conclusion": "success"
+              },
+              {
+                "name": "Generate simultaneous dual-gain demo artifacts",
+                "conclusion": "success"
+              },
+              {
+                "name": "Repeat demo in a fresh process",
+                "conclusion": "success"
+              },
+              {
+                "name": "Independently verify artifacts and reproducibility",
+                "conclusion": "success"
+              },
+              {
+                "name": "Confirm dependencies were not modified",
+                "conclusion": "success"
+              },
+              {
+                "name": "Upload numerical evidence and simultaneous readouts",
+                "conclusion": "success"
+              },
+              {
+                "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+                "conclusion": "success"
+              },
+              {
+                "name": "Complete job",
+                "conclusion": "success"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "phase2_artifact": {
+      "id": 14095597020,
+      "name": "phase2-evidence-ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+      "size_in_bytes": 44446,
+      "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14095597020",
+      "archive_download_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14095597020/zip",
+      "expired": false,
+      "created_at": "2026-11-14T02:57:42Z",
+      "expires_at": "2026-11-28T02:57:41Z",
+      "updated_at": "2026-11-14T02:57:42Z",
+      "digest": "sha256:e87fa6f1744de357c26e77b2d93c9b8820c0ec5a77c998dbd50d1d3c396a654e",
+      "workflow_run": {
+        "id": 43548974466,
+        "repository_id": 1454419692,
+        "head_repository_id": 1454419692,
+        "head_branch": "main",
+        "head_sha": "ab1c0bad7cbcf993d0b95980214d45f45f59028c"
+      }
+    },
+    "phase1_artifact": {
+      "id": 14094887731,
+      "name": "phase1-evidence-ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+      "size_in_bytes": 99909,
+      "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14094887731",
+      "archive_download_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14094887731/zip",
+      "expired": false,
+      "created_at": "2026-11-14T02:57:24Z",
+      "expires_at": "2026-11-28T02:57:23Z",
+      "updated_at": "2026-11-14T02:57:24Z",
+      "digest": "sha256:13169afc0dc769bef73450843b98436b67be71816d0e0e1594e07c2dcb8cf949",
+      "workflow_run": {
+        "id": 43548974450,
+        "repository_id": 1454419692,
+        "head_repository_id": 1454419692,
+        "head_branch": "main",
+        "head_sha": "ab1c0bad7cbcf993d0b95980214d45f45f59028c"
+      }
+    },
+    "artifact_retention_days": 14,
+    "phase2_zip_download_sha256_verified": true,
+    "full_zip_and_binary_payloads_committed": false,
+    "retained_evidence_policy": "Original concise reports and checksums are retained here. The complete uploaded CI artifact has finite retention. No temporary signed download URL is retained."
+  },
+  "commands": {
+    "context": "Repository root. These are reproduction commands and exact program arguments/output paths, not raw shell transcripts. In the original local executions, octave and the failure-harness --octave argument selected the verified session-provided Octave 9.4.0 executable. CI used Ubuntu package Octave 8.4.0. Local executable placeholders must be replaced before running. Use fresh demo output directories.",
+    "common": [
+      "python3 scripts/verify_submodules.py --require-checkout",
+      "python3 -m unittest discover -s scripts/tests -v"
+    ],
+    "local": [
+      "octave --no-gui --quiet --eval \"addpath('matlab'); report=run_phase2_tests('outputs/release-phase2/validation',true); assert(report.phase2_passed);\"",
+      "python3 scripts/test_phase2_runner_failure.py --octave <verified-local-octave-9.4-executable>",
+      "python3 scripts/test_runner_failure.py --octave <verified-local-octave-9.4-executable>",
+      "octave --no-gui --quiet --eval \"addpath('matlab'); setup_project(false); phase2_demo('outputs/release-phase2/demo');\"",
+      "octave --no-gui --quiet --eval \"addpath('matlab'); setup_project(false); phase2_demo('outputs/release-phase2/demo-repeat');\"",
+      "python3 scripts/verify_phase2_artifacts.py outputs/release-phase2 --expected-commit ab1c0bad7cbcf993d0b95980214d45f45f59028c --compare-dir outputs/release-phase2/demo-repeat",
+      "octave --no-gui --quiet --eval \"addpath('matlab'); setup_project(true); phase1_demo('outputs/release-phase1/demo',true);\"",
+      "octave --no-gui --quiet --eval \"addpath('matlab'); setup_project(true); phase1_demo('outputs/release-phase1/demo-repeat',true);\"",
+      "python3 scripts/verify_phase1_artifacts.py outputs/release-phase1 --expected-commit ab1c0bad7cbcf993d0b95980214d45f45f59028c --compare-dir outputs/release-phase1/demo-repeat",
+      "python3 scripts/verify_submodules.py --require-checkout"
+    ],
+    "phase1_numerical_report_reuse": "The complete nested Phase 1 report produced by run_phase2_tests was copied byte-for-byte from outputs/release-phase2/validation/phase1-regression/phase1-validation.json to outputs/release-phase1/validation/phase1-validation.json before artifact verification. Its original standalone SHA256 is retained in the source/artifact observations; the full numerical content is already nested in phase2-local-validation.json and is not duplicated here.",
+    "ci_workflow_definitions": [
+      {
+        "path": ".github/workflows/phase1-tests.yml",
+        "url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/blob/ab1c0bad7cbcf993d0b95980214d45f45f59028c/.github/workflows/phase1-tests.yml"
+      },
+      {
+        "path": ".github/workflows/repository-integrity.yml",
+        "url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/blob/ab1c0bad7cbcf993d0b95980214d45f45f59028c/.github/workflows/repository-integrity.yml"
+      },
+      {
+        "path": ".github/workflows/phase2-tests.yml",
+        "url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/blob/ab1c0bad7cbcf993d0b95980214d45f45f59028c/.github/workflows/phase2-tests.yml"
+      }
+    ],
+    "downloaded_primary_recheck": "python3 scripts/verify_phase2_artifacts.py outputs/release-ci/phase2-artifact --expected-commit ab1c0bad7cbcf993d0b95980214d45f45f59028c"
+  },
+  "evidence_catalog": {
+    "path_base": "Directory containing this index (docs/evidence).",
+    "original_execution_paths": "Original paths identify the execution context; some ignored output files are not retained in Git. The catalog path names identify the retained copies.",
+    "copy_policy": "Seventeen catalogued files are byte-for-byte copies of the named originals. The two normalized_ci_log_excerpts records remove only a redundant final blank-line separator; their transformations and original size/hash are recorded explicitly. Derived summaries/audits remain classified as such; copying does not convert them into original runtime or GitHub API responses.",
+    "index_self_hash": "Omitted to avoid a circular hash. Git records the index itself.",
+    "files": [
+      {
+        "path": "phase2-validation.json",
+        "sha256": "86488be8af8a4b4384734c6584b0a54ae4d723247c6ec9a429cd0a433a632510",
+        "bytes": 39047,
+        "record_kind": "original_ci_artifact",
+        "original_execution_path": "outputs/release-ci/phase2-artifact/validation/phase2-validation.json",
+        "meaning": "Complete numerical report with the required nested Phase 1 report."
+      },
+      {
+        "path": "phase2-acceptance.json",
+        "sha256": "ad04821af189e55a1998c0fdedbf6f03429cd82b5e787586e721ae6ed6c97c5f",
+        "bytes": 5019,
+        "record_kind": "original_ci_artifact",
+        "original_execution_path": "outputs/release-ci/phase2-artifact/validation/phase2-acceptance.json",
+        "meaning": "Original independent verifier receipt, including CI fresh-process repeat result and 31 file hashes."
+      },
+      {
+        "path": "phase2-demo-summary.json",
+        "sha256": "11445f9b92e06e56de83d16fcb4ac78620684f90eef3f680e5f17f52cc1120ea",
+        "bytes": 2381,
+        "record_kind": "original_ci_artifact",
+        "original_execution_path": "outputs/release-ci/phase2-artifact/demo/phase2-demo-summary.json",
+        "meaning": "Original six-frame demo summary from the accepted CI artifact."
+      },
+      {
+        "path": "phase2-runner-failures.json",
+        "sha256": "9dd6a17090684cb3a8fd5e462c438b755720b6a8b2363095e0d4168657af3ca3",
+        "bytes": 1290,
+        "record_kind": "original_ci_artifact",
+        "original_execution_path": "outputs/release-ci/phase2-artifact/validation/phase2-runner-failures.json",
+        "meaning": "Original five-scenario failure-harness receipt."
+      },
+      {
+        "path": "phase2-local-validation.json",
+        "sha256": "72e34ca3977a1f90ad61a209b15b419dd67339175c7f42ec71cb8efca69090bf",
+        "bytes": 39047,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase2/validation/phase2-validation.json",
+        "meaning": "Local Octave 9.4 numerical report, including its nested Phase 1 report."
+      },
+      {
+        "path": "phase2-local-acceptance.json",
+        "sha256": "c7cc22ae2fceb2d92907308e79b79899d113a52ab64c8c0cca4e7018c61146a9",
+        "bytes": 5019,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase2/validation/phase2-acceptance.json",
+        "meaning": "Local independent verifier receipt with fresh-process repeat and 31 file hashes."
+      },
+      {
+        "path": "phase2-local-demo-summary.json",
+        "sha256": "440631c7ba337a02cb3d2a10a63bd53e0c4066746973f1498f82f36b1261efd3",
+        "bytes": 2381,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase2/demo/phase2-demo-summary.json",
+        "meaning": "Local six-frame summary."
+      },
+      {
+        "path": "phase2-local-runner-failures.json",
+        "sha256": "64da0ba9d29f140acb132b3d25cd53423342db5cb8484c0d26acd706d2d39107",
+        "bytes": 1290,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase2/validation/phase2-runner-failures.json",
+        "meaning": "Local five-scenario failure-harness receipt."
+      },
+      {
+        "path": "phase2-local-source-record.json",
+        "sha256": "48137120b303d89920af61c0a7ea5651e3c44a349e220d17d1286ed041c8060d",
+        "bytes": 2233,
+        "record_kind": "derived_local_source_observation",
+        "original_execution_path": "outputs/release-phase2/local-source-record.json",
+        "meaning": "Recorded clean implementation tree, strict dependency command and hashes at local acceptance, before documentation changes."
+      },
+      {
+        "path": "phase2-local-python-tests.txt",
+        "sha256": "d013781ded37201ffed66599fa6dd8d49d5c08bcf2513f12a0cf49c62de14bd4",
+        "bytes": 6427,
+        "record_kind": "original_local_log",
+        "original_execution_path": "outputs/release-python.log",
+        "meaning": "Original combined output of all 47 Python tests."
+      },
+      {
+        "path": "phase2-preserved-phase1-acceptance.json",
+        "sha256": "03eb1ef13df31ebb523a613f877bb972e0832f1667b6476415fd0a6807b0ac53",
+        "bytes": 624,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase1/validation/phase1-acceptance.json",
+        "meaning": "Independent preserved Phase 1 artifact acceptance on the Phase 2 source."
+      },
+      {
+        "path": "phase2-preserved-phase1-artifact-integrity.json",
+        "sha256": "5cd44e1d8a7883d940fba92c488a209dfc5d48a112a3f50b5ccd3b34181bc93f",
+        "bytes": 5386,
+        "record_kind": "derived_local_artifact_audit",
+        "original_execution_path": "outputs/release-phase1/validation/phase1-artifact-integrity.json",
+        "meaning": "All 31 preserved Phase 1 file hashes and disjoint fresh-process identity sets."
+      },
+      {
+        "path": "phase2-preserved-phase1-demo-summary.json",
+        "sha256": "c6c71e6a8307b00a2cd00f47198863db089970e969c6ff034e67ec520c75625a",
+        "bytes": 15096,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase1/demo/phase1-demo-summary.json",
+        "meaning": "Ten-frame preserved Phase 1 summary on the Phase 2 source."
+      },
+      {
+        "path": "phase2-preserved-phase1-runner-failures.json",
+        "sha256": "a8cd1bb25c28dc2003dce8cebe50c20cd7fed388c7935352ab310b9cfa447a97",
+        "bytes": 235,
+        "record_kind": "original_local_execution",
+        "original_execution_path": "outputs/release-phase2/validation/phase1-runner-failures.json",
+        "meaning": "Preserved Phase 1 failure-harness receipt on the Phase 2 source."
+      },
+      {
+        "path": "phase2-ci-summary.json",
+        "sha256": "2ed7f53b567404ee15dd995aa2816fa0b4012d2f278433aff5e5d57e0d501e65",
+        "bytes": 9457,
+        "record_kind": "derived_ci_api_summary",
+        "original_execution_path": "outputs/release-ci/ci-summary.json",
+        "meaning": "Observed workflow/job outcomes and artifact metadata derived from original GitHub API responses."
+      },
+      {
+        "path": "phase2-ci-artifact-audit.json",
+        "sha256": "9644c49142fc4980ac26eb3e11a7ce27eb4fd934250da0e521c44a8e35924842",
+        "bytes": 3465,
+        "record_kind": "derived_download_audit",
+        "original_execution_path": "outputs/release-ci/phase2-artifact-audit.json",
+        "meaning": "Downloaded ZIP integrity, payload associations and bounded comparison with local execution."
+      },
+      {
+        "path": "phase2-ci-downloaded-artifact-recheck.json",
+        "sha256": "5248aee99c971f0bdfd91c7c528665637e68082bce78ceb4d9f9c5af2a4de1ca",
+        "bytes": 5020,
+        "record_kind": "original_download_reverification",
+        "original_execution_path": "outputs/release-ci/phase2-downloaded-artifact-recheck.json",
+        "meaning": "New independent verification of downloaded primary bytes; it does not rerun the missing CI repeat directory."
+      },
+      {
+        "path": "phase2-ci-phase2-job-excerpts.txt",
+        "sha256": "18e52a6cf0ec8a89d03206adf804489e9df04395862a04cced6089f2066a3784",
+        "bytes": 387,
+        "record_kind": "normalized_ci_log_excerpts",
+        "original_execution_path": "outputs/release-ci/phase2-job-excerpts.log",
+        "meaning": "Unchanged selected original Phase 2 job-log lines establishing OS, runtime, Python count and numerical completion.",
+        "transformation": "Removed only the redundant final blank-line separator from the extracted log text; every retained original log line is unchanged.",
+        "byte_identical_to_original_execution_path": false,
+        "original_bytes": 388,
+        "original_sha256": "365ccd9b198652ccbe6001d1410887d30bc90471a7a5cef18a3e369f764a1d2a"
+      },
+      {
+        "path": "phase2-ci-phase1-job-excerpts.txt",
+        "sha256": "58c3d567ee7ea8176d818131e7f9a14acd2b7a1ed5b850e8dbf011da85861b65",
+        "bytes": 420,
+        "record_kind": "normalized_ci_log_excerpts",
+        "original_execution_path": "outputs/release-ci/phase1-job-excerpts.log",
+        "meaning": "Unchanged selected original Phase 1 job-log lines establishing OS, runtime, Python count and numerical completion.",
+        "transformation": "Removed only the redundant final blank-line separator from the extracted log text; every retained original log line is unchanged.",
+        "byte_identical_to_original_execution_path": false,
+        "original_bytes": 421,
+        "original_sha256": "2cf0e8c7250d0009fcefce908284428a908354c017fa8e54675d10ad7a449c36"
+      }
+    ]
+  },
+  "repeat_evidence_boundary": "The original CI acceptance receipt includes CI's fresh-process comparison. The downloaded archive contains only the primary demo directory. phase2-ci-downloaded-artifact-recheck.json independently verifies those downloaded bytes and deliberately reports no repeat comparison; it does not replace the original CI receipt."
+}

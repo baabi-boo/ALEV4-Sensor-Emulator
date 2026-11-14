@@ -1,6 +1,6 @@
 # Development roadmap
 
-**Phase 0 is established. Phase 1 is complete and acceptance-tested in GNU Octave 8.4.0.** Phase 2 now implements simultaneous dual gain; its current release status is recorded in the [README](../README.md), with the final revision and evidence in the [Phase 2 completion report](PHASE2_COMPLETION.md). The historical Phase 1 numerical, RAW, provenance, integration, and repeated-process gates remain identified in its [completion report](PHASE1_COMPLETION.md). No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
+**Phase 0 is established. Phases 1 and 2 are complete and acceptance-tested.** Phase 2's simultaneous dual-gain implementation passed on source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally. The [Phase 2 completion report](PHASE2_COMPLETION.md) and [retained evidence index](evidence/phase2-release-record.json) identify the accepted gates and passing workflows. The historical Phase 1 acceptance remains identified in its [completion report](PHASE1_COMPLETION.md). No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
 
 | Phase | Goal | Acceptance evidence |
 | --- | --- | --- |
@@ -27,26 +27,26 @@ Phase 1 supplies the generic spectral sensor, retained photoelectron expectation
 
 These gates passed for the recorded Phase 1 revision and remain regression requirements. The core-only entrypoint intentionally reports `phase1_passed=false`. See [Phase 1 usage](PHASE1_USAGE.md) and [validation](VALIDATION.md).
 
-## Phase 2 implementation and release gate
+## Accepted Phase 2 implementation and release gate
 
 The implementation now samples one shared photocharge array and physical well, branches into independently configured electronics, and reconstructs signed electrons from the two recorded ADC planes. It preserves Phase 1 APIs and uses the same spectral integration helper. The [numerical contract](PHASE2_DESIGN.md) defines gain/units, conservative rail validity, the low-channel transition policy, its quantization margin, and its noisy-estimator limitations.
 
-Phase 2 release acceptance requires all of the following together:
+The accepted source passed 62 Phase 2 numerical groups, all 92 Phase 1 regression groups, 47 Python tests, both phases' failure-reporting checks, and independent fresh-process artifact gates. These release requirements continue to apply when the implementation changes:
 
 1. Preserve the complete Phase 1 numerical/ISETCam prerequisite and its separate artifact/repeat gates.
 2. Verify shared sampled charge, independent path transfer functions, distinct ADC and physical saturation, and RNG restoration on success and failure.
 3. Measure shared shot covariance, independent electronic noise, cancellation of shot noise in the path difference, and electronic noise added after physical well clipping. Use sample-size-based tolerances and meaningful wrong-model controls.
-4. Verify deterministic merge continuity and quantization bounds, including fractional black offsets and the high-gain upper-rail boundary. Merge decisions must use recorded channels, not hidden noiseless charge.
+4. Verify noiseless upper-handoff continuity and quantization bounds, including fractional black offsets and the high-gain upper-rail boundary. Keep the documented lower-rail fallback limitation distinct from this guarantee. Merge decisions must use recorded channels, not hidden noiseless charge.
 5. Reject malformed configuration, unsupported numerical ranges, corrupted bundles, ambiguous metadata, and inconsistent validity flags. Verify no-overwrite and owned failure cleanup behavior.
 6. Execute the Phase 2 runner with the Phase 1 prerequisite required; stale success must not survive a failed rerun after report invalidation succeeds. A failed process cannot be replaced by an old report when initial storage fails.
 7. Generate all six dual-gain demo bundles, independently decode and recompute their deterministic results, repeat in a fresh process, and compare distinct nonaliased artifact sets.
 8. Retain the tested source/dependency revisions, runtime, commands, reports and artifact checksums; confirm clean pinned dependencies and the release CI result.
 
-The Phase 2 core-only entrypoint deliberately reports `phase2_passed=false`. A passing numerical report alone does not replace the artifact and independent-repeat gates. The [usage guide](PHASE2_USAGE.md), [bundle contract](PHASE2_ARTIFACTS.md), and [review ledger](PHASE2_REVIEW_LOG.md) describe the implementation and verification work without treating pending release evidence as complete.
+The Phase 2 core-only entrypoint deliberately reports `phase2_passed=false`. A passing numerical report alone does not replace the artifact and independent-repeat gates. The [usage guide](PHASE2_USAGE.md), [bundle contract](PHASE2_ARTIFACTS.md), and [review ledger](PHASE2_REVIEW_LOG.md) describe the accepted implementation and its verification work; the retained reports keep the source revision that actually produced them.
 
 ## Next: Phase 3 geometry and optics
 
-After Phase 2 acceptance, the next development phase is **Phase 3: ALEV4-inspired geometry and optics**. Its first deliverable should identify the origin and confidence of every geometry, CFA, and optical parameter. Published dimensions, assumed spectral curves, fitted values, and controlled measurements must remain distinguishable.
+The next development phase is **Phase 3: ALEV4-inspired geometry and optics**. Its Phase 2 acceptance prerequisite is now satisfied. Begin with the source register and Slice 3A in the [Phase 3 plan](PHASE3_PLAN.md): explicit pixel-grid coordinates, active cropping, CFA phase, and identity regressions. Identify the origin and confidence of every geometry, CFA, and optical parameter. Published dimensions, assumed spectral curves, fitted values, and controlled measurements must remain distinguishable.
 
 Implement and test pixel-grid/CFA origin conventions, physical image extent and spatial sampling, followed by a documented PSF/MTF model and independently checked spatial integration. The current ISETCam adapter only validates a uniform field; nonuniform optical images require a separate resampling/integration contract. Retain both existing readout modes and their acceptance gates while adding this layer.
 

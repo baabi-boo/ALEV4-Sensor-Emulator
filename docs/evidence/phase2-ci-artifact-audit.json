@@ -1,0 +1,122 @@
+{
+  "status": "passed",
+  "source_sha": "ab1c0bad7cbcf993d0b95980214d45f45f59028c",
+  "ci_runtime": {
+    "name": "GNU Octave",
+    "version": "8.4.0"
+  },
+  "local_runtime": {
+    "name": "GNU Octave",
+    "version": "9.4.0"
+  },
+  "phase2_suite_counts": {
+    "core": 9,
+    "config_edges": 7,
+    "noise": 8,
+    "raw_io": 16,
+    "numerical_edges": 8,
+    "spectral_properties": 7,
+    "demo_contract": 7
+  },
+  "phase1_test_groups": 92,
+  "ci_artifact_files_verified": 31,
+  "ci_failure_scenarios": 5,
+  "ci_receipt_records_fresh_process_byte_identity": true,
+  "downloaded_recheck_does_not_reexecute_repeat": true,
+  "metrics": {
+    "high_read_variance_e2": {
+      "ci": 0.9984225842465663,
+      "local": 0.9984225842465663,
+      "target": 1,
+      "ci_tolerance": 0.02734385430872522
+    },
+    "low_read_variance_e2": {
+      "ci": 24.98431954706771,
+      "local": 24.98431954706771,
+      "target": 25,
+      "ci_tolerance": 0.6835963577181304
+    },
+    "shared_shot": {
+      "ci": 250.29342708693852,
+      "local": 250.29342708693852
+    },
+    "shot_cancellation": {
+      "ci": 25.950205224145893,
+      "local": 25.950205224145893
+    }
+  },
+  "fixtures": {
+    "dark": {
+      "ci_mean_merged_e": 0.0,
+      "local_mean_merged_e": 0.0,
+      "ci_valid_fraction": 1.0,
+      "local_valid_fraction": 1.0
+    },
+    "highlight": {
+      "ci_mean_merged_e": 12000.0,
+      "local_mean_merged_e": 12000.0,
+      "ci_valid_fraction": 1.0,
+      "local_valid_fraction": 1.0
+    },
+    "noisy": {
+      "ci_mean_merged_e": 250.1995880064088,
+      "local_mean_merged_e": 250.1995880064088,
+      "ci_valid_fraction": 1.0,
+      "local_valid_fraction": 1.0
+    },
+    "saturation": {
+      "ci_mean_merged_e": 30000.0,
+      "local_mean_merged_e": 30000.0,
+      "ci_valid_fraction": 0.0,
+      "local_valid_fraction": 0.0
+    },
+    "shadow": {
+      "ci_mean_merged_e": 10.0,
+      "local_mean_merged_e": 10.0,
+      "ci_valid_fraction": 1.0,
+      "local_valid_fraction": 1.0
+    },
+    "transition": {
+      "ci_mean_merged_e": 912.0,
+      "local_mean_merged_e": 912.0,
+      "ci_valid_fraction": 1.0,
+      "local_valid_fraction": 1.0
+    }
+  },
+  "cross_runtime_hash_match_count": 24,
+  "cross_runtime_hash_match_names": [
+    "dark.flags.u8",
+    "dark.high.raw",
+    "dark.low.raw",
+    "dark.merged.f64",
+    "highlight.flags.u8",
+    "highlight.high.raw",
+    "highlight.low.raw",
+    "highlight.merged.f64",
+    "noisy.flags.u8",
+    "noisy.high.raw",
+    "noisy.low.raw",
+    "noisy.merged.f64",
+    "saturation.flags.u8",
+    "saturation.high.raw",
+    "saturation.low.raw",
+    "saturation.merged.f64",
+    "shadow.flags.u8",
+    "shadow.high.raw",
+    "shadow.low.raw",
+    "shadow.merged.f64",
+    "transition.flags.u8",
+    "transition.high.raw",
+    "transition.low.raw",
+    "transition.merged.f64"
+  ],
+  "cross_runtime_rng_guarantee": false,
+  "zip_sha256": "e87fa6f1744de357c26e77b2d93c9b8820c0ec5a77c998dbd50d1d3c396a654e",
+  "retained_file_sha256": {
+    "validation/phase2-validation.json": "86488be8af8a4b4384734c6584b0a54ae4d723247c6ec9a429cd0a433a632510",
+    "validation/phase2-acceptance.json": "ad04821af189e55a1998c0fdedbf6f03429cd82b5e787586e721ae6ed6c97c5f",
+    "validation/phase2-runner-failures.json": "9dd6a17090684cb3a8fd5e462c438b755720b6a8b2363095e0d4168657af3ca3",
+    "demo/phase2-demo-summary.json": "11445f9b92e06e56de83d16fcb4ac78620684f90eef3f680e5f17f52cc1120ea"
+  },
+  "tracked_worktree_clean": true
+}
