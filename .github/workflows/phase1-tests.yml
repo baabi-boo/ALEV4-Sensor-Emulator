@@ -2,7 +2,7 @@ name: Phase 1 numerical validation
 
 on:
   push:
-    branches: [main, master, phase1-bayer-baseline]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

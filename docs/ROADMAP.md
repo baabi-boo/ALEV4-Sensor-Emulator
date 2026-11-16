@@ -15,9 +15,9 @@ Phase 0 is established. Phases 1, 2, and 3 remain complete and acceptance-tested
 | 6 | Real-camera characterization | Planned: controlled exposure brackets, Xyla chart, dark/flat frames, color charts and comparison metrics with uncertainties |
 | 7 | Performance, reproducibility and public reports | Planned: multi-frame benchmark, full example workflows, error bars and reproducible validation assets |
 
-Phase 4 work targets `master`; the repository's default branch remains `main`.
-The [usage guide](PHASE4_USAGE.md#runtime-and-complete-verification) selects
-`master` explicitly and documents the complete acceptance command.
+Phases 1–4 are consolidated on the canonical `main` branch. The
+[usage guide](PHASE4_USAGE.md#runtime-and-complete-verification) selects
+`main` explicitly and documents the complete acceptance command.
 
 ## Preserved Phase 1 completion gate
 

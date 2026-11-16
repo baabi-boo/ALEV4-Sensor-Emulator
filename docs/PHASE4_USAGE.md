@@ -17,7 +17,7 @@ Use Git, Python 3.10 or newer, and GNU Octave with the image package. Initialize
 the two pinned submodules for the complete inherited ISET requirements:
 
 ```bash
-git clone --branch master https://github.com/baabi-boo/ALEV4-Sensor-Emulator.git
+git clone --branch main https://github.com/baabi-boo/ALEV4-Sensor-Emulator.git
 cd ALEV4-Sensor-Emulator
 git submodule update --init --recursive --depth 1
 python3 scripts/verify_submodules.py --require-checkout

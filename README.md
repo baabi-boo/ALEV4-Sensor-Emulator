@@ -69,10 +69,11 @@ The upstream projects remain separately maintained Git submodules. The simultane
 
 Use Git, Python 3.10 or newer, and GNU Octave with the `image` package for the complete ISETCam prerequisite. The standalone core does not require the ISET toolboxes or a statistics package. CI currently installs Octave, `octave-image`, and `octave-statistics`; the custom Poisson sampler does not call `poissrnd`.
 
-Phase 4 work targets `master`. The repository's default branch remains `main`, so select `master` explicitly:
+`main` is the canonical development branch and contains the accepted Phase 1–4
+implementation and evidence. Select it explicitly:
 
 ```bash
-git clone --branch master https://github.com/baabi-boo/ALEV4-Sensor-Emulator.git
+git clone --branch main https://github.com/baabi-boo/ALEV4-Sensor-Emulator.git
 cd ALEV4-Sensor-Emulator
 git submodule update --init --recursive --depth 1
 python3 scripts/verify_submodules.py --require-checkout
