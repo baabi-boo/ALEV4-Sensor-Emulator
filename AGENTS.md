@@ -47,6 +47,35 @@ other contributors' changes and coordinate ownership when agents share files.
 - Follow the Phase 3 usage/artifact contracts and preserve all earlier phase
   gates. Core-only numerical or demo results must remain visibly incomplete.
 
+## Structured-noise contract
+
+- Keep the Phase 4 noise model separate from sensor and geometry schemas.
+  Supplied full-grid maps define the persistent realization; a label or seed
+  is not a substitute for the actual map values. Preserve scalar-uniform maps,
+  one-based ROI identity and the declared assumed parameter classification.
+- Apply achromatic PRNU to the photoelectron expectation and dark rate to
+  exposure seconds. Sample their separately controlled components before one
+  common physical well; add shared/path electronic components afterward.
+  Do not use retained maps, expectations or component draws to correct the
+  observed-channel merge.
+- Preserve direct legacy results for valid disabled calls, and the documented
+  isolated component streams for enabled calls. Validate represented numeric
+  seeds in binary64 before bound comparisons. Independent frames, absolute
+  indices and metadata-only EI have explicit contracts; additional temporal,
+  temperature, EI or spectral models require their own design and evidence.
+- Honor preallocation and retained-sample bounds. Demonstrations and acceptance
+  use small fixtures; neither a supported geometry nor a sample-count limit is
+  evidence of full-frame memory or throughput performance.
+- Use the distinct structured bundle identity. Preserve every retained value,
+  type, shape, unit, stage and fixed-map association. The packed payload uses
+  C row-major order, unlike the earlier spatial plane-major format. Verify
+  actual bytes and deterministic semantics independently; hashes alone cannot
+  validate a modified result. Readers do not authenticate stochastic PRNG origin.
+- Preserve all nine required Phase 4 numerical suites and every Phase 1–3 gate.
+  Keep development and fixture-control results separate from clean-source
+  release acceptance. Update source, usage, artifact and completion records
+  when the implemented contract changes.
+
 ## Boundaries and dependencies
 
 This is an independent, uncalibrated research model. Label assumed parameters
