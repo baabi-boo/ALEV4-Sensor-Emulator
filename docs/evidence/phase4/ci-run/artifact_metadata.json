@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 14194742079,
+      "node_id": "MDg6QXJ0aWZhY3QxNDE5NDc0MjA3OQ==",
+      "name": "phase4-evidence-ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "size_in_bytes": 1393948,
+      "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14194742079",
+      "archive_download_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14194742079/zip",
+      "expired": false,
+      "digest": "sha256:dd1ad67edb8fbc5e14050f97f89cd365eacc61d1972c662d3706ac781349b966",
+      "created_at": "2026-11-16T03:13:31Z",
+      "updated_at": "2026-11-16T03:13:31Z",
+      "expires_at": "2026-11-30T03:13:29Z",
+      "workflow_run": {
+        "id": 43795168396,
+        "repository_id": 1454419692,
+        "head_repository_id": 1454419692,
+        "head_branch": "master",
+        "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da"
+      }
+    }
+  ]
+}

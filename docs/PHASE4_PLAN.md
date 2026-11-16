@@ -1,16 +1,25 @@
 # Phase 4 plan: structured noise and readout realism
 
-**Status: implemented; complete release acceptance pending.** The
+**Status: implemented; candidate `ad036efe6bb6d298545055df37cc4b4681c3e8da`
+accepted locally and in CI.** All 20 acceptance commands, 400 numerical groups
+and 316 Python tests passed in GNU Octave 9.4.0 locally and 8.4.0 in CI; all five
+candidate workflows succeeded. The [completion record](PHASE4_COMPLETION.md)
+links the retained receipts, independent archive verification and the separate
+later test-only diagnostic correction/publication boundary. The
 [implementation design](PHASE4_DESIGN.md) and
-[development record](development/phase4/README.md) describe the current APIs,
-executed development checks and outstanding release work. This plan preserves
+[development record](development/phase4/README.md) describe the current APIs
+and actual delegated work. This plan preserves
 the [roadmap](ROADMAP.md) requirements for PRNU/DSNU, row/column structure,
 dark-frame behavior, and clipping/exposure-index sweeps. The
 [accepted Phase 3 record](PHASE3_COMPLETION.md) supplies the inherited contract;
 the development record retains the executed entry-baseline evidence.
 
-Phase 4 will extend the generic sensor model with explicit, reproducible noise
-components. It will not establish calibrated ALEV4 parameters. Color transforms
+The requirements below are the original Phase 4 development contract; their
+imperative wording is preserved. The [acceptance matrix](development/phase4/ACCEPTANCE_MATRIX.md)
+maps all seven release conditions to the accepted candidate's executed evidence.
+
+Phase 4 extends the generic sensor model with explicit, reproducible noise
+components. It does not establish calibrated ALEV4 parameters. Color transforms
 remain Phase 5, controlled real-camera characterization and parameter fitting
 remain Phase 6, and large-workload performance/reporting remain Phase 7.
 
@@ -210,11 +219,18 @@ Complete acceptance must require:
    summaries, hashes, limits, and the observed release CI result. Native MATLAB
    remains unverified until its relevant gates actually execute.
 
-The next concrete step is to finish the remaining implementation reviews and
-execute the complete release gates on an identified clean source revision,
-retaining local and CI evidence. The [design](PHASE4_DESIGN.md),
-[source register](PHASE4_SOURCES.md) and
-[development record](development/phase4/README.md) distinguish the implemented
-contract from executed checks and pending acceptance. Plausible structured
-noise by itself is not sensor calibration or evidence of measured ARRI dynamic
-range.
+All seven conditions above are closed for the identified accepted candidate;
+the [matrix](development/phase4/ACCEPTANCE_MATRIX.md) links each to retained
+local/CI receipts. A later report-only boundary diagnostic correction has
+focused evidence, with final publication/full CI tracked separately in the
+[completion record](PHASE4_COMPLETION.md). The next implementation is the
+unimplemented [Phase 5 color-pipeline plan](PHASE5_PLAN.md). The
+[source register](PHASE4_SOURCES.md) keeps all new noise values/maps assumed;
+plausible structured noise is not sensor calibration or evidence of measured
+ARRI dynamic range. Native MATLAB remains unverified.
+
+The current 100-million-value guard excludes enabled structured direct
+exposure of a fully active 4608×3164 grid: the 64-values-per-pixel reservation
+alone is 933,101,568 values. Small coordinate-preserving crops are supported
+within the declared bounds. Full-frame resource and throughput work remains
+Phase 7; see the [measured resource audit](development/phase4/agent-reports/w09_f.md).

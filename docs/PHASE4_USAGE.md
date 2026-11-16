@@ -1,10 +1,15 @@
 # Phase 4 usage: structured noise and readout
 
-This guide describes the implemented synthetic model. Complete release
-acceptance is pending; the [development record](development/phase4/README.md)
-tracks executed checks and source associations. A successful example is not
-complete phase acceptance. All new parameter values and maps are assumed.
-Native MATLAB execution remains unverified.
+This guide describes the implemented synthetic model. Clean candidate
+`ad036efe6bb6d298545055df37cc4b4681c3e8da` passed all 20 acceptance gates,
+400 numerical groups and 316 Python tests in GNU Octave 9.4.0 locally and
+8.4.0 in CI, with independently verified demo/repeat pairs and CI artifacts.
+The [completion report](PHASE4_COMPLETION.md), [retained evidence](evidence/phase4/README.md)
+and [development record](development/phase4/README.md) identify those executions
+and distinguish the later test-only decimal-diagnostic correction
+(14 focused groups in Octave 9.4.0). A successful example alone is not complete
+phase acceptance. All new parameter values and maps are assumed. Native MATLAB
+execution remains unverified.
 
 ## Runtime and complete verification
 
@@ -144,10 +149,51 @@ also enter both paths; path electronics remain separate. The merge uses only
 the recorded high/low RAW and configuration. It does not remove retained fixed
 maps or component noise using simulated truth.
 
-Inspect `components`, `active_maps` and `readout` to separate expected charge,
-collected charge, stored charge, signed readouts, ADC clipping, conservative
-rail usability and reconstruction validity. The earlier merge's limitations
-near noisy transitions and rail fallback still apply.
+### Interpreting enabled-result diagnostics
+
+The paths below are relative to the enabled result. `P` means `readout` for
+single gain, or `readout.high_gain` / `readout.low_gain` for dual gain. Its
+matching electronic component is `components.single`, `components.high_gain`
+or `components.low_gain`, respectively. The common `readout` fields remain
+outside the gain paths in dual mode.
+
+| Field or path | Units | Meaning |
+| --- | --- | --- |
+| `baseline_expected_electrons` | electrons | Spectrally integrated photo expectation before PRNU, dark charge, sampling or clipping. |
+| `active_maps.prnu` | dimensionless | Fixed photo-response multiplier at the active photosites. |
+| `active_maps.dark_current_e_per_s` | electrons/s | Fixed dark-current rate at the active photosites. |
+| `readout.expected_photoelectrons` | electrons | `baseline_expected_electrons .* active_maps.prnu`. |
+| `readout.expected_dark_electrons` | electrons | `active_maps.dark_current_e_per_s * readout.exposure_s`. |
+| `readout.expected_electrons` | electrons | `expected_photoelectrons + expected_dark_electrons`: total expected photo **plus dark** charge; the legacy expectation is photo-only. |
+| `components.photo_electrons`, `components.dark_electrons` | electrons | Separately sampled charges; each equals its expectation when its shot-noise switch is off. |
+| `readout.collected_electrons` | electrons | Sum of the photo and dark components before the physical well. |
+| `readout.charge_electrons` | electrons | Stored charge: collected charge capped at the configured physical `full_well_e`. |
+| `components.shared` and the matching path component | electrons | Retained `fixed_offset_e`, `row_e`, `column_e`, `frame_e`, `pixel_e` and their sum `total_e`; shared `pixel_e` is zero. |
+| `P.read_electrons` | electrons | Signed stored charge plus shared and path electronics; no second full-well clipping. |
+| `P.raw_dn` | DN (`uint16`) | Gain and black level applied to signed readout, then rounded and clamped to the ADC range. |
+| `readout.full_well_saturated` | logical | Collected charge is **at or above** physical full well, before electronics. |
+| `P.adc_low_clipped`, `P.adc_high_clipped` | logical | Rounded code is strictly below zero or above the maximum ADC code, respectively, before clamping. |
+| `P.adc_usable` | logical | Recorded RAW is strictly between the ADC rails. A code exactly on either rail is unusable even without clipping. |
+| `readout.merged.valid` | logical | Dual gain only: at least one recorded path is ADC-usable. |
+| `readout.reconstruction_valid` | logical | ADC/merge usability with known physical full-well saturation excluded. |
+
+For each path, `read_electrons = (charge_electrons + shared.total_e) +
+path_component.total_e`. Let `q = round(read_electrons * gain_dn_per_e +
+black_level_dn)` and `M = 2^adc_bits - 1`, using that path's configuration.
+Then RAW is `uint16(min(max(q,0),M))`, clipping tests are `q < 0` and `q > M`,
+and usability is `raw_dn > 0 & double(raw_dn) < M`. Single-gain
+`reconstruction_valid` is
+`readout.adc_usable & ~readout.full_well_saturated`; dual gain uses
+`readout.merged.valid & ~readout.full_well_saturated`. If neither dual path is
+usable, the merge retains a finite low-path estimate with `merged.valid=false`.
+These definitions follow the [structured readout](../matlab/+alev4/simulateStructuredExposure.m)
+and [RAW-only merge](../matlab/+alev4/mergeDualGain.m).
+
+Retained component arrays are verification diagnostics, not corrections used
+by the merge. PRNU is a declared phenomenological response multiplier, so even
+`expected_photoelectrons` may exceed `expected_incident_photons`; total expected
+charge also includes dark current. The earlier merge's limitations near noisy
+transitions and rail fallback still apply.
 
 ## Independent frames, reset, continuation and EI
 
@@ -262,7 +308,17 @@ model validation; disabled sequences still have the sequence aggregate limit.
 Bundles separately count every actual retained numeric/logical value and allow
 at most 800,000,000 payload bytes. The conservative simulation reservation can
 reject a request even when its eventual bundle would be smaller. These bounds
-are supported-size checks, not peak-memory or throughput guarantees. Use small
-fixtures or crops; a supported full-grid geometry does not establish practical
-full-frame simulation. Performance measurements and calibrated camera
-characterization remain later work.
+are supported-size checks, not peak-memory or throughput guarantees.
+
+The Open Gate geometry profile supports a 4608×3164 full grid and crops within
+it, but **enabled direct structured exposure of the fully active grid exceeds
+the current guard**. Its 14,579,712 photosites require 933,101,568 reserved values
+at 64 per photosite alone, before spectral input, maps or metadata; this already
+exceeds the 100,000,000-value cap in
+[`simulateStructuredExposure`](../matlab/+alev4/simulateStructuredExposure.m).
+This follows from the guard and scalar arithmetic; no full-frame input was
+allocated for that check. Use small fixtures or coordinate-preserving crops.
+The [resource audit](development/phase4/agent-reports/w09_f.md) reports measured
+acceptance costs and their limits. Full-frame execution/performance work remains
+Phase 7, while calibrated camera characterization remains Phase 6; neither is
+established by this geometry profile or by the small-fixture acceptance runs.

@@ -1,6 +1,9 @@
 # Phase 4 structured-noise design
 
-Status: implementation contract; acceptance is not yet claimed.
+Status: implemented contract. Candidate `ad036efe6bb6d298545055df37cc4b4681c3e8da`
+passed complete local and CI acceptance. The [completion record](PHASE4_COMPLETION.md)
+and [retained evidence](evidence/phase4/README.md) identify the executed source
+and distinguish the later test-only diagnostic correction.
 
 This phase implements explicit synthetic fixed maps, separately seeded noise
 components, independent temporal frames, and exposure/electronic-gain sweeps.

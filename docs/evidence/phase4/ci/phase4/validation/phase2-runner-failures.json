@@ -1,0 +1,47 @@
+{
+  "scenarios": [
+    {
+      "nonzero_exit": 1,
+      "observed_error": "ALEV4:MissingSubmodules",
+      "runtime_version": "8.4.0",
+      "scenario": "missing_prerequisite",
+      "stale_success_removed": true,
+      "status": "passed"
+    },
+    {
+      "nonzero_exit": 1,
+      "observed_error": "ALEV4:InjectedPhase2Failure",
+      "runtime_version": "8.4.0",
+      "scenario": "late_assertion",
+      "stale_success_removed": true,
+      "status": "passed"
+    },
+    {
+      "nonzero_exit": 1,
+      "observed_error": "ALEV4:Phase2SuiteFailed",
+      "runtime_version": "8.4.0",
+      "scenario": "malformed_suite_inventory",
+      "stale_success_removed": true,
+      "status": "passed"
+    },
+    {
+      "nonzero_exit": 1,
+      "observed_error": "ALEV4:Phase2SuiteFailed",
+      "runtime_version": "8.4.0",
+      "scenario": "duplicate_test_names",
+      "stale_success_removed": true,
+      "status": "passed"
+    },
+    {
+      "current_process_failure_required": true,
+      "nonzero_exit": 1,
+      "observed_error": "ALEV4:ReportWrite",
+      "report_invalidation_possible": false,
+      "scenario": "initial_report_write_failure",
+      "stale_report_unchanged": true,
+      "status": "passed"
+    }
+  ],
+  "status": "passed",
+  "test": "phase2_runner_failure_contract"
+}

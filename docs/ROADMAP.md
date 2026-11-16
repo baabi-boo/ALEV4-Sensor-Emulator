@@ -1,17 +1,23 @@
 # Development roadmap
 
-**Phase 0 is established. Phases 1, 2, and 3 are complete and acceptance-tested.** The Phase 3 [completion record](PHASE3_COMPLETION.md), [usage](PHASE3_USAGE.md), [design](PHASE3_DESIGN.md), [parameter sources](PHASE3_SOURCES.md), and [artifact contract](PHASE3_ARTIFACTS.md) describe the spatial layer and measured evidence. Historical accepted Phase 2 source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) passed in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally; its [completion report](PHASE2_COMPLETION.md) and [evidence](evidence/phase2-release-record.json) remain preserved. No native MATLAB runtime pass or ALEV4 calibration is claimed. Numbered future targets are not completion claims.
+**Phase 4 is implemented and candidate `ad036efe6bb6d298545055df37cc4b4681c3e8da` passed complete clean-source acceptance locally and in CI.** Each execution passed 20 command gates, 400 numerical groups and 316 Python tests, in GNU Octave 9.4.0 locally and 8.4.0 in CI. All five candidate workflows passed, and the downloaded CI archive was independently verified. Start with the [completion report](PHASE4_COMPLETION.md), [retained evidence](evidence/phase4/README.md), [usage guide](PHASE4_USAGE.md), [design](PHASE4_DESIGN.md), [parameter sources](PHASE4_SOURCES.md), and [typed artifact contract](PHASE4_ARTIFACTS.md). The [development record](development/phase4/README.md) separates clean candidate acceptance from later targeted checks. All new parameter values and maps are assumed; no ALEV4 calibration, measured ARRI dynamic range, genuine ARRIRAW output or native MATLAB runtime pass is claimed.
 
-| Phase | Goal | Acceptance evidence |
+Phase 0 is established. Phases 1, 2, and 3 remain complete and acceptance-tested at their recorded historical source revisions. The Phase 3 [completion record](PHASE3_COMPLETION.md), [usage](PHASE3_USAGE.md), [design](PHASE3_DESIGN.md), [parameter sources](PHASE3_SOURCES.md), and [artifact contract](PHASE3_ARTIFACTS.md) describe its spatial layer and executed evidence. Historical accepted Phase 2 source [`ab1c0bad7cbcf993d0b95980214d45f45f59028c`](https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ab1c0bad7cbcf993d0b95980214d45f45f59028c) passed in GNU Octave 8.4.0 in GitHub CI and 9.4.0 locally; its [completion report](PHASE2_COMPLETION.md) and [evidence](evidence/phase2-release-record.json) remain preserved. These earlier results do not establish Phase 4 release acceptance. Every earlier gate remains required, and future targets are not completion claims.
+
+| Phase | Goal | State and acceptance evidence |
 | --- | --- | --- |
-| 0 | Reproducible repository with two pinned upstream submodules | `.gitmodules`, 160000 gitlinks, clean `main`, integrity check passing |
-| 1 | Generic spectral Bayer sensor baseline | Known photon-to-electron conversion, shot-noise scaling, deterministic tests, scene-to-RAW demo |
-| 2 | Simultaneous high/low-gain readout of shared charge | Independent electronic noise, gain/clipping checks, guarded observable merge, synthetic bundles and repeatable artifacts |
-| 3 | ALEV4-inspired geometry and optics | Sourced Open Gate geometry, crop/CFA binding, conservative spectral sampling, stated PSF/MTF, restricted nonuniform ISET comparison, verified spatial artifacts |
-| 4 | Sensor noise and readout realism | PRNU/DSNU, row/column structure, dark-frame behaviour, clipping and exposure-index sweeps |
-| 5 | RAW and ARRI-compatible post-capture color transforms | Labelled synthetic RAW, reproducible demosaic/color pipeline, numeric LogC4/AWG4 transform tests |
-| 6 | Real-camera characterization | Controlled exposure brackets, Xyla chart, dark/flat frames, color charts and comparison metrics with uncertainties |
-| 7 | Performance, reproducibility and public reports | Multi-frame benchmark, full example workflows, reported error bars and reproducible validation assets |
+| 0 | Reproducible repository with two pinned upstream submodules | Established: `.gitmodules`, 160000 gitlinks, historical clean `main` checkpoint and passing integrity check |
+| 1 | Generic spectral Bayer sensor baseline | Accepted historical source: known photon-to-electron conversion, shot-noise scaling, deterministic tests, scene-to-RAW demo |
+| 2 | Simultaneous high/low-gain readout of shared charge | Accepted historical source: independent electronics, gain/clipping checks, observable merge, synthetic bundles and repeats |
+| 3 | ALEV4-inspired geometry and optics | Accepted historical source: sourced Open Gate geometry, crop/CFA binding, conservative sampling, PSF/MTF, restricted ISET comparison and spatial artifacts |
+| 4 | Structured sensor noise and readout | Accepted candidate `ad036ef`: 20 gates, 400 numerical groups and 316 Python tests locally/CI; PRNU, dark/offset maps, shared/path electronics, sequences and typed bundles |
+| 5 | Demosaic and documented AWG4/LogC4 post-capture transforms | Planned, not implemented; [detailed plan](PHASE5_PLAN.md) defines a reproducible color pipeline and independent numerical/artifact gates |
+| 6 | Real-camera characterization | Planned: controlled exposure brackets, Xyla chart, dark/flat frames, color charts and comparison metrics with uncertainties |
+| 7 | Performance, reproducibility and public reports | Planned: multi-frame benchmark, full example workflows, error bars and reproducible validation assets |
+
+Phase 4 work targets `master`; the repository's default branch remains `main`.
+The [usage guide](PHASE4_USAGE.md#runtime-and-complete-verification) selects
+`master` explicitly and documents the complete acceptance command.
 
 ## Preserved Phase 1 completion gate
 
@@ -85,19 +91,75 @@ Core-only numerical execution and seven-frame demos remain incomplete. The
 source geometry does not establish measured optical response, calibration,
 complete die dimensions, arbitrary ISET imports, or full-frame throughput.
 
-## Next: Phase 4 sensor noise and readout realism
+## Accepted Phase 4 candidate and preserved release gate
 
-Follow the [Phase 4 plan](PHASE4_PLAN.md). Start by
-separating a persistent full-grid sensor realization from frame/exposure
-randomness. Define PRNU and distinguish exposure-dependent dark-current rates
-from exposure-independent electronic offsets, with explicit units and stage
-order, before adding row/column or temporal electronics. Fixed maps must retain
-their full-grid identity through crops; dual gain must continue to share one
-photocharge and one physical well.
-Use zero-effect identity, analytical means/variances/covariances and controlled
-exposure sweeps as gates. Assumed parameters remain labelled until measured
-datasets support them. Color transforms and real-camera calibration retain
-Phases 5 and 6.
+The separate opt-in model preserves the earlier sensor/geometry schemas and
+entrypoints. Supplied full-grid PRNU, dark-current rate and fixed electronic
+offset maps persist through one-based crops; scalar maps mean uniform values.
+The map values define a realization, independently of its label or frame seed.
+
+Achromatic PRNU multiplies photoelectron expectation. Dark rate times exposure
+seconds gives a separate dark-charge expectation, with its own shot-noise
+switch and stream. Photo and dark draws enter one physical well. Shared and
+path-specific fixed offsets plus Gaussian row, column and frame components
+enter after the well, alongside each path's existing per-pixel read noise.
+Dual-gain reconstruction uses the recorded channels and configuration only.
+
+Independent frames use explicit absolute indices and a documented seed
+schedule, with reset/continuation and caller RNG restoration. Fixed maps stay
+constant. EI labels affect metadata only; physical exposure and electronic
+gains remain explicit. Valid disabled direct/spatial calls return the complete
+legacy result; disabled sequences retain legacy frames in their new envelope.
+There is no temperature law, correlated flicker/1/f process, rolling shutter,
+random fixed-map generator or calibrated camera EI policy in this version.
+
+The distinct structured bundle preserves every retained value, type, shape,
+unit, full-grid map and spatial history. Its packed payload uses true C
+row-major order. Native and independent Python readers verify bytes and
+deterministic semantics, including the observable merge; hashes and source
+labels do not authenticate stochastic draws. See the [artifact contract](PHASE4_ARTIFACTS.md)
+and [source register](PHASE4_SOURCES.md) for exact boundaries.
+
+The clean candidate passed all nine Phase 4 suites with 111 groups, plus
+135 Phase 3, 62 Phase 2 and 92 Phase 1 groups: **400 groups in each execution**.
+Both complete receipts include 316 Python tests, all failure controls, all four
+fresh-process demo/repeat pairs and clean dependency checks. These observed
+results satisfy the following [Phase 4 release requirements](PHASE4_PLAN.md),
+which remain mandatory when the implementation changes:
+
+1. One identified clean source revision and clean pinned dependencies before
+   and after execution.
+2. All nine Phase 4 suites, covering deterministic/statistical physics,
+   invalid inputs, RNG isolation, crops, sequences, numerical/resource limits,
+   artifacts and demonstrations, plus every Phase 1–3 numerical/ISET gate.
+3. Python tests and all four phases' runner-failure controls, with failed or
+   incomplete results remaining visibly nonrelease.
+4. All four phases' complete demos and distinct fresh-process repeats, with
+   independent byte, shape/type/unit, semantic and repeat-identity checks.
+5. Retained commands, runtime/version, source/dependency revisions, exits,
+   reports and hashes, together with observed CI and verified CI artifacts.
+
+`scripts/run_phase4_acceptance.py` implements the 20-command aggregate gate.
+Edited-checkout `--development` runs always leave `release_accepted=false`;
+core-only numerical runs leave `phase4_passed=false`. The retained clean
+receipts identify `ad036ef`; the later test-only decimal-diagnostic correction
+has focused 14-group Octave 9.4.0 evidence, without relabelling those earlier
+receipts as a newer execution. Supported sample limits do not establish
+peak-memory behavior or throughput. In particular, enabled fully active
+4608×3164 structured direct exposure exceeds the current 100-million-value
+guard; use the documented [small crops and limits](PHASE4_USAGE.md#supported-sizes-and-allocation-checks).
+Native MATLAB remains unverified until its relevant gates execute.
+
+## Next: Phase 5 post-capture color
+
+Phase 5 is planned and **not implemented**. The [detailed Phase 5 plan](PHASE5_PLAN.md)
+defines source/domain checks, normalization from observed readouts and masks,
+a reproducible Bayer demosaic, an explicitly assumed camera-color mapping,
+and published AWG4/LogC4 post-capture transforms with independent numerical
+and artifact checks. Sensor noise and readout physics remain separate.
+Controlled real-camera characterization remains Phase 6, and performance
+measurement and public reporting remain Phase 7. A rendered preview or LogC4
+encoding does not establish sensor identity or calibration.
 
 ## Calibration gate
 

@@ -1,0 +1,10 @@
+{
+  "artifact_id": 14194742079,
+  "file": "/workspace/scratch/c29e5f205eec/phase4-ci-ad036ef/phase4-evidence-ad036ef.zip",
+  "bytes": 1393948,
+  "sha256": "dd1ad67edb8fbc5e14050f97f89cd365eacc61d1972c662d3706ac781349b966",
+  "github_digest": "sha256:dd1ad67edb8fbc5e14050f97f89cd365eacc61d1972c662d3706ac781349b966",
+  "github_size_in_bytes": 1393948,
+  "digest_matches_github": true,
+  "size_matches_github": true
+}

@@ -1,0 +1,89 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 133062224124,
+      "run_id": 43795168396,
+      "workflow_name": "Phase 4 structured noise validation",
+      "head_branch": "master",
+      "run_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168396",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVrCu7M8AAAAe-yBo_A",
+      "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/jobs/133062224124",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168396/job/133062224124",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-16T02:56:45Z",
+      "started_at": "2026-11-16T02:59:23Z",
+      "completed_at": "2026-11-16T03:13:34Z",
+      "name": "octave-validation",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-16T02:59:24Z",
+          "completed_at": "2026-11-16T02:59:26Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-16T02:59:26Z",
+          "completed_at": "2026-11-16T02:59:41Z"
+        },
+        {
+          "name": "Install numerical runtime",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-16T02:59:41Z",
+          "completed_at": "2026-11-16T03:00:27Z"
+        },
+        {
+          "name": "Complete structured noise and preserved Phase 1–3 acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-16T03:00:27Z",
+          "completed_at": "2026-11-16T03:13:29Z"
+        },
+        {
+          "name": "Retain exact-source validation and artifact evidence",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-16T03:13:29Z",
+          "completed_at": "2026-11-16T03:13:32Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-16T03:13:32Z",
+          "completed_at": "2026-11-16T03:13:32Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-16T03:13:32Z",
+          "completed_at": "2026-11-16T03:13:32Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/check-runs/133062224124",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000001298,
+      "runner_name": "GitHub Actions 1000001298",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

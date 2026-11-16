@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "scripts/run_phase4_acceptance.py",
+    "--output-root",
+    "outputs/phase4-candidate-ad036ef",
+    "--expected-commit",
+    "ad036efe6bb6d298545055df37cc4b4681c3e8da"
+  ],
+  "exit_code": 0,
+  "elapsed_s": 1149.4327030169989,
+  "child_max_rss_kib": 156808,
+  "child_user_cpu_s": 1110.958377,
+  "child_system_cpu_s": 34.968641,
+  "measurement": "Python monotonic clock and Linux RUSAGE_CHILDREN; maximum child RSS is not simultaneous aggregate peak memory."
+}

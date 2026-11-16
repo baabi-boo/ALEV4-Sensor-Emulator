@@ -1,0 +1,280 @@
+{
+ "schema_version": "1.0",
+ "record_type": "phase4_release_evidence_index",
+ "path_base": "repository root",
+ "scope": "Accepted candidate evidence and a separate later test-only correction. This index is outside the hashed evidence subtree.",
+ "accepted_candidate": {
+  "commit": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+  "tree": "34bf3899c4903a6283ae344076983f948fddfc19",
+  "branch_observed": "master",
+  "public_commit_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/commit/ad036efe6bb6d298545055df37cc4b4681c3e8da",
+  "dependency_gitlinks": {
+   "third_party/isetcam": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+   "third_party/isethdrsensor": "ee2dacceb456516de3ecefadd72955154cf3cabe"
+  }
+ },
+ "retained_evidence": {
+  "manifest_path": "docs/evidence/phase4/manifest.json",
+  "manifest_sha256": "458abc5e8c8da88835d4986ee198d18572e629f12424b089d2ff6dbeb2ce4c59",
+  "manifest_bytes": 44037,
+  "readme_path": "docs/evidence/phase4/README.md",
+  "subtree_files_including_manifest": 87,
+  "subtree_bytes_including_manifest": 2817053,
+  "inventoried_files_excluding_manifest": 86,
+  "note": "Use the manifest for individual hashes/source associations and the ZIP for the complete CI payload. Readable selections are partial; the full local payload tree is not duplicated."
+ },
+ "candidate_acceptance": {
+  "local": {
+   "receipt_path": "docs/evidence/phase4/local/acceptance.json",
+   "runtime": "GNU Octave 9.4.0",
+   "status": "passed",
+   "passed_commands": 20,
+   "total_commands": 20,
+   "release_accepted": true,
+   "development": false,
+   "source_clean_at_start": true,
+   "source_clean_at_end": true
+  },
+  "ci": {
+   "receipt_path": "docs/evidence/phase4/ci/acceptance.json",
+   "runtime": "GNU Octave 8.4.0",
+   "status": "passed",
+   "passed_commands": 20,
+   "total_commands": 20,
+   "release_accepted": true,
+   "development": false,
+   "source_clean_at_start": true,
+   "source_clean_at_end": true
+  }
+ },
+ "results_per_candidate_execution": {
+  "numerical_groups": {
+   "phase4": 111,
+   "phase3": 135,
+   "phase2": 62,
+   "phase1": 92,
+   "total": 400
+  },
+  "phase4_suite_groups": {
+   "config": 9,
+   "core": 11,
+   "noise": 11,
+   "rng": 10,
+   "sequence": 12,
+   "spatial": 10,
+   "artifact_io": 20,
+   "demo_contract": 14,
+   "numerical_edges": 14
+  },
+  "python_tests": 316,
+  "numerical_report_paths": [
+   "docs/evidence/phase4/local/phase4/validation/phase4-validation.json",
+   "docs/evidence/phase4/ci/phase4/validation/phase4-validation.json"
+  ],
+  "python_log_paths": [
+   "docs/evidence/phase4/local/logs/02-python-tests.stderr.txt",
+   "docs/evidence/phase4/ci/logs/02-python-tests.stderr.txt"
+  ],
+  "counting_note": "Nested earlier phases count once per execution. Controls, demos and focused reruns do not add numerical groups."
+ },
+ "demo_repeats": {
+  "both_candidate_executions": "All four primary/repeat sets passed byte comparison and distinct-file identity checks; separate generator commands are retained in the aggregate receipts.",
+  "phases": [
+   {
+    "phase": 1,
+    "frames_per_set": 10,
+    "files_per_set": 31,
+    "ci_verifier_path": "docs/evidence/phase4/ci/phase1/validation/phase1-acceptance.json"
+   },
+   {
+    "phase": 2,
+    "frames_per_set": 6,
+    "files_per_set": 31,
+    "ci_verifier_path": "docs/evidence/phase4/ci/phase2/validation/phase2-acceptance.json"
+   },
+   {
+    "phase": 3,
+    "frames_per_set": 8,
+    "files_per_set": 66,
+    "ci_verifier_path": "docs/evidence/phase4/ci/phase3/validation/phase3-acceptance.json"
+   },
+   {
+    "phase": 4,
+    "frames_per_set": 24,
+    "files_per_set": 49,
+    "ci_verifier_path": "docs/evidence/phase4/ci/phase4/validation/phase4-acceptance.json"
+   }
+  ]
+ },
+ "phase4_runner_controls": {
+  "receipt_paths": [
+   "docs/evidence/phase4/local/phase4/validation/phase4-runner-failures.json",
+   "docs/evidence/phase4/ci/phase4/validation/phase4-runner-failures.json"
+  ],
+  "status": "passed",
+  "listed_scenarios": 163,
+  "listed_exit_1_scenarios": 162,
+  "listed_exit_0_scenario": {
+   "name": "core_only_never_accepted",
+   "count": 1,
+   "status": "core_only",
+   "phase4_passed": false
+  },
+  "additional_complete_positive_fixture_controls": 1,
+  "fixture_suites_only": true,
+  "iset_computation_executed": false,
+  "numerical_acceptance_executed": false
+ },
+ "statistical_budget": {
+  "source_field": "noise.metrics.statistical_allocation in both numerical reports",
+  "checked_comparisons": 81,
+  "non_gaussian_comparisons": 22,
+  "gaussian_comparisons": 59,
+  "non_gaussian_family_limit": 32,
+  "gaussian_family_limit": 64,
+  "family_allowance_each": 0.005,
+  "total_false_failure_allowance": 0.01,
+  "union_bound_formula": "22/6400 + 59/12800",
+  "recorded_union_bound": 0.008046875000000002,
+  "effective_counts": {
+   "pixels": 262144,
+   "disjoint_wrong_charge_pairs": 131072,
+   "independent_rows_or_columns": 8192,
+   "disjoint_spatial_pairs": 4096,
+   "independent_frames": 1024,
+   "disjoint_temporal_pairs_per_lag": 512
+  },
+  "interpretation": "All 81 observations meet their retained bounds under the declared ideal independent-draw model. Fixed seeds do not prove PRNG independence, detection of every weak correlation or calibration."
+ },
+ "candidate_ci": {
+  "snapshot_path": "docs/evidence/phase4/ci-run/candidate_run_summary.json",
+  "observed_at": "2026-11-16T03:14:23Z",
+  "all_five_completed_successfully": true,
+  "runs": [
+   {
+    "name": "Repository integrity",
+    "id": 43795168180,
+    "public_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168180"
+   },
+   {
+    "name": "Phase 2 dual-gain validation",
+    "id": 43795168226,
+    "public_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168226"
+   },
+   {
+    "name": "Phase 1 numerical validation",
+    "id": 43795168212,
+    "public_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168212"
+   },
+   {
+    "name": "Phase 4 structured noise validation",
+    "id": 43795168396,
+    "public_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168396"
+   },
+   {
+    "name": "Phase 3 geometry and optics validation",
+    "id": 43795168215,
+    "public_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168215"
+   }
+  ],
+  "scope": "Recorded candidate observations; no live or later-commit status assertion.",
+  "artifact": {
+   "id": 14194742079,
+   "metadata_path": "docs/evidence/phase4/ci-run/artifact_metadata.json",
+   "download_digest_path": "docs/evidence/phase4/ci-run/download_summary.json",
+   "archive_path": "docs/evidence/phase4/ci-evidence-ad036ef.zip",
+   "bytes": 1393948,
+   "sha256": "dd1ad67edb8fbc5e14050f97f89cd365eacc61d1972c662d3706ac781349b966",
+   "expanded_files": 402,
+   "expanded_bytes": 18400875,
+   "aggregate_inventory_entries": 401,
+   "phase4_job_id": 133062224124,
+   "public_job_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168396/job/133062224124",
+   "api_url": "https://api.github.com/repos/baabi-boo/ALEV4-Sensor-Emulator/actions/artifacts/14194742079"
+  }
+ },
+ "independent_checks": {
+  "ci_artifact_audit": {
+   "path": "docs/evidence/phase4/independent/w09_a-ci-semantic-audit.json",
+   "status": "passed",
+   "python_version": "3.12.14",
+   "artifact_verifiers_executed": 4,
+   "all_exit_codes_zero": true,
+   "all_stderr_empty": true,
+   "stdout_identical_to_ci_receipts": true,
+   "native_numerical_or_python_unit_tests_rerun": false
+  },
+  "selected_native_readback": {
+   "path": "docs/evidence/phase4/independent/w09_d-native-readback.json",
+   "status": "passed",
+   "producer_runtime": "GNU Octave 8.4.0",
+   "reader_runtime": "GNU Octave 9.4.0",
+   "selected_bundles_read_and_validated": 4,
+   "numeric_leaves_checked": 537,
+   "production_files_identical_to_candidate": 52,
+   "initial_helper_scope_error_retained": true,
+   "rng_and_handles_preserved": true,
+   "scope": "Four existing CI bundles only; no regeneration, PRNG replay, all-24 native rerun or cross-runtime generation-identity claim."
+  }
+ },
+ "post_candidate_test_only_correction": {
+  "base_commit": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+  "source_worktree_dirty": true,
+  "test_path": "matlab/tests/test_phase4_numerical_edges.m",
+  "corrected_test_sha256": "05568045ddbbb73c8fc95bc9ddbcb6b2fcff5fe068d6c676f2e946bae5e0948d",
+  "change": "Boundary diagnostic metrics use decimal text with serialization assertions inside existing groups. Production simulation, scientific predicates and the 111-group inventory are unchanged.",
+  "focused_runtime": "GNU Octave 9.4.0",
+  "focused_passed_edge_groups": 14,
+  "focused_total_edge_groups": 14,
+  "remaining_numeric_scalars_audited": 40,
+  "report_path": "docs/evidence/phase4/post-candidate/w08_f/numerical-edges.json",
+  "metric_audit_path": "docs/evidence/phase4/post-candidate/w08_f/numeric-metric-audit.json",
+  "historical_harness_path": "docs/evidence/phase4/post-candidate/w08_f/targeted_edges.m",
+  "execution_account_path": "docs/development/phase4/agent-reports/w08_f.md",
+  "boundary_text": {
+   "smallest_normal_accepted_decimal": "2.2250738585072014e-308",
+   "first_representable_mean_above_limit_decimal": "1000000000.0000001"
+  },
+  "candidate_receipt_limit": "Original smallest_normal_accepted remains numeric 0 after JSON serialization, not an exact realmin measurement. Scientific assertions passed; original candidate receipts and ZIP are unchanged.",
+  "complete_clean_acceptance_for_corrected_source_recorded_here": false,
+  "reproduction_note": "Historical harness paths must be changed to a fresh output location; never rerun over retained evidence."
+ },
+ "publication": {
+  "final_commit": null,
+  "final_master_ci_status": "unrecorded",
+  "final_master_ci_runs": [],
+  "note": "Candidate acceptance and focused evidence do not establish final publication acceptance. The coordinator will observe final master CI separately."
+ },
+ "limits": {
+  "new_noise_parameters_and_maps": "assumed",
+  "artifacts": "synthetic",
+  "model": "independent, uncalibrated research model",
+  "native_matlab_executed": false,
+  "measured_alev4_arri_noise_or_dynamic_range_established": false,
+  "genuine_arriraw_supported": false,
+  "repeatability": "same_runtime_and_version_only; selected cross-runtime agreement does not extend the PRNG contract",
+  "semantic_verification": "Actual bytes and deterministic semantics are checked; stochastic origin/distributions and claimed input sources are not authenticated.",
+  "structured_sample_reservation_limit": 100000000,
+  "full_active_open_gate": {
+   "width": 4608,
+   "height": 3164,
+   "pixels": 14579712,
+   "lower_bound_64_values_per_pixel": 933101568,
+   "enabled_structured_simulation": "rejected by the current reservation guard",
+   "guard_source_path": "matlab/+alev4/simulateStructuredExposure.m",
+   "basis": "Static deduction from the enabled direct guard; no full-frame allocation or execution."
+  },
+  "performance": "Small fixtures/allocation rejection are not full-frame memory or throughput benchmarks. Local child maximum RSS is not simultaneous aggregate peak memory.",
+  "local_timing_receipt_path": "docs/evidence/phase4/local/phase4-candidate-time.json"
+ },
+ "supporting_review_reports": [
+  "docs/development/phase4/agent-reports/w08_c.md",
+  "docs/development/phase4/agent-reports/w08_f.md",
+  "docs/development/phase4/agent-reports/w09_a.md",
+  "docs/development/phase4/agent-reports/w09_b.md",
+  "docs/development/phase4/agent-reports/w09_c.md",
+  "docs/development/phase4/agent-reports/w09_d.md",
+  "docs/development/phase4/agent-reports/w09_e.md",
+  "docs/development/phase4/agent-reports/w09_f.md"
+ ]
+}

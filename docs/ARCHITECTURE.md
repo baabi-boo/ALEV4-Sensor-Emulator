@@ -12,6 +12,19 @@ separately from later documentation and evidence commits.
 See the [usage guide](PHASE3_USAGE.md), [numerical contract](PHASE3_DESIGN.md),
 and [validation gates](VALIDATION.md).
 
+Phase 4 is **implemented and its clean candidate `ad036ef` passed complete
+acceptance in GNU Octave 9.4.0 locally and 8.4.0 in CI**: 20 command gates,
+400 numerical groups and 316 Python tests per execution. All five candidate
+workflows passed, and the downloaded CI archive was independently verified.
+The [completion record](PHASE4_COMPLETION.md) and [retained evidence](evidence/phase4/README.md)
+identify that source separately from the later test-only decimal-diagnostic
+correction and its targeted 14-group check. The implementation adds persistent supplied sensor maps,
+separately seeded structured-noise components, independent frame sequences,
+and a distinct typed artifact format. The [design](PHASE4_DESIGN.md),
+[usage guide](PHASE4_USAGE.md), and [development record](development/phase4/README.md)
+separate implemented behavior from executed acceptance. All new parameter
+values and maps are assumed, as recorded in the [source register](PHASE4_SOURCES.md).
+
 ## Spatial front end and geometry binding
 
 `createSensorGeometry` owns a separate versioned geometry schema: full-grid
@@ -101,6 +114,75 @@ With custom black offsets, a low-path fallback can step downward when a more pre
 
 The [Phase 2 numerical contract](PHASE2_DESIGN.md) specifies equations, interfaces, numerical limits, and acceptance invariants. No proprietary ARRI readout topology or measured sensor parameters are inferred from this generic branching model.
 
+## Structured noise and independent frames
+
+[`createStructuredNoise`](../matlab/+alev4/createStructuredNoise.m) owns a
+separate model schema. PRNU, dark-current rate and signed electronic offsets
+are supplied scalar-uniform or full-grid maps. Actual map values define the
+persistent realization; a `realization_id` is only a label. One-based ROI
+selection preserves each photosite's fixed values and Bayer identity without
+normalizing, regenerating or resizing maps. PRNU is an achromatic multiplier;
+dark-current rates use electrons per photosite per second. The declared
+temperature records applicability and applies no temperature-response law.
+
+[`simulateStructuredExposure`](../matlab/+alev4/simulateStructuredExposure.m)
+uses this order for an enabled model:
+
+1. Integrate spectral irradiance into the baseline photoelectron expectation,
+   applying area, fill factor, seconds, QE and bin widths once.
+2. Multiply that expectation by active PRNU and independently form expected
+   dark charge from active dark-current rate times exposure seconds.
+3. Sample photocharge and dark charge with their separately controlled Poisson
+   switches, or use the respective expectation when its switch is disabled.
+4. Sum the two components and apply **one physical full-well limit**. Both gain
+   paths receive this same stored photo-plus-dark charge array.
+5. Add shared fixed/row/column/frame electronics after the well, then each
+   path's fixed/row/column/frame components and per-pixel read noise. Row draws
+   are constant across columns, column draws across rows, and frame draws
+   across the active image. Signed read electrons are not clipped to the well.
+6. Apply each path's gain and black offset, round and clamp to its ADC. Dual
+   gain uses the unchanged `mergeDualGain` with **observed RAW and configuration
+   only**. Retained maps, expectations and component draws never correct the
+   merge; physical saturation, ADC clipping and rail usability remain separate.
+
+Persistent maps consume no RNG draws. Enabled stochastic components use
+separate named streams with `mod(frame_seed + tag, 2^32)` seeds; adding or
+disabling one component does not shift another component's stream. This is a
+declared synthetic stream policy, not a proof of ideal PRNG independence. A
+valid disabled call returns the complete corresponding legacy result without
+added wrapper fields or extra draws. Enabled realizations need not match
+legacy streams. Public calls restore caller RNG state on success and failure;
+repeatability is limited to the same runtime and version. The
+[RNG suite](../matlab/tests/test_phase4_rng.m) tests these distinct contracts.
+
+[`simulateStructuredSpatialExposure`](../matlab/+alev4/simulateStructuredSpatialExposure.m)
+retains the complete valid legacy `spatial_baseline`, including its analog
+history, as verification context. It feeds the baseline's sampled irradiance
+to one structured exposure; the baseline contributes no additional charge.
+Legacy spatial validity remains a precondition. Optics still precede CFA
+selection, density sampling still precedes spectral integration, and
+`post_optics` still forbids a second PSF. The wrapper retains a separate
+`spatial_operation_order`; see its [integration tests](../matlab/tests/test_phase4_spatial.m).
+
+[`simulateNoiseSequence`](../matlab/+alev4/simulateNoiseSequence.m) is a pure
+function of the input, configuration, geometry, supplied model, sequence seed,
+exposure seconds and absolute frame indices. Frame `i` uses
+`mod(sequence_seed + 64*(i-1), 2^32)`, with indices from 1 through 2^26.
+Reset and continuation reproduce the same absolute frames without hidden
+mutable state. Component seeds do not overlap within that supported sequence;
+different sequence identities can overlap. Fixed maps persist, while an
+independently drawn noisy crop need not equal a crop of a larger random frame.
+`ei_label` changes metadata only; exposure and electronic gains must change
+explicitly. The only temporal model is independent frames, with no rolling
+shutter, elapsed-time law or measured flicker/1/f claim. The
+[sequence suite](../matlab/tests/test_phase4_sequence.m) checks these boundaries.
+
+Simulation preflight bounds represented numeric/logical contents before map
+expansion, spatial sampling or sequence continuation. These conservative
+reservations and the separate artifact bounds are supported-size checks,
+not full-frame memory or throughput measurements; see
+[allocation limits](PHASE4_USAGE.md#supported-sizes-and-allocation-checks).
+
 ## Artifacts and independent verification
 
 Phase 1 continues to export its uint16 RAW/JSON pair and optional grayscale Bayer preview. Phase 2 uses a separate [five-file bundle](PHASE2_ARTIFACTS.md): high/low uint16 DN, signed float64 merged electrons, packed diagnostic/validity flags, and a complete JSON manifest. All binary planes use explicit row-major little-endian representation.
@@ -135,6 +217,42 @@ targets and ambiguous staging ownership reject. Failure cleanup removes only
 this invocation's owned output. Concurrent writers to one target and universal
 atomic no-clobber publication are outside the contract.
 
+Phase 4's distinct [structured bundle](PHASE4_ARTIFACTS.md) contains exactly
+`structured.json` and `data.bin`, identified as
+`ALEV4-SYNTHETIC-STRUCTURED-NOISE` version 1.0 with `typed-tree-v1` wire
+descriptors. It preserves every enabled exposure/spatial-exposure result
+field, native class, shape, orientation, unit, scalar-map representation and
+retained legacy spatial value. Sequence frames are exported individually;
+disabled legacy results retain their earlier artifact interfaces.
+
+All numeric/logical leaves use contiguous little-endian segments. Their
+`double`, `uint16` or canonical logical-byte classes, offsets, lengths, shapes
+and units are explicit, including scalars and empty arrays. **The last index
+varies fastest** in a cube: true C row-major order, unlike Phase 3's plane-major
+cube order. Actual maps and their crops are bound by the complete typed tree
+and payload SHA-256. The format separately bounds manifest bytes, tree depth,
+node counts and actual retained values; hashes alone establish no physics.
+
+Native [semantic validation](../matlab/+alev4/structuredValidateResult.m) and
+the [independent Python verifier](../scripts/verify_phase4_artifacts.py)
+reconstruct map selection, spectral/photo/dark expectations, charge assembly,
+one well, signed electronics, ADCs and observed-channel merging, including the
+complete spatial baseline. They reject semantic changes even after a payload
+is rehashed. They check stochastic support and zero-noise constraints, but
+cannot authenticate the claimed seed or distribution of an internally
+consistent random realization. Statistical and fresh-process repeat gates
+supply separate evidence; none establishes calibration.
+
+Structured export validates before mutation, writes into an owned sibling
+stage, publishes the manifest last within that stage, and performs complete
+native readback before publishing the directory. Existing targets, unsafe
+paths, symlinks and hard-linked entries reject; failure cleanup removes only
+owned files after identity checks. Concurrent writers and adversarial
+filesystem replacement are outside the contract. The
+[native artifact suite](../matlab/tests/test_phase4_artifacts.m) and
+[Python corruption tests](../scripts/tests/test_verify_phase4_artifacts.py)
+exercise byte order, typed semantics and publication failures independently.
+
 `run_phase3_tests` writes fresh incomplete evidence before execution and
 requires nine Phase 3 suite gates plus the complete Phase 2/Phase 1
 numerical/ISETCam prerequisites. Standalone execution reports `core_only` with
@@ -148,11 +266,22 @@ from its own Git reads and child gates. `--development` runs the same gates
 but always leaves `release_accepted=false`. Observed Git revisions alone do
 not establish a clean or correctly pinned source tree.
 
+[`run_phase4_tests`](../matlab/run_phase4_tests.m) requires all nine Phase 4
+suites and the complete nested Phase 3/2/1 numerical/ISETCam prerequisites.
+Standalone mode still runs the nine Phase 4 suites but reports `core_only`
+with `phase4_passed=false`. The primary complete
+[`run_phase4_acceptance.py`](../scripts/run_phase4_acceptance.py) preserves all
+earlier gates and adds the fourth phase's failure controls, demo/repeat and
+independent artifact verifier, for 20 command gates. All four primary/repeat
+pairs require separate processes and disjoint file identities. Clean source,
+unchanged HEAD and dependency pins are checked; `--development` always leaves
+`release_accepted=false`. See the [full validation contract](VALIDATION.md#phase-4-structured-noise-acceptance-no-camera-required).
+
 ## Dependency responsibilities
 
 - `third_party/isetcam`: scene, optical-image, sensor, pixel, and imaging utilities. The retained uniform adapter and restricted spatial fixtures execute `sceneCreate`, `oiCompute`, and a noiseless Bayer `sensorCompute`; they do not supply an ARRI ALEV4 preset.
 - `third_party/isethdrsensor`: linked HDR architecture research and test scenes, not executed by the current single/dual core. Its RGBW and multiple-exposure examples do not implement the specific simultaneous readout in this repository. Advanced examples may require external projects or datasets that are not bundled.
-- `matlab/+alev4/`: independently testable geometry, PSF/MTF, conservative sampling, spectral integration, readout, merge, synthetic I/O, provenance observation, and ISETCam adapters. New project behavior belongs here rather than in modified submodules.
+- `matlab/+alev4/`: independently testable geometry, PSF/MTF, conservative sampling, spectral integration, structured maps/noise, independent sequences, readout, merge, synthetic I/O, provenance observation, and ISETCam adapters. New project behavior belongs here rather than in modified submodules.
 - `matlab/tests/` and `scripts/`: numerical acceptance, artifact corruption tests, independent scalar/file calculations, and dependency checks. Python verification does not implement a second production sensor simulator.
 
 ## ISETCam adapter boundary
@@ -196,13 +325,15 @@ native sensor/pixel configurations, measured ALEV4 OLPF, or calibrated lens MTF.
 
 ## Planned later layers and exclusions
 
-The next development work is
-[Phase 4 sensor noise and readout realism](PHASE4_PLAN.md): persistent sensor
-realizations anchored to the full grid, PRNU/DSNU, and structured electronic
-noise while preserving shared dual-gain charge. Its initial contract separates
-exposure-dependent dark-current rates from exposure-independent electronic
-offsets and keeps fixed maps stable through crops. Demosaic and color
-characterization, AWG4/LogC4 encoding, controlled real-camera comparisons, and
-performance reporting retain their later roadmap phases.
+The [Phase 5 plan](PHASE5_PLAN.md) defines the next, unimplemented layer:
+observed-readout normalization, demosaic, an explicit assumed camera-color
+mapping, and documented AWG4/LogC4 transforms. Controlled real-camera
+comparisons remain Phase 6; full-frame performance and public reporting remain
+Phase 7 in the [roadmap](ROADMAP.md). Enabled fully active Open Gate structured
+direct exposure currently exceeds the retained-value guard; supported geometry
+and coordinate-preserving crops do not make that full-frame operation available.
+See the [allocation limits](PHASE4_USAGE.md#supported-sizes-and-allocation-checks). Temperature response,
+camera EI policies, correlated temporal spectra and calibrated noise-map
+generation are outside the implemented assumed Phase 4 model.
 
 No firmware emulation, MIPI CSI-2 hardware emulation, camera UI, lens-mount mechanics, or ARRI camera control protocol is implemented here. None of the synthetic formats is an ARRIRAW encoder. Native MATLAB execution, calibrated ALEV4 equivalence, and practical full-frame performance remain unestablished until their own evidence exists.

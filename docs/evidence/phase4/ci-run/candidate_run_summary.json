@@ -1,0 +1,56 @@
+{
+  "observed_at": "2026-11-16T03:14:23Z",
+  "candidate_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+  "runs": [
+    {
+      "id": 43795168180,
+      "name": "Repository integrity",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168180",
+      "created_at": "2026-11-16T02:56:44Z",
+      "updated_at": "2026-11-16T02:57:11Z"
+    },
+    {
+      "id": 43795168226,
+      "name": "Phase 2 dual-gain validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168226",
+      "created_at": "2026-11-16T02:56:44Z",
+      "updated_at": "2026-11-16T02:58:46Z"
+    },
+    {
+      "id": 43795168212,
+      "name": "Phase 1 numerical validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168212",
+      "created_at": "2026-11-16T02:56:44Z",
+      "updated_at": "2026-11-16T03:00:05Z"
+    },
+    {
+      "id": 43795168396,
+      "name": "Phase 4 structured noise validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168396",
+      "created_at": "2026-11-16T02:56:44Z",
+      "updated_at": "2026-11-16T03:13:35Z"
+    },
+    {
+      "id": 43795168215,
+      "name": "Phase 3 geometry and optics validation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "ad036efe6bb6d298545055df37cc4b4681c3e8da",
+      "html_url": "https://github.com/baabi-boo/ALEV4-Sensor-Emulator/actions/runs/43795168215",
+      "created_at": "2026-11-16T02:56:44Z",
+      "updated_at": "2026-11-16T03:04:41Z"
+    }
+  ]
+}
