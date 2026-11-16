@@ -81,7 +81,9 @@ function result = structuredValidateResult(result)
 
     dimensions = sensor.image_size;
     bands = numel(sensor.wavelength_nm);
-    fixed_count = numericCount(model)+numericCount(configuration)+numericCount(geometry);
+    % Match the producer's compact scalar-metadata allowance, including
+    % singleton ROIs where per-pixel slack cannot cover these fixed fields.
+    fixed_count = numericCount(model)+numericCount(configuration)+numericCount(geometry)+64;
     if fixed_count > 1e8 || prod(dimensions) > (1e8-fixed_count)/(64+bands)
         error('ALEV4:StructuredNoiseSize','Structured retained-array reservation exceeds its limit.');
     end

@@ -2,7 +2,7 @@ name: Phase 3 geometry and optics validation
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
 

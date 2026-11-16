@@ -284,8 +284,35 @@ function metrics=retainedBaseline(input,grid,g,single,dual,model,psf)
         assert(any(doubled(:)~=result.readout.collected_electrons(:)));
         comparisons=comparisons+1;
     end
+    % The preserved legacy baseline is a validity precondition. Zero PRNU
+    % makes the structured photo expectation valid, but cannot bypass a
+    % legacy Poisson mean above 1e9 when the spatial wrapper retains it.
+    unit_g=alev4.createSensorGeometry(struct('full_grid_size',[1 1],'pixel_pitch_m',1));
+    unit_grid=alev4.createSpatialGrid(struct('x_edges_m',[0 1],'y_edges_m',[0 1]));
+    sensor=struct('image_size',[1 1],'pixel_pitch_m',1,'wavelength_nm',500, ...
+        'bin_width_nm',1,'qe',[1 1 1],'fill_factor',1,'full_well_e',1000,'shot_noise',true);
+    unit_single=alev4.createBaselineSensor(sensor); unit_single.read_noise_e=0;
+    unit_dual=alev4.createDualGainSensor(struct('sensor',sensor, ...
+        'high_gain',struct('read_noise_e',0),'low_gain',struct('read_noise_e',0), ...
+        'merge',struct('start_e',100,'end_e',200)));
+    zero_prnu=alev4.createStructuredNoise([1 1],struct('prnu',0,'dark_shot_noise',false));
+    disabled=zero_prnu; disabled.enabled=false;
+    unit_configs={unit_single,unit_dual}; options=struct('input_stage','post_optics');
+    for mode=1:2
+        cfg=unit_configs{mode};
+        direct=alev4.simulateStructuredExposure(1e9+1,cfg,1,29,zero_prnu,unit_g);
+        assert(direct.baseline_expected_electrons==1e9+1);
+        assert(direct.readout.expected_electrons==0 && direct.readout.collected_electrons==0);
+        expectError(@() alev4.simulateSpatialExposure(1e9+1,unit_grid,unit_g,cfg,1,29,options), ...
+            'ALEV4:InvalidPoissonMean');
+        expectError(@() alev4.simulateStructuredSpatialExposure(1e9+1,unit_grid,unit_g,cfg,1,29,zero_prnu,options), ...
+            'ALEV4:InvalidPoissonMean');
+        expectError(@() alev4.simulateStructuredSpatialExposure(1e9+1,unit_grid,unit_g,cfg,1,29,disabled,options), ...
+            'ALEV4:InvalidPoissonMean');
+    end
     metrics=struct('whole_legacy_baselines_and_replays',comparisons, ...
-        'baseline_charge_excluded_from_structured_exposure',true);
+        'baseline_charge_excluded_from_structured_exposure',true, ...
+        'direct_zero_prnu_baseline_limit_examples',2,'legacy_validity_precondition_rejections',6);
 end
 
 function metrics=artifactIdentity(result)

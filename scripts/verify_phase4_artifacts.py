@@ -666,7 +666,7 @@ def validate_result(result):
     model = result["noise_model"]
     noise_model(model, result["geometry"])
     fixed_count = sum(numeric_count(result[name]) for name in ("noise_model", "configuration", "geometry"))
-    require(fixed_count + math.prod(dims) * (64 + len(sensor["wavelength_nm"])) <= MAX_SAMPLES,
+    require(fixed_count + 64 + math.prod(dims) * (64 + len(sensor["wavelength_nm"])) <= MAX_SAMPLES,
             "Structured retained-array reservation exceeds its supported bound")
     active_maps(result["active_maps"], model, result["geometry"], dims)
     fields(result["temperature_condition"], {"reference_temperature_K", "policy"}, "temperature condition")
@@ -753,6 +753,65 @@ def spatial_grid(value, label):
         require(isinstance(value[key], Array), label + ": missing typed edges")
         numeric(value[key], (1, len(value[key])), label + " " + key)
     return phase3.grid(plain(value), label)
+
+
+def spatial_provenance(value):
+    """Validate legacy spatial metadata and count its bounded plain JSON bytes.
+
+    The native spatial validator passes this subtree through encodeBundleJson.
+    Its numeric matrices must be doubles, logicals must be scalar, and cells
+    are unsupported. Empty character data must survive the legacy JSON
+    roundtrip as 0-by-0, unlike the supported empty double matrix shapes.
+    Packed numeric leaves do not count toward the typed manifest's byte limit,
+    so independently bound their 17-significant-digit plain JSON representation.
+    Count incrementally without materializing that representation. Portable
+    ASCII keys, valid Unicode, finite samples and stricter field/depth bounds
+    have already been checked by the typed reader.
+    """
+    byte_count = 0
+
+    def add(count):
+        nonlocal byte_count
+        byte_count += count
+        require(byte_count <= MAX_JSON, "Spatial provenance exceeds the plain JSON byte limit")
+
+    def visit(item):
+        if isinstance(item, dict):
+            add(2 + max(0, len(item) - 1))  # Braces and field separators.
+            for name, child in item.items():
+                add(len(name) + 3)  # Portable ASCII key quotes and colon.
+                visit(child)
+        elif isinstance(item, Char):
+            require(item.shape == (0, 0) if not item else item.shape[0] == 1,
+                    "Spatial provenance has an unsupported character shape")
+            add(2)
+            for character in item:
+                code = ord(character)
+                if character in '"\\\b\f\n\r\t':
+                    add(2)
+                elif code < 0x20:
+                    add(6)  # Other C0 controls use a six-byte Unicode escape.
+                else:
+                    add(1 if code < 0x80 else 2 if code < 0x800 else 3 if code < 0x10000 else 4)
+        elif isinstance(item, Array):
+            require(item.class_name == "double" and len(item.shape) == 2
+                    or item.class_name == "logical" and item.shape == (1, 1),
+                    "Spatial provenance requires double matrices or scalar logicals")
+            if item.class_name == "logical":
+                add(4 if item[0] else 5)
+            elif not len(item):
+                add(2)  # All supported empty double shapes encode as [].
+            else:
+                if item.shape != (1, 1):
+                    # Vectors lose orientation; genuine matrices retain rows.
+                    add(len(item) + (1 if 1 in item.shape else 2 * item.shape[0] + 1))
+                for sample in item:
+                    add(len(format(sample, ".17g")))
+        else:
+            raise ArtifactError("Unsupported spatial provenance value type")
+
+    visit(value)
+    return byte_count
 
 
 def _literal_struct(actual, literals, label):
@@ -921,6 +980,7 @@ def verify_spatial(result, cfg, sensor, target_axes):
     numeric(base["optical_irradiance"], oshape, "spatial optical irradiance", lower=0)
     require(base["sampled_irradiance"] == result["input_irradiance"], "Spatial sampled input differs from integrated density")
     require(isinstance(base["spatial_provenance"], dict), "Spatial provenance must be a scalar metadata struct")
+    spatial_provenance(base["spatial_provenance"])
     data = {name: band_major(base[name]) for name in ("input_irradiance", "optical_irradiance", "sampled_irradiance")}
     meta = {"input_stage": stage, "input_grid": plain(base["input_grid"]),
             "optical_grid": plain(base["optical_grid"]), "files": {}}
@@ -1322,6 +1382,152 @@ def verify_demo(directory, source=None, engine=None):
     return files, metrics
 
 
+# Frozen required execution inventory. These identities and ordered group names
+# are independent verifier data: never derive them from a submitted report or
+# import/parse the native test sources while verifying evidence.
+NUMERICAL_SUITES = {
+    "config": ("phase4_config", (
+        "defaults_partial_revalidation",
+        "strict_schema_fields_and_structure",
+        "strict_grid_and_full_grid_match",
+        "nonnegative_maps_and_signed_offsets",
+        "rms_and_temperature_ranges",
+        "realization_and_source_identifiers",
+        "numeric_representation_canonicalization",
+        "all_bayer_roi_parity_map_identity",
+        "constructor_map_rng_and_caller_isolation")),
+    "core": ("phase4_core", (
+        "independent_scalar_stage_oracle",
+        "single_gain_transfer_and_signed_quantization",
+        "dark_only_saturation_and_shared_well",
+        "zero_exposure_fill_and_prnu",
+        "fixed_offsets_after_well_and_gain_black_once",
+        "fixed_map_crop_exposure_identity",
+        "disabled_whole_result_identity",
+        "distinct_adc_physical_and_reconstruction_masks",
+        "raw_only_merge_transition_oracle",
+        "arithmetic_failures_and_rng_restoration",
+        "deterministic_wrong_model_controls")),
+    "noise": ("phase4_noise", (
+        "photo_dark_poisson_moments_and_independence",
+        "independent_photo_dark_shot_policies",
+        "shared_total_charge_covariance_and_path_variance_sums",
+        "independent_pixel_noise_and_shot_cancellation",
+        "independent_charge_and_reused_pixel_stream_controls",
+        "row_covariance_counts_independent_rows",
+        "column_covariance_counts_independent_columns",
+        "wrong_spatial_axes_and_reused_path_stream_controls",
+        "frame_shared_path_covariance_counts_independent_frames",
+        "independent_frame_differences_and_disjoint_temporal_pairs",
+        "mixed_components_sum_after_one_physical_charge")),
+    "rng": ("phase4_rng", (
+        "named_component_seed_schedule_and_wrap_boundaries",
+        "accepted_and_rejected_seed_representations",
+        "each_named_component_matches_independent_seeded_oracle",
+        "added_component_toggles_isolate_all_other_draws",
+        "photo_dark_switches_and_zero_support_isolate_streams",
+        "fixed_maps_and_inactive_paths_are_rng_free",
+        "public_success_paths_restore_rng_and_caller_values",
+        "early_failures_restore_rng_and_caller_values",
+        "post_draw_and_later_frame_failures_restore_rng",
+        "same_runtime_whole_result_repeatability")),
+    "sequence": ("phase4_sequence", (
+        "exact_reset_start_absolute_and_gapped_continuation",
+        "frame_seed_wrap_maximum_index_and_17_component_disjointness",
+        "independent_frame_draws_and_fixed_map_persistence",
+        "fixed_pattern_cancellation_from_signed_frame_differences",
+        "ei_labels_leave_every_frame_unchanged",
+        "exposure_vector_scales_photo_dark_not_fixed_offsets",
+        "accepted_numeric_representations_are_canonical",
+        "strict_sequence_options_and_absolute_index_rejection",
+        "strict_exposure_and_ei_label_rejection",
+        "caller_configuration_and_rng_survive_success_and_second_frame_failure",
+        "retained_sequence_resource_bounds",
+        "disabled_single_dual_frames_match_complete_legacy_results")),
+    "spatial": ("phase4_spatial", (
+        "disabled_single_dual_whole_result_identity_with_nontrivial_psf",
+        "enabled_spatial_result_matches_core_on_sampled_input",
+        "full_crop_fixed_maps_and_readouts_all_parities_and_cfas",
+        "independent_multiband_optics_geometry_and_signed_noise_oracle",
+        "wrong_cfa_blur_and_pre_well_electronics_controls",
+        "post_optics_identity_nonuniform_sampling_and_duplicate_psf_rejection",
+        "retained_spatial_baseline_is_unchanged_valid_legacy_context",
+        "new_result_identity_exact_bundle_roundtrip_and_old_schema_rejection",
+        "exact_coordinate_coverage_and_declared_psf_support",
+        "strict_options_binding_and_rng_cleanup_after_legacy_baseline")),
+    "artifact_io": ("phase4_artifacts", (
+        "enabled_single_dual_core_and_spatial_exact_roundtrips",
+        "singleton_scalar_full_grid_map_and_empty_metadata_shapes",
+        "independent_asymmetric_2x3x4_c_order_little_endian_bytes",
+        "strict_native_producer_validation_before_publication",
+        "rehashed_maps_expectations_charge_and_well_semantic_corruptions",
+        "rehashed_electronics_adc_and_observed_merge_corruptions",
+        "complete_spatial_analog_and_report_history_corruptions",
+        "strict_typed_fields_shapes_classes_and_role_units",
+        "contiguous_offsets_lengths_totals_and_no_padding",
+        "malformed_json_wire_kinds_duplicates_and_unicode_boundaries",
+        "source_runtime_flags_and_unknown_metadata",
+        "payload_hash_truncation_logical_and_nonfinite_bytes",
+        "exact_inventory_missing_extra_symlink_hardlink_entries",
+        "canonical_paths_symlink_ancestors_and_refuse_existing",
+        "caller_rng_and_distinct_repeat_artifacts",
+        "supported_stochastic_alternate_without_seed_replay",
+        "staging_collision_and_ambiguous_creation_preserve_preexisting",
+        "injected_midwrite_failure_owned_cleanup",
+        "injected_publication_failure_foreign_and_replaced_identity",
+        "injected_read_and_write_close_failure_propagation")),
+    "demo_contract": ("phase4_demo", (
+        "fixed_24_frame_inventory_generation_only_and_rng",
+        "four_physical_exposure_and_electronic_gain_sweeps",
+        "three_sequence_roles_seed_wrap_reset_continuation_ei",
+        "independent_adc_well_merge_map_coverage",
+        "explicit_units_assumed_provenance_and_runtime",
+        "complete_24_bundle_export_exact_native_readbacks",
+        "existing_output_stale_success_is_never_overwritten",
+        "invalid_output_paths_and_symlink_ancestors_reject",
+        "missing_exporter_or_reader_reject_before_creation",
+        "incomplete_summary_until_every_export_and_readback",
+        "injected_exporter_failure_cleans_only_owned_stage",
+        "injected_reader_failure_and_mismatch_clean_owned_stage",
+        "staging_collision_and_replacement_identity_preserve_sentinels",
+        "publication_failure_race_identity_and_summary_cleanup")),
+    "numerical_edges": ("phase4_numerical_edges", (
+        "represented_seed_and_sequence_index_endpoints",
+        "exact_zero_support_at_finite_extremes",
+        "normal_boundary_and_signed_cancellation",
+        "spectral_overflow_and_positive_support_underflow",
+        "prnu_dark_and_total_charge_arithmetic",
+        "poisson_limit_and_component_preflight",
+        "electronic_rms_and_gain_numeric_limits",
+        "late_stochastic_failure_restores_rng",
+        "constructor_aggregate_maps_reject_before_densification",
+        "core_combined_budget_rejects_before_expansion",
+        "spatial_combined_budget_rejects_before_legacy_sampling",
+        "spatial_retained_options_and_spectral_storage_are_bounded",
+        "bounded_spatial_and_disabled_legacy_results",
+        "sequence_retained_model_budget_and_failure_cleanup")),
+}
+
+
+def _numerical_suite(report, name):
+    identity, expected_names = NUMERICAL_SUITES[name]
+    gate = report.get(name)
+    require(isinstance(gate, dict) and gate.get("suite") == identity
+            and gate.get("status") == "passed" and gate.get("passed") is True,
+            f"Missing, misidentified or failed Phase 4 numerical suite: {name}")
+    count = integer(gate.get("test_count"), name + " test count", 1)
+    tests = gate.get("tests")
+    require(count == len(expected_names) and isinstance(tests, list)
+            and len(tests) == len(expected_names),
+            f"{name}: complete frozen test inventory/count is required")
+    require(all(isinstance(test, dict) and test.get("name") == expected_name
+                for test, expected_name in zip(tests, expected_names)),
+            f"{name}: frozen test names/order disagree")
+    require(all(test.get("status") == "passed" and test.get("passed") is True for test in tests),
+            f"{name}: missing or unpassed individual test group")
+    return count
+
+
 def check_numerical_report(report, expected_commit=None):
     require(isinstance(report, dict) and report.get("schema_version") == "1.0"
             and integer(report.get("phase"), "numerical phase", 4, 4) == 4 and report.get("status") == "passed"
@@ -1333,7 +1539,7 @@ def check_numerical_report(report, expected_commit=None):
     phase3.expected_revision(source, expected_commit)
     require(all(source[key] == value for key, value in phase3.PINNED_HEADS.items()),
             "Phase 4 numerical report does not identify the frozen dependency pins")
-    groups = sum(phase3._suite(report, name) for name in GATES)
+    groups = sum(_numerical_suite(report, name) for name in GATES)
     previous = report.get("phase3")
     require(isinstance(previous, dict), "Complete Phase 3 numerical prerequisite is missing")
     previous_source, previous_engine, previous_groups, phase2_groups, _ = phase3.check_numerical_report(previous, expected_commit)

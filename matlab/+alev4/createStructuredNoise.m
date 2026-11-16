@@ -15,6 +15,8 @@ function model = createStructuredNoise(full_grid_size, overrides)
 %   a matrix matching that full grid exactly; no map is silently normalized.
 %   Numeric settings become dense doubles, while logical switches remain
 %   logical. Explicit scalar maps remain compact until ROI extraction.
+%   The complete model supports at most 100 million numeric/logical values;
+%   the descriptor inventory rejects before any sparse map becomes dense.
 %
 %   Defaults and supplied maps are assumed synthetic settings, not measured
 %   ALEV4 calibration. The default reference temperature is 293.15 K; it
@@ -52,6 +54,14 @@ function model = createStructuredNoise(full_grid_size, overrides)
         else
             model.(name) = overrides.(name);
         end
+    end
+
+    % Full-grid maps can be sparse descriptors with enormous represented
+    % sizes. Bound their aggregate before validation converts even the first
+    % map to dense storage. This also bounds explicitly disabled models.
+    if alev4.structuredNumericSamples(model) > 1e8
+        error('ALEV4:StructuredNoiseSize', ...
+            'A structured model supports at most 100 million numeric/logical values.');
     end
 
     if ~ischar(model.schema_version) || ~isrow(model.schema_version) || ...

@@ -1,11 +1,13 @@
 # Phase 4 plan: structured noise and readout realism
 
-**Status: planned; no Phase 4 implementation or acceptance is claimed.** This
-plan develops the [roadmap](ROADMAP.md) target for PRNU/DSNU, row/column
-structure, dark-frame behavior, and clipping/exposure-index sweeps. The
-[accepted Phase 3 record](PHASE3_COMPLETION.md) now supplies the required entry
-evidence. Re-run the preserved baseline on the selected starting revision
-before changing production behavior.
+**Status: implemented; complete release acceptance pending.** The
+[implementation design](PHASE4_DESIGN.md) and
+[development record](development/phase4/README.md) describe the current APIs,
+executed development checks and outstanding release work. This plan preserves
+the [roadmap](ROADMAP.md) requirements for PRNU/DSNU, row/column structure,
+dark-frame behavior, and clipping/exposure-index sweeps. The
+[accepted Phase 3 record](PHASE3_COMPLETION.md) supplies the inherited contract;
+the development record retains the executed entry-baseline evidence.
 
 Phase 4 will extend the generic sensor model with explicit, reproducible noise
 components. It will not establish calibrated ALEV4 parameters. Color transforms
@@ -208,8 +210,11 @@ Complete acceptance must require:
    summaries, hashes, limits, and the observed release CI result. Native MATLAB
    remains unverified until its relevant gates actually execute.
 
-The first concrete next step is to write the Phase 4 component-order/configuration
-design and provenance register against the accepted Phase 3 baseline.
-Only after reviewing those contracts should Slice 4A introduce the disabled
-model and fixed-map identity tests. Plausible structured noise by itself is
-not sensor calibration or evidence of measured ARRI dynamic range.
+The next concrete step is to finish the remaining implementation reviews and
+execute the complete release gates on an identified clean source revision,
+retaining local and CI evidence. The [design](PHASE4_DESIGN.md),
+[source register](PHASE4_SOURCES.md) and
+[development record](development/phase4/README.md) distinguish the implemented
+contract from executed checks and pending acceptance. Plausible structured
+noise by itself is not sensor calibration or evidence of measured ARRI dynamic
+range.

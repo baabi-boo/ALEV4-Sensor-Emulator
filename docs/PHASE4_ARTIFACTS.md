@@ -76,6 +76,15 @@ including configuration scalars, flags, full-grid maps and spatial history.
 Its limit is 100,000,000; the byte limit is 800,000,000. Character data do not
 contribute to the numerical count.
 
+These are actual wire-content bounds. Repeated retained fields count separately
+even if the native runtime shares their storage. The simulation APIs also make
+conservative preallocation reservations before dense map expansion or spatial
+sampling; a request can exceed those reservations before its eventual wire
+content would exceed this format limit. The constructor checks its full model
+inventory, and sequences bound their complete retained numeric/logical contents.
+Neither limit establishes peak memory use or full-frame throughput; see the
+[usage guide](PHASE4_USAGE.md#supported-sizes-and-allocation-checks).
+
 ## Typed tree
 
 Every node has exactly the fields listed for its `kind`; unknown fields and
@@ -109,6 +118,26 @@ uses UTF-8 bytes and MATLAB uses UTF-16 code units. ASCII labels are portable.
 An independent reader can use `result.runtime.name` when checking Unicode
 extents. A native reader rejects a Unicode extent incompatible with its own
 native character representation rather than silently changing the shape.
+
+### Retained spatial provenance
+
+`spatial_baseline.spatial_provenance` retains the earlier spatial metadata
+contract: nested scalar structs, finite double scalars/vectors/matrices,
+scalar logicals, character rows and 0-by-0 empty characters. Cells, uint16
+values, nonscalar logicals and rank-three doubles are unsupported here.
+The typed payload still preserves every supported native class and shape,
+including empty double matrix orientations.
+
+This subtree must also fit the preserved `encodeBundleJson` limit of
+**2,000,000 UTF-8 bytes in plain JSON**, independently of the typed manifest
+and packed-payload bounds. Doubles use 17 significant digits; numeric vectors
+have one JSON array regardless of orientation, matrices retain rows, and
+empty doubles encode as `[]`. Struct punctuation, string escapes and UTF-8
+bytes all count. Moving metadata numbers into `data.bin` does not remove this
+earlier limit. The independent verifier counts incrementally and rejects above
+the limit without constructing the plain JSON text. These counts and native
+escaping have been checked in GNU Octave 9.4; native MATLAB execution and
+serializer parity remain unverified.
 
 ### Numerical segments
 

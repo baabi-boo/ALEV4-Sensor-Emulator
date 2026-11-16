@@ -27,12 +27,13 @@ function result = simulateNoiseSequence(input, readout, exposures_s, sequence_se
     caller_rng = rng;
     rng_guard = onCleanup(@() rng(caller_rng)); %#ok<NASGU>
     options = validateOptions(options);
+    geometry = alev4.createSensorGeometry(geometry);
+    reserveRawSequence(input,readout,exposures_s,model,geometry,options);
     exposures_s = exposureVector(exposures_s);
     frame_count = numel(exposures_s);
     sequence_seed = sequenceSeed(sequence_seed);
     frame_indices = absoluteIndices(options,frame_count);
     ei_label = eiLabels(options,frame_count);
-    geometry = alev4.createSensorGeometry(geometry);
     configuration = alev4.bindSensorGeometry(readout,geometry,'validate');
     model = alev4.createStructuredNoise(geometry.full_grid_size,model);
 
@@ -92,6 +93,45 @@ function result = simulateNoiseSequence(input, readout, exposures_s, sequence_se
         'rng_generator','twister','runtime',runtimeInfo(), ...
         'reproducibility','same_runtime_and_version_only', ...
         'synthetic',true,'calibrated_alev4',false);
+end
+
+function reserveRawSequence(input,configuration,exposures,model,geometry,options)
+    % Descriptor-only lower bound before any sparse exposure/index/model
+    % becomes dense or any default index/EI vector is allocated.
+    if ~isnumeric(exposures) || ~isreal(exposures) || ...
+            ~isvector(exposures) || isempty(exposures)
+        return; % The ordinary validator supplies the precise input error.
+    end
+    count = numel(exposures);
+    if count > 67108864
+        error('ALEV4:InvalidNoiseSequenceIndices', ...
+            'A sequence cannot contain more than 2^26 absolute frame indices.');
+    end
+    if isfield(options,'frame_indices') && numel(options.frame_indices) ~= count
+        error('ALEV4:InvalidNoiseSequenceIndices', ...
+            'frame_indices must contain one integer in [1,2^26] per exposure.');
+    end
+    if isfield(options,'ei_label') && numel(options.ei_label) > 1 && ...
+            numel(options.ei_label) ~= count
+        error('ALEV4:InvalidNoiseSequenceEi', ...
+            'ei_label must be scalar or contain one label per exposure.');
+    end
+    retained_metadata = alev4.structuredNumericSamples(configuration) + ...
+        alev4.structuredNumericSamples(geometry) + ...
+        alev4.structuredNumericSamples(model);
+    metadata = retained_metadata + 3*count + 16;
+    if isfield(options,'ei_label') && ~isempty(options.ei_label)
+        metadata = metadata + count;
+    end
+    minimum_frame = numel(input)+prod(geometry.active_roi(3:4));
+    enabled = isstruct(model) && isscalar(model) && ...
+        (~isfield(model,'enabled') || ...
+        (islogical(model.enabled) && isscalar(model.enabled) && model.enabled));
+    if enabled, minimum_frame = minimum_frame+retained_metadata; end
+    if metadata > 1e8 || count > (1e8-metadata)/max(1,minimum_frame)
+        error('ALEV4:NoiseSequenceSize', ...
+            'Sequence descriptors and retained frames exceed 100 million numeric/logical values.');
+    end
 end
 
 function options = validateOptions(options)

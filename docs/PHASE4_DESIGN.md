@@ -56,12 +56,34 @@ Model creation and ROI extraction consume no randomness and do not mutate caller
 values. Unknown fields, malformed dimensions, nonfinite values, unsupported
 arithmetic, negative rates/RMS, and mismatched full grids reject.
 
-Before expanding active maps, an enabled exposure reserves 64 numerical values
-per active pixel plus its spectral input and the actual model/configuration/
-geometry numerical values. Reservations above 100 million values reject. This
-conservative retained-array bound also accounts for diagnostic planes; it is not
-a full-frame throughput or memory guarantee. Disabled calls retain legacy limits.
-Sequences additionally bound their complete retained numerical contents.
+The constructor inventories the complete merged model before numeric scans or
+sparse-to-dense conversion, rejecting more than 100 million represented
+numeric/logical values even for disabled models. Sparse arrays count their full
+represented size; repeated retained fields count separately regardless of
+runtime storage sharing.
+
+Before normalizing readout/model descriptors or expanding active maps, an
+enabled direct exposure reserves 64 values per active pixel plus its spectral
+input, model/configuration/geometry inventory, and 64 compact metadata values.
+The fixed allowance covers retained seeds, scalar component values, exposure
+and result flags even for a one-pixel ROI. Its raw preflight also reserves 32
+values for missing model defaults; readout binding requires a complete readout.
+The authoritative check uses canonical settings. Enabled spatial calls reserve
+both the legacy baseline and structured result before sampling: descriptor inventories, four source-cube
+counts, and `128 + 2*B` values per active pixel, where `B` is the configured
+spectral-bin count. The raw check is repeated using validated configuration.
+The descriptor allowance includes both configurations/geometries/input grids,
+the complete model, PSF/options/provenance, and compact reports. Reservations
+above 100 million values reject; these conservative checks cover diagnostics
+and working arrays without guaranteeing peak memory or full-frame throughput.
+
+Disabled direct/spatial calls retain legacy readout limits after ordinary model
+validation. Sequences preflight descriptors and a retained-frame lower bound
+before allocating index vectors or frames, then inventory the first complete
+frame to bound the entire sequence before producing the remaining frames.
+Enabled and disabled sequences both limit aggregate retained numeric/logical
+contents to 100 million values. Bundles independently count their actual stored
+values; passing a bundle-size bound does not bypass simulation reservations.
 
 ## Stage order and retained values
 

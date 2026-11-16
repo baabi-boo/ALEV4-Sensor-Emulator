@@ -32,6 +32,13 @@ function result = simulateStructuredExposure(input, readout, exposure_s, frame_s
     caller_rng = rng;
     rng_guard = onCleanup(@() rng(caller_rng)); %#ok<NASGU>
     geometry = alev4.createSensorGeometry(geometry);
+    % Reject combined descriptor/target reservations before configuration or
+    % model normalization can densify sparse arrays. The canonical check
+    % below uses the validated readout and model. Disabled dispatch retains
+    % its legacy allocation contract.
+    if enabledRequest(model)
+        reserveRawSamples(readout, model, geometry);
+    end
     configuration = alev4.bindSensorGeometry(readout, geometry, 'validate');
     model = alev4.createStructuredNoise(geometry.full_grid_size, model);
     % Validate even the disabled wrapper's seed against the documented range;
@@ -68,9 +75,12 @@ function result = simulateStructuredExposure(input, readout, exposure_s, frame_s
     % reservation before expanding scalar maps or sampling charge; an input
     % cube limit alone would permit multi-gigabyte intermediate allocations.
     % The conservative 64 values/pixel includes all single/dual maps,
-    % components, flags and readouts, plus compact row/column terms.
-    fixed_samples = numericSamples(model) + numericSamples(configuration) + ...
-        numericSamples(geometry);
+    % components, flags and readouts, plus row/column terms (H+W <= 2*H*W).
+    % A separate 64-value allowance covers at most 38 retained scalars:
+    % map RMS values, frame components, seeds, exposure and result metadata.
+    fixed_samples = alev4.structuredNumericSamples(model) + ...
+        alev4.structuredNumericSamples(configuration) + ...
+        alev4.structuredNumericSamples(geometry) + 64;
     samples_per_pixel = 64 + numel(sensor.wavelength_nm);
     if fixed_samples > 1e8 || ...
             prod(sensor.image_size) > (1e8-fixed_samples)/samples_per_pixel
@@ -169,22 +179,33 @@ function result = simulateStructuredExposure(input, readout, exposure_s, frame_s
         'synthetic', true, 'calibrated_alev4', false);
 end
 
-function count = numericSamples(value)
-    if isnumeric(value) || islogical(value)
-        count = numel(value);
-    elseif isstruct(value)
-        count = 0;
-        fields = fieldnames(value);
-        for j = 1:numel(value)
-            for k = 1:numel(fields)
-                count = count + numericSamples(value(j).(fields{k}));
-            end
-        end
-    elseif iscell(value)
-        count = 0;
-        for k = 1:numel(value), count = count + numericSamples(value{k}); end
-    else
-        count = 0;
+function answer = enabledRequest(model)
+    answer = isstruct(model) && isscalar(model) && ...
+        (~isfield(model,'enabled') || ...
+        (islogical(model.enabled) && isscalar(model.enabled) && model.enabled));
+end
+
+function reserveRawSamples(configuration, model, geometry)
+    sensor = configuration;
+    if isstruct(configuration) && isscalar(configuration) && ...
+            isfield(configuration,'schema_version') && ...
+            isequal(configuration.schema_version,'2.0') && ...
+            isfield(configuration,'sensor')
+        sensor = configuration.sensor;
+    end
+    bands = 1;
+    if isstruct(sensor) && isscalar(sensor) && isfield(sensor,'wavelength_nm')
+        bands = max(1,numel(sensor.wavelength_nm));
+    end
+    % Binding requires a complete readout, so only the raw model can omit
+    % numeric defaults (at most 23). Reserve 32 slots for these defaults and
+    % the same 64 retained-scalar slots as the canonical check above.
+    fixed = alev4.structuredNumericSamples(configuration) + ...
+        alev4.structuredNumericSamples(model) + ...
+        alev4.structuredNumericSamples(geometry) + 64 + 32;
+    if fixed > 1e8 || prod(geometry.active_roi(3:4)) > (1e8-fixed)/(64+bands)
+        error('ALEV4:StructuredNoiseSize', ...
+            'Structured descriptors and retained arrays exceed the 100 million sample reservation.');
     end
 end
 
