@@ -1,0 +1,20 @@
+{
+  "analytical_flat_means_e": {
+    "exposure_025x": 4221.495955808403,
+    "exposure_050x": 8442.991911616806,
+    "exposure_100x": 16885.98382323361,
+    "exposure_200x": 33771.96764646722,
+    "exposure_400x": 67543.93529293445,
+    "flat": 16885.98382323361
+  },
+  "artifact_count": 31,
+  "calibrated_alev4": false,
+  "compared_demo_byte_identical": true,
+  "frame_count": 10,
+  "source": {
+    "isetcam_head": "3e0253421752eb72f2d1353327dffd0d433abdaf",
+    "isethdrsensor_head": "ee2dacceb456516de3ecefadd72955154cf3cabe",
+    "repository_head": "5b61230f6b652d7d053910ea32e144bb9441774a"
+  },
+  "status": "passed"
+}
