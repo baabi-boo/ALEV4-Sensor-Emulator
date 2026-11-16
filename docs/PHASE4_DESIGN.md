@@ -56,6 +56,13 @@ Model creation and ROI extraction consume no randomness and do not mutate caller
 values. Unknown fields, malformed dimensions, nonfinite values, unsupported
 arithmetic, negative rates/RMS, and mismatched full grids reject.
 
+Before expanding active maps, an enabled exposure reserves 64 numerical values
+per active pixel plus its spectral input and the actual model/configuration/
+geometry numerical values. Reservations above 100 million values reject. This
+conservative retained-array bound also accounts for diagnostic planes; it is not
+a full-frame throughput or memory guarantee. Disabled calls retain legacy limits.
+Sequences additionally bound their complete retained numerical contents.
+
 ## Stage order and retained values
 
 1. The existing integration calculates baseline photoelectron expectation
